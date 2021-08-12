@@ -1,10 +1,8 @@
 package pro.gravit.simplecabinet.web.exception;
 
-public class EntityNotFoundException extends RuntimeException {
-    public EntityNotFoundException() {
-    }
+public class EntityNotFoundException extends AbstractCabinetException {
 
     public EntityNotFoundException(String message) {
-        super(message);
+        super(message, 499);
     }
 }

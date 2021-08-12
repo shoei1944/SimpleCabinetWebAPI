@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.model.AuditEntity;
@@ -7,7 +8,6 @@ import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.repository.AuditRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,7 +18,7 @@ public class AuditService {
         return repository.findById(aLong);
     }
 
-    public List<AuditEntity> findAll(Pageable pageable) {
+    public Page<AuditEntity> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 

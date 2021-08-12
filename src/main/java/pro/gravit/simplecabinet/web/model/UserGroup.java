@@ -7,9 +7,11 @@ import java.time.LocalDateTime;
 @Table(name = "user_groups")
 public class UserGroup {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_groups_generator")
+    @SequenceGenerator(name = "user_groups_generator", sequenceName = "user_groups_seq", allocationSize = 1)
     private long id;
     private String groupName;
+    private long priority;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     @ManyToOne
@@ -22,6 +24,14 @@ public class UserGroup {
 
     public String getGroupName() {
         return groupName;
+    }
+
+    public long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(long priority) {
+        this.priority = priority;
     }
 
     public void setGroupName(String groupName) {

@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
 @Table(name = "audit_log")
 public class AuditEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "audit_log_generator")
+    @SequenceGenerator(name = "audit_log_generator", sequenceName = "audit_log_seq", allocationSize = 1)
     private long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

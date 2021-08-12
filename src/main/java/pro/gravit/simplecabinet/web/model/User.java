@@ -8,19 +8,16 @@ import java.util.UUID;
 @Entity(name = "User")
 @Table(name = "users")
 @Cacheable
-public class User {
+public class User implements BasicUser {
 
     public static HashType DEFAULT_PASSWORD_HASH = HashType.BCRYPT;
     //Base and launcher
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_generator")
+    @SequenceGenerator(name = "users_generator", sequenceName = "users_seq", allocationSize = 1)
     private long id;
     @Column(unique = true)
     private String username;
-    @Column(name = "access_token")
-    private String accessToken;
-    @Column(name = "server_id")
-    private String serverId;
     @Column(unique = true)
     private UUID uuid;
     //Password and permissions
@@ -28,35 +25,26 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     private HashType hashType = HashType.BCRYPT;
     private String password;
-    private long permissions;
-    private long flags;
     //Special
     @Column(unique = true)
     private String email;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hwid_id")
-    private HardwareId hardwareId;
-    //Economic info
-    @Column(name = "economy_money")
-    private long economyMoney;
-    @Column(name = "donate_money")
-    private double donateMoney;
-    @Column(name = "extended_money")
-    private double extendedMoney;
+    @OneToOne(mappedBy = "target", fetch = FetchType.LAZY)
+    private BanInfoEntity banInfo;
+    //Skin info
+    @Column(name = "skin_model")
+    private String skinModel;
     //Addional info (may be null)
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
     private String status;
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
-    @Column(name = "last_login")
-    private LocalDateTime lastLoginDate;
     @Column(name = "totp_secret_key")
-    private byte[] totpSecretKey;
+    private String totpSecretKey;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserGroup> groups;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PaymentId> payments;
+    private List<UserSession> sessions;
 
     public static boolean isCorrectEmail(String email) //Very simple check
     {
@@ -75,28 +63,12 @@ public class User {
         this.email = email;
     }
 
-    public long getEconomyMoney() {
-        return economyMoney;
+    public String getSkinModel() {
+        return skinModel;
     }
 
-    public void setEconomyMoney(long economyMoney) {
-        this.economyMoney = economyMoney;
-    }
-
-    public double getDonateMoney() {
-        return donateMoney;
-    }
-
-    public void setDonateMoney(double donateMoney) {
-        this.donateMoney = donateMoney;
-    }
-
-    public double getExtendedMoney() {
-        return extendedMoney;
-    }
-
-    public void setExtendedMoney(double extendedMoney) {
-        this.extendedMoney = extendedMoney;
+    public void setSkinModel(String skinModel) {
+        this.skinModel = skinModel;
     }
 
     public Gender getGender() {
@@ -115,19 +87,11 @@ public class User {
         this.status = status;
     }
 
-    public HardwareId getHardwareId() {
-        return hardwareId;
-    }
-
-    public void setHardwareId(HardwareId hardwareId) {
-        this.hardwareId = hardwareId;
-    }
-
-    public byte[] getTotpSecretKey() {
+    public String getTotpSecretKey() {
         return totpSecretKey;
     }
 
-    public void setTotpSecretKey(byte[] totpSecretKey) {
+    public void setTotpSecretKey(String totpSecretKey) {
         this.totpSecretKey = totpSecretKey;
     }
 
@@ -155,20 +119,16 @@ public class User {
         this.hashType = type;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getPassword() {
+        return password;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public HashType getHashType() {
+        return hashType;
     }
 
-    public String getServerID() {
-        return serverId;
-    }
-
-    public void setServerID(String serverID) {
-        this.serverId = serverID;
+    public void setHashType(HashType hashType) {
+        this.hashType = hashType;
     }
 
     public UUID getUuid() {
@@ -187,12 +147,12 @@ public class User {
         this.registrationDate = registrationDate;
     }
 
-    public LocalDateTime getLastLoginDate() {
-        return lastLoginDate;
+    public BanInfoEntity getBanInfo() {
+        return banInfo;
     }
 
-    public void setLastLoginDate(LocalDateTime lastLoginDate) {
-        this.lastLoginDate = lastLoginDate;
+    public void setBanInfo(BanInfoEntity banInfo) {
+        this.banInfo = banInfo;
     }
 
     public enum HashType {
