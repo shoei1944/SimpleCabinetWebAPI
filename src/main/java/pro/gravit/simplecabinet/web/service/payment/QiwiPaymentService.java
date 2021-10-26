@@ -57,7 +57,7 @@ public class QiwiPaymentService {
         } catch (BillPaymentServiceException e) {
             payment.setStatus(UserPayment.PaymentStatus.CANCELED);
             paymentService.save(payment);
-            throw new PaymentException(e.getResponse().getDescription());
+            throw new PaymentException(e.getResponse().getDescription(), 4);
         }
     }
 

@@ -67,7 +67,7 @@ public class YooPaymentService {
             } else {
                 errorText = String.format("Http Code: %d", result.statusCode());
             }
-            throw new PaymentException(errorText);
+            throw new PaymentException(errorText, 4);
         }
     }
 

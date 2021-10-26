@@ -57,7 +57,7 @@ public class UserService {
 
     public User register(String username, String email, String password) {
         if (!USERNAME_PATTERN.matcher(username).matches()) {
-            throw new InvalidParametersException("Username contains forbidden characters");
+            throw new InvalidParametersException("Username contains forbidden characters", 33);
         }
         User user = new User();
         user.setUsername(username);
