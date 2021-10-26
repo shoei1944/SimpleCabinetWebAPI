@@ -76,7 +76,7 @@ curl -H "Authorization: Bearer TOKEN" -F variant=default -F file="@/path/to/file
 curl -H "Authorization: Bearer TOKEN" -F variant=default -F file="@/path/to/file.png"  https://АДРЕС ЛК/cabinet/upload/cloak
 ```
 #### Личный кабинет: Безопасность
-- `/cabinet/changepassword` смена пароля
+- `/cabinet/security/changepassword` смена пароля
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/cabinet/changepassword", {
   "method": "POST",
@@ -89,7 +89,7 @@ await ( await fetch("https://АДРЕС ЛК/cabinet/changepassword", {
   }
 }) ).json()
 ```
-- `/cabinet/prepare2fa` подключение 2FA: получение секрета
+- `/cabinet/security/prepare2fa` подключение 2FA: получение секрета
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/cabinet/prepare2fa", {
   "method": "POST",
@@ -98,7 +98,7 @@ await ( await fetch("https://АДРЕС ЛК/cabinet/prepare2fa", {
   }
 }) ).json()
 ```
-- `/cabinet/enable2fa` подключение 2FA: активация
+- `/cabinet/security/enable2fa` подключение 2FA: активация
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/cabinet/enable2fa", {
   "method": "POST",
@@ -111,7 +111,7 @@ await ( await fetch("https://АДРЕС ЛК/cabinet/enable2fa", {
   }
 }) ).json()
 ```
-- `/cabinet/disable2fa` отключение 2FA
+- `/cabinet/security/disable2fa` отключение 2FA
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/cabinet/disable2fa", {
   "method": "POST",
