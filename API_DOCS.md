@@ -274,3 +274,66 @@ await ( await fetch("https://АДРЕС ЛК/news/id/1/update", {
 }) ).json()
 ```
 #### Курсы валют
+- `/exchangerate/page/{pageId}` просмотр курсов валют по страницам
+```javascript
+await ( await fetch("https://АДРЕС ЛК/exchangerate/page/0", {
+  "method": "GET"
+}) ).json()
+```
+- `/exchangerate/id/{id}` просмотр курса валют по ID
+```javascript
+await ( await fetch("https://АДРЕС ЛК/exchangerate/page/0", {
+  "method": "GET"
+}) ).json()
+```
+- `/exchangerate/get/{fromCurrency}/{toCurrency}` просмотр курса валют по начальной и конечной валюте
+```javascript
+await ( await fetch("https://АДРЕС ЛК/exchangerate/get/DONATE/ECO", {
+  "method": "GET"
+}) ).json()
+```
+- `/new` добавление нового курса валют
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/news/id/1/update", {
+  "method": "PUT",
+  "body": JSON.stringify({
+    "fromCurrency": "DONATE",
+    "toCurrency": "ECO",
+    "value": 2.0,
+    "unsafe": false
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+#### Администрирование: модерация
+- `/admin/moderation/ban/{userId}` бан пользователя
+```javascript
+await ( await fetch("https://АДРЕС ЛК/admin/moderation/ban/1", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "reason": "2.4",
+    "expireMinutes": "30",
+    "isHardware": false
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/admin/moderation/unban/{userId}` разбан пользователя
+```javascript
+await ( await fetch("https://АДРЕС ЛК/admin/moderation/unban/1", {
+  "method": "POST",
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+#### Администрирование: Экономика
+#### Администрирование: Управление HWID
+#### Администрирование: Выдача предметов
+#### Администрирование: Вход на сервера
+#### Администрирование: Аудит
