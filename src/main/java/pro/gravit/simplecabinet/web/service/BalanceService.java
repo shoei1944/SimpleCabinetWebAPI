@@ -12,8 +12,10 @@ import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserBalance;
 import pro.gravit.simplecabinet.web.repository.BalanceRepository;
 import pro.gravit.simplecabinet.web.repository.BalanceTransactionsRepository;
+import pro.gravit.simplecabinet.web.repository.UserRepository;
 
-import java.time.LocalDateTime;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.Optional;
 
 @Service
@@ -24,6 +26,10 @@ public class BalanceService {
     private BalanceTransactionsRepository transactionsRepository;
     @Autowired
     private ExchangeRateService exchangeRateService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     public Optional<ExchangeRate> findExchangeRate(String fromCurrency, String toCurrency) {
         return exchangeRateService.findByCurrency(fromCurrency, toCurrency);
@@ -39,6 +45,10 @@ public class BalanceService {
 
     public Optional<UserBalance> findById(Long aLong) {
         return repository.findById(aLong);
+    }
+
+    public UserBalance getReference(Long aLong) {
+        return repository.getById(aLong);
     }
 
     public UserBalance create(User user, String currency) {
@@ -59,84 +69,83 @@ public class BalanceService {
     }
 
     @Transactional
-    public BalanceTransaction transferMoney(User user, UserBalance from, UserBalance to, double count, String comment, boolean munticurrency) throws BalanceException {
-        if (from.getCurrency() == null || to.getCurrency() == null) {
-            throw new BalanceException("Currency is null");
+    public BalanceTransaction transfer(Long userId, Long fromId, Long toId, double fromCount, double toCount, boolean multiCurrency, String comment) {
+        if (fromId != null && (Double.isNaN(fromCount) || Double.isInfinite(fromCount) || fromCount < 0.0)) {
+            throw new BalanceException("Illegal fromCount (NaN, Inf, Neg)");
         }
-        double k = 1.0;
-        if (munticurrency) {
-            Optional<ExchangeRate> rate = findExchangeRate(from.getCurrency(), to.getCurrency());
-            if (rate.isPresent()) {
-                k = rate.get().getValue();
-            } else {
-                throw new BalanceException(String.format("From %s to %s transfer denied", from.getCurrency(), to.getCurrency()));
+        if (toId != null && (Double.isNaN(toCount) || Double.isInfinite(toCount) || toCount < 0.0)) {
+            throw new BalanceException("Illegal toCount (NaN, Inf, Neg)");
+        }
+        if (fromId == null && toId == null) {
+            throw new BalanceException("Illegal arguments: fromId and toId is null");
+        }
+        if (fromId != null) {
+            Query fromUpdate = entityManager.createQuery("update UserBalance f set f.balance = f.balance - :fromCount where f.id = :id and f.balance > :fromCount");
+            fromUpdate.setParameter("fromCount", fromCount);
+            fromUpdate.setParameter("id", fromId);
+            int updated = fromUpdate.executeUpdate();
+            if (updated != 1) {
+                throw new BalanceException("Insufficient funds");
             }
-            munticurrency = from.getCurrency().equals(to.getCurrency());
-        } else {
-            if (!from.getCurrency().equals(to.getCurrency())) {
-                throw new BalanceException("Source currency and destination currency do not match");
+        }
+        if (toId != null) {
+            Query toUpdate = entityManager.createQuery("update UserBalance f set f.balance = f.balance + :toCount where f.id = :id");
+            toUpdate.setParameter("toCount", toCount);
+            toUpdate.setParameter("id", toId);
+            int updated = toUpdate.executeUpdate();
+            if (updated != 1) {
+                throw new BalanceException("Illegal state: target id not found");
             }
         }
-        if (count <= 0) {
-            throw new BalanceException("Count is negative");
-        }
-        if (from.getBalance() < count) {
-            throw new BalanceException("Insufficient funds");
-        }
-        var toValue = count * k;
-        var transaction = new BalanceTransaction();
-        transaction.setFrom(from);
-        transaction.setTo(to);
+        BalanceTransaction transaction = new BalanceTransaction();
+        transaction.setUser(userId == null ? null : userRepository.getById(userId));
+        transaction.setFrom(fromId == null ? null : repository.getById(fromId));
+        transaction.setTo(toId == null ? null : repository.getById(toId));
+        transaction.setFromCount(fromId == null ? 0.0 : -fromCount);
+        transaction.setToCount(toId == null ? 0.0 : toCount);
+        transaction.setMulticurrency(multiCurrency);
         transaction.setComment(comment);
-        transaction.setFromCount(count);
-        transaction.setToCount(toValue);
-        transaction.setUser(user);
-        transaction.setMulticurrency(munticurrency);
-        transaction.setCreatedAt(LocalDateTime.now());
         transactionsRepository.save(transaction);
-        to.setBalance(to.getBalance() + toValue);
-        from.setBalance(from.getBalance() - count);
-        repository.save(to);
-        repository.save(from);
         return transaction;
+    }
+
+    @Transactional
+    public BalanceTransaction transfer(Long userId, long fromId, long toId, ExchangeRate rate, double count, String comment) {
+        return transfer(userId, fromId, toId, count, count * rate.getValue(), true, comment);
+    }
+
+    @Transactional
+    public BalanceTransaction transfer(Long userId, long fromId, long toId, String fromCurrency, String toCurrency, double count, String comment, boolean strictRate) {
+        if (fromCurrency == null || toCurrency == null) {
+            throw new BalanceException("fromCurrency or toCurrency is null");
+        }
+        Optional<ExchangeRate> rate = findExchangeRate(fromCurrency, toCurrency);
+        if (rate.isEmpty()) {
+            if (!fromCurrency.equals(toCurrency) || strictRate) {
+                throw new BalanceException(String.format("Can't convert money from %s to %s", fromCurrency, toCurrency));
+            }
+            return transfer(userId, fromId, toId, count, count, false, comment);
+        }
+        return transfer(userId, fromId, toId, count, count * rate.get().getValue(), true, comment);
+    }
+
+    @Transactional
+    public BalanceTransaction addMoney(long toId, double count, String comment) throws BalanceException {
+        return transfer(null, null, toId, 0.0, count, false, comment);
+    }
+
+    @Transactional
+    public BalanceTransaction removeMoney(long fromId, double count, String comment) throws BalanceException {
+        return transfer(null, fromId, null, count, 0.0, false, comment);
     }
 
     @Transactional
     public BalanceTransaction addMoney(UserBalance to, double count, String comment) throws BalanceException {
-        if (count <= 0) {
-            throw new BalanceException("Count is negative");
-        }
-        var transaction = new BalanceTransaction();
-        transaction.setFrom(null);
-        transaction.setTo(to);
-        transaction.setUser(null);
-        transaction.setFromCount(count);
-        transaction.setComment(comment);
-        transaction.setCreatedAt(LocalDateTime.now());
-        transactionsRepository.save(transaction);
-        to.setBalance(to.getBalance() + count);
-        repository.save(to);
-        return transaction;
+        return addMoney(to.getId(), count, comment);
     }
 
     @Transactional
     public BalanceTransaction removeMoney(UserBalance from, double count, String comment) throws BalanceException {
-        if (count <= 0) {
-            throw new BalanceException("Count is negative");
-        }
-        if (from.getBalance() - count < 0) {
-            throw new BalanceException("Insufficient funds");
-        }
-        var transaction = new BalanceTransaction();
-        transaction.setFrom(from);
-        transaction.setTo(null);
-        transaction.setUser(null);
-        transaction.setFromCount(-count);
-        transaction.setComment(comment);
-        transaction.setCreatedAt(LocalDateTime.now());
-        transactionsRepository.save(transaction);
-        from.setBalance(from.getBalance() - count);
-        repository.save(from);
-        return transaction;
+        return removeMoney(from.getId(), count, comment);
     }
 }

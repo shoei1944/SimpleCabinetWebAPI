@@ -6,7 +6,6 @@ import pro.gravit.simplecabinet.web.dto.BalanceTransactionDto;
 import pro.gravit.simplecabinet.web.dto.UserBalanceDto;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
-import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.service.BalanceService;
 import pro.gravit.simplecabinet.web.service.UserService;
@@ -30,23 +29,53 @@ public class AdminMoneyController {
         return new UserBalanceDto(balance.get());
     }
 
-    @PostMapping("/addmoney")
-    public BalanceTransactionDto addMoney(@RequestBody AddMoneyRequest request) throws BalanceException {
-        var balanceTo = balanceService.findById(request.balanceId);
-        if (balanceTo.isEmpty()) {
-            throw new InvalidParametersException("Balance not found", 1);
-        }
-        var transaction = balanceService.addMoney(balanceTo.get(), request.count, request.comment);
+    @PostMapping("/addmoney/unchecked/{balanceId}")
+    public BalanceTransactionDto addMoneyUnchecked(@PathVariable long balanceId, @RequestBody AddMoneyRequest request) throws BalanceException {
+        var transaction = balanceService.addMoney(balanceId, request.count, request.comment);
         return new BalanceTransactionDto(transaction);
     }
 
-    @PostMapping("/removemoney")
-    public BalanceTransactionDto removeMoney(@RequestBody AddMoneyRequest request) throws BalanceException {
-        var balanceTo = balanceService.findById(request.balanceId);
-        if (balanceTo.isEmpty()) {
-            throw new InvalidParametersException("Balance not found", 1);
+    @PostMapping("/addmoney/byuuid/{userUUID}/{currency}")
+    public BalanceTransactionDto addMoneyByUUID(@PathVariable UUID userUUID, @PathVariable String currency, @RequestBody AddMoneyRequest request) throws BalanceException {
+        var user = userService.findByUUID(userUUID);
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
         }
-        var transaction = balanceService.removeMoney(balanceTo.get(), request.count, request.comment);
+        var balanceTo = balanceService.findOrCreateUserBalanceByUserAndCurrency(user.get(), currency);
+        var transaction = balanceService.addMoney(balanceTo.getId(), request.count, request.comment);
+        return new BalanceTransactionDto(transaction);
+    }
+
+    @PostMapping("/addmoney/byid/{userId}/{currency}")
+    public BalanceTransactionDto addMoneyByUserId(@PathVariable long userId, @PathVariable String currency, @RequestBody AddMoneyRequest request) throws BalanceException {
+        var user = userService.getReference(userId);
+        var balanceTo = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, currency);
+        var transaction = balanceService.addMoney(balanceTo.getId(), request.count, request.comment);
+        return new BalanceTransactionDto(transaction);
+    }
+
+    @PostMapping("/removemoney/unchecked/{balanceId}")
+    public BalanceTransactionDto removeMoneyUnchecked(@PathVariable long balanceId, @RequestBody AddMoneyRequest request) throws BalanceException {
+        var transaction = balanceService.removeMoney(balanceId, request.count, request.comment);
+        return new BalanceTransactionDto(transaction);
+    }
+
+    @PostMapping("/removemoney/byuuid/{userUUID}/{currency}")
+    public BalanceTransactionDto removeMoneyByUUID(@PathVariable UUID userUUID, @PathVariable String currency, @RequestBody AddMoneyRequest request) throws BalanceException {
+        var user = userService.findByUUID(userUUID);
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        var balanceTo = balanceService.findOrCreateUserBalanceByUserAndCurrency(user.get(), currency);
+        var transaction = balanceService.removeMoney(balanceTo.getId(), request.count, request.comment);
+        return new BalanceTransactionDto(transaction);
+    }
+
+    @PostMapping("/removemoney/byid/{userId}/{currency}")
+    public BalanceTransactionDto removeMoneyByUserId(@PathVariable long userId, @PathVariable String currency, @RequestBody AddMoneyRequest request) throws BalanceException {
+        var user = userService.getReference(userId);
+        var balanceTo = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, currency);
+        var transaction = balanceService.removeMoney(balanceTo.getId(), request.count, request.comment);
         return new BalanceTransactionDto(transaction);
     }
 
@@ -72,33 +101,64 @@ public class AdminMoneyController {
         return new UserBalanceDto(balance);
     }
 
-    @PostMapping("/transfer")
-    public BalanceTransactionDto transfer(@RequestBody TransferMoneyRequest request) throws BalanceException {
-        var fromOptional = balanceService.findById(request.fromBalanceId);
-        var toOptional = balanceService.findById(request.toBalanceId);
-        if (fromOptional.isEmpty()) {
-            throw new InvalidParametersException("From not found", 2);
+    @PostMapping("/transfer/byuuid/{fromUUID}/{fromCurrency}/to/{toUUID}/{toCurrency}")
+    public BalanceTransactionDto transferByUUID(@PathVariable UUID fromUUID, @PathVariable String fromCurrency, @PathVariable UUID toUUID, @PathVariable String toCurrency, @RequestBody TransferMoneyRequest request) throws BalanceException {
+        var fromUserOptional = userService.findByUUID(fromUUID);
+        if (fromUserOptional.isEmpty()) {
+            throw new EntityNotFoundException("From User not found");
         }
-        if (toOptional.isEmpty()) {
-            throw new InvalidParametersException("To not found", 3);
+        var toUserOptional = userService.findByUUID(toUUID);
+        if (toUserOptional.isEmpty()) {
+            throw new EntityNotFoundException("To User not found");
         }
-        var from = fromOptional.get();
-        var to = toOptional.get();
+        var fromBalance = balanceService.findOrCreateUserBalanceByUserAndCurrency(fromUserOptional.get(), fromCurrency);
+        var toBalance = balanceService.findOrCreateUserBalanceByUserAndCurrency(toUserOptional.get(), toCurrency);
         User user;
-        if (!request.selfUser) {
-            user = from.getUser();
+        if (request.selfUser) {
+            user = fromBalance.getUser();
         } else {
-            user = userService.getCurrentUser().getReference();
+            user = null;
         }
-        var transaction = balanceService.transferMoney(user, from, to, request.count, request.comment, request.multicurrency);
+        var transaction = balanceService.transfer(user == null ? null : user.getId(),
+                fromBalance.getId(), toBalance.getId(), fromBalance.getCurrency(), toBalance.getCurrency(), request.count, request.comment, request.strictRate);
         return new BalanceTransactionDto(transaction);
     }
 
-    public static record AddMoneyRequest(long balanceId, double count, String comment) {
+    @PostMapping("/transfer/byid/{fromUserId}/{fromCurrency}/to/{toUserId}/{toCurrency}")
+    public BalanceTransactionDto transferByUserId(@PathVariable long fromUserId, @PathVariable String fromCurrency, @PathVariable long toUserId, @PathVariable String toCurrency, @RequestBody TransferMoneyRequest request) throws BalanceException {
+        var fromUser = userService.getReference(fromUserId);
+        var toUser = userService.getReference(toUserId);
+        var fromBalance = balanceService.findOrCreateUserBalanceByUserAndCurrency(fromUser, fromCurrency);
+        var toBalance = balanceService.findOrCreateUserBalanceByUserAndCurrency(toUser, toCurrency);
+        User user;
+        if (request.selfUser) {
+            user = fromBalance.getUser();
+        } else {
+            user = null;
+        }
+        var transaction = balanceService.transfer(user == null ? null : user.getId(),
+                fromBalance.getId(), toBalance.getId(), fromBalance.getCurrency(), toBalance.getCurrency(), request.count, request.comment, request.strictRate);
+        return new BalanceTransactionDto(transaction);
+    }
+
+    @PostMapping("/transfer/unchecked/multicurrency/{userId}/from/{fromId}/{fromCurrency}/to/{toId}/{toCurrency}")
+    public BalanceTransactionDto transferUncheckedMultiCurrency(@PathVariable Long userId, @PathVariable Long fromId, @PathVariable String fromCurrency, @PathVariable Long toId, @PathVariable String toCurrency, @RequestBody TransferMoneyRequest request) throws BalanceException {
+        var transaction = balanceService.transfer(userId,
+                fromId, toId, fromCurrency, toCurrency, request.count, request.comment, request.strictRate);
+        return new BalanceTransactionDto(transaction);
+    }
+
+    @PostMapping("/transfer/unchecked/nocurrency/{userId}/from/{fromId}/to/{toId}")
+    public BalanceTransactionDto transferUncheckedNoCurrency(@PathVariable Long userId, @PathVariable Long fromId, @PathVariable Long toId, @RequestBody TransferMoneyRequest request) throws BalanceException {
+        var transaction = balanceService.transfer(userId,
+                fromId, toId, request.count, request.count, false, request.comment);
+        return new BalanceTransactionDto(transaction);
+    }
+
+    public static record AddMoneyRequest(double count, String comment) {
 
     }
 
-    public static record TransferMoneyRequest(long fromBalanceId, long toBalanceId, double count, boolean selfUser,
-                                              String comment, boolean multicurrency) {
+    public static record TransferMoneyRequest(double count, boolean selfUser, String comment, boolean strictRate) {
     }
 }

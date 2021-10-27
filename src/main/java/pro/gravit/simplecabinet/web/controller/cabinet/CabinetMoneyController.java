@@ -10,9 +10,11 @@ import pro.gravit.simplecabinet.web.dto.UserBalanceDto;
 import pro.gravit.simplecabinet.web.exception.AuthException;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
-import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
+import pro.gravit.simplecabinet.web.model.UserBalance;
 import pro.gravit.simplecabinet.web.service.BalanceService;
 import pro.gravit.simplecabinet.web.service.UserService;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cabinet/money")
@@ -66,48 +68,37 @@ public class CabinetMoneyController {
         return new UserBalanceDto(optional.get());
     }
 
-
-    @PostMapping("/transfer/self")
+    @PostMapping("/transfer/{fromCurrency}/to/{userId}/{toCurrency}")
     @Transactional
-    public BalanceTransactionDto selfTransfer(@RequestBody SelfTransferRequest request) throws BalanceException {
+    public BalanceTransactionDto transfer(@PathVariable String fromCurrency, @PathVariable long toId, @PathVariable String toCurrency, @RequestBody TransferRequest request) throws BalanceException {
         var user = userService.getCurrentUser();
-        var from = balanceService.findById(request.fromBalanceId);
-        var to = balanceService.findById(request.toBalanceId);
-        if (from.isEmpty()) {
-            throw new InvalidParametersException("From balance not found", 1);
+        var ref = user.getReference();
+        var fromBalanceOptional = balanceService.findUserBalanceByUserAndCurrency(ref, fromCurrency);
+        if (fromBalanceOptional.isEmpty()) {
+            throw new EntityNotFoundException("Your balance not found");
         }
-        if (to.isEmpty()) {
-            throw new InvalidParametersException("To balance not found", 2);
+        var targetUser = userService.findById(toId);
+        if (targetUser.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
         }
-        if (from.get().getUser().getId() != user.getId() || to.get().getUser().getId() != user.getId()) {
-            throw new SecurityException("Access denied");
+        boolean needCreate = fromCurrency.equals(toCurrency);
+        Optional<UserBalance> toBalanceOptional;
+        if (needCreate) {
+            toBalanceOptional = Optional.of(balanceService.findOrCreateUserBalanceByUserAndCurrency(targetUser.get(), toCurrency));
+        } else {
+            toBalanceOptional = balanceService.findUserBalanceByUserAndCurrency(targetUser.get(), toCurrency);
         }
-        var transaction = balanceService.transferMoney(user.getReference(), from.get(), to.get(), request.count, null, true);
+        if (toBalanceOptional.isEmpty()) {
+            throw new EntityNotFoundException("Target balance not found");
+        }
+        var fromBalance = fromBalanceOptional.get();
+        var toBalance = toBalanceOptional.get();
+        var transaction = balanceService.transfer(user.getId(), fromBalance.getId(), toBalance.getId(),
+                fromBalance.getCurrency(), toBalance.getCurrency(),
+                request.count, request.comment, true);
         return new BalanceTransactionDto(transaction);
     }
 
-    @PostMapping("/transfer")
-    @Transactional
-    public BalanceTransactionDto transfer(@RequestBody SelfTransferRequest request) throws BalanceException {
-        var user = userService.getCurrentUser();
-        var from = balanceService.findById(request.fromBalanceId);
-        var to = balanceService.findById(request.toBalanceId);
-        if (from.isEmpty()) {
-            throw new InvalidParametersException("From balance not found", 1);
-        }
-        if (to.isEmpty()) {
-            throw new InvalidParametersException("To balance not found", 2);
-        }
-        if (from.get().getUser().getId() != user.getId() || to.get().getUser().getId() != user.getId()) {
-            throw new SecurityException("Access denied");
-        }
-        var transaction = balanceService.transferMoney(user.getReference(), from.get(), to.get(), request.count, null, true);
-        return new BalanceTransactionDto(transaction);
-    }
-
-    public record SelfTransferRequest(long fromBalanceId, long toBalanceId, long count) {
-    }
-
-    public record TransferRequest(long fromBalanceId, long toBalanceId, long count) {
+    public record TransferRequest(long count, String comment) {
     }
 }
