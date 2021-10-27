@@ -32,6 +32,13 @@ public class DtoService {
                 groups, skin, cloak);
     }
 
+    public UserDto toMiniUserDto(User user) {
+        var skin = skinService.getSkinTexture(user);
+        var cloak = skinService.getCloakTexture(user);
+        return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
+                null, skin, cloak);
+    }
+
     public ItemDeliveryDto itemDeliveryDto(ItemDelivery delivery) {
         List<ItemDeliveryDto.ItemEnchantDto> list;
         if (delivery.getItemEnchants() != null) {

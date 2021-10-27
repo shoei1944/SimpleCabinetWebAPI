@@ -73,6 +73,6 @@ UserController {
     @GetMapping("/page/{pageId}")
     public PageDto<UserDto> getPage(@PathVariable int pageId) {
         var list = service.findAll(PageRequest.of(pageId, 10));
-        return new PageDto<>(list.map(dtoService::toPublicUserDto));
+        return new PageDto<>(list.map(dtoService::toMiniUserDto));
     }
 }
