@@ -31,6 +31,10 @@ public class NewsService {
         return newsRepository.findById(aLong);
     }
 
+    public Optional<NewsComment> findCommentById(Long aLong) {
+        return commentRepository.findById(aLong);
+    }
+
     public <S extends NewsComment> S save(S entity) {
         return commentRepository.save(entity);
     }

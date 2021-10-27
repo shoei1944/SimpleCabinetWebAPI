@@ -1,6 +1,7 @@
 package pro.gravit.simplecabinet.web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.model.User;
@@ -9,7 +10,6 @@ import pro.gravit.simplecabinet.web.repository.UserSessionRepository;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,8 +45,12 @@ public class SessionService {
         return repository.findByUserAndServerId(user, serverId);
     }
 
-    public List<UserSession> findByUser(User user, Pageable pageable) {
+    public Page<UserSession> findByUser(User user, Pageable pageable) {
         return repository.findByUser(user, pageable);
+    }
+
+    public Page<UserSession> findByUserPublic(User user, Pageable pageable) {
+        return repository.findByUserAndDeleted(user, false, pageable);
     }
 
     public Optional<UserSession> findById(Long aLong) {

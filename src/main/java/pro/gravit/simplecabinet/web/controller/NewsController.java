@@ -47,6 +47,17 @@ public class NewsController {
         news.setHeader(request.header);
         news.setMiniText(request.miniText);
         news.setText(request.text);
+        newsService.save(news);
+    }
+
+    @DeleteMapping("/id/{newsId}/comment/{commentId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void deleteCommentById(@PathVariable long newsId, @PathVariable long commentId) {
+        var commentOptional = newsService.findCommentById(commentId);
+        if (commentOptional.isEmpty()) {
+            throw new EntityNotFoundException("NewsComment not found");
+        }
+        newsService.delete(commentOptional.get());
     }
 
     @PutMapping("/id/{newsId}/newcomment")

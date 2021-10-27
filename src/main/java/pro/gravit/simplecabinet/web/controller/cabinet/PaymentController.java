@@ -1,10 +1,9 @@
 package pro.gravit.simplecabinet.web.controller.cabinet;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.*;
+import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.dto.UserPaymentDto;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.PaymentService;
@@ -38,6 +37,13 @@ public class PaymentController {
             default -> throw new InvalidParametersException("Payment system not found", 11);
         };
         return new PaymentInfoDto(info.redirect(), new UserPaymentDto(info.paymentInfo()));
+    }
+
+    @GetMapping("/page/{pageId}")
+    public PageDto<UserPaymentDto> getPage(@PathVariable int pageId) {
+        var user = userService.getCurrentUser();
+        var list = paymentService.findAllByUser(user.getReference(), PageRequest.of(pageId, 10));
+        return new PageDto<>(list.map(UserPaymentDto::new));
     }
 
     public static record PaymentInfoDto(PaymentService.PaymentRedirectInfo redirect, UserPaymentDto payment) {

@@ -1,6 +1,8 @@
 package pro.gravit.simplecabinet.web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
@@ -24,6 +26,10 @@ public class PaymentService {
         payment.setStatus(UserPayment.PaymentStatus.INITIATED);
         paymentRepository.save(payment);
         return payment;
+    }
+
+    public Page<UserPayment> findAllByUser(User user, Pageable pageable) {
+        return paymentRepository.findAllByUser(user, pageable);
     }
 
     public <S extends UserPayment> S save(S entity) {
