@@ -166,6 +166,248 @@ await ( await fetch("https://АДРЕС ЛК/cabinet/payment/create", {
   }
 }) ).json()
 ```
+- `/cabinet/payment/page/{pageId}` просмотр информации о платежах
+```javascript
+await ( await fetch("https://АДРЕС ЛК/cabinet/payment/page/0", {
+  "method": "GET"
+}) ).json()
+```
+#### Личный кабинет: Сессии
+- `/cabinet/sessions/page/{pageId}` просмотр информации о сессиях
+```javascript
+await ( await fetch("https://АДРЕС ЛК/cabinet/sessions/page/0", {
+  "method": "GET"
+}) ).json()
+```
+- `/cabinet/sessions/current` просмотр информации о текущей сессии
+```javascript
+await ( await fetch("https://АДРЕС ЛК/cabinet/sessions/current", {
+  "method": "GET"
+}) ).json()
+```
+- `/cabinet/sessions/id/{id}` просмотр информации о своей сессии по ID
+```javascript
+await ( await fetch("https://АДРЕС ЛК/cabinet/sessions/current", {
+  "method": "GET"
+}) ).json()
+```
+- DELETE `/cabinet/sessions/id/{id}` удаление своей сессии по ID  
+*Текущую сессию нельзя удалить*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/cabinet/sessions/id/1", {
+  "method": "DELETE"
+}) ).json()
+```
+#### Магазин блоков
+- `/shop/item/page/{pageId}` просмотр товаров в магазине
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/item/page/0", {
+  "method": "GET"
+}) ).json()
+```
+- `/shop/item/id/{id}` просмотр товара в магазине по ID
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/item/id/1", {
+  "method": "GET"
+}) ).json()
+```
+- `/shop/item/buy` купить товар
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/item/buy", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "id": 1,
+    "quantity": 2
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/item/new` создание нового товара  
+*Товар по умолчанию добавляется с available false и не показывается в списке товаров*  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/item/new", {
+  "method": "PUT",
+  "body": JSON.stringify({
+        "displayName": "Product 1",
+        "description": "Description 1",
+        "price": 1.0,
+        "currency": "DONATE",
+        "itemName": "minecraft:stone",
+        "itemExtra": null,
+        "itemNbt": null,
+        "itemCustom": null,
+        "itemQuantity": 2,
+        "server": null
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/item/id/{id}/setlimitations` изменяет органичения у товара  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/item/id/1/setlimitations", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "endDate": "2021-08-11T21:20:13.384Z",
+    "count": 100,
+    "groupName": null
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/item/id/{id}/update` изменяет название у товара  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/item/id/1/setlimitations", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "displayName": "The Best Product",
+    "description": "The Best Description"
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/item/id/{id}/setprice` изменяет цену у товара  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/item/id/1/setprice", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "price": 50.0
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/item/id/{id}/setavailable` изменяет доступность у товара  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/item/id/1/setavailable", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "available": true
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+#### Магазин привилегий
+- `/shop/group/page/{pageId}` просмотр товаров в магазине
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/group/page/0", {
+  "method": "GET"
+}) ).json()
+```
+- `/shop/group/id/{id}` просмотр товара в магазине по ID
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/group/id/1", {
+  "method": "GET"
+}) ).json()
+```
+- `/shop/group/buy` купить товар
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/group/buy", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "id": 1,
+    "quantity": 2
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/group/new` создание нового товара  
+*Товар по умолчанию добавляется с available false и не показывается в списке товаров*  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/group/new", {
+  "method": "PUT",
+  "body": JSON.stringify({
+        "displayName": "Product 1",
+        "description": "Description 1",
+        "server": "global",
+        "world": "global",
+        "context": "{}",
+        "expireDays": 30,
+        "local": true,
+        "price": 1.0,
+        "currency": "DONATE",
+        "stackable": true,
+        "localName": "HD"
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/group/id/{id}/setlimitations` изменяет органичения у товара  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/group/id/1/setlimitations", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "endDate": "2021-08-11T21:20:13.384Z",
+    "count": 100,
+    "groupName": null
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/group/id/{id}/update` изменяет название у товара  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/group/id/1/setlimitations", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "displayName": "The Best Product",
+    "description": "The Best Description"
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/group/id/{id}/setprice` изменяет цену у товара  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/group/id/1/setprice", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "price": 50.0
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/shop/group/id/{id}/setavailable` изменяет доступность у товара  
+*Требуются права администратора*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/shop/group/id/1/setavailable", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "available": true
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+
 #### Бан-лист
 - `/banlist/userId/{userId}` просмотр информации о бане пользователя
 ```javascript
@@ -292,7 +534,7 @@ await ( await fetch("https://АДРЕС ЛК/exchangerate/get/DONATE/ECO", {
   "method": "GET"
 }) ).json()
 ```
-- `/new` добавление нового курса валют
+- `/new` добавление нового курса валют  
 *Требуются права администратора*
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/news/id/1/update", {
