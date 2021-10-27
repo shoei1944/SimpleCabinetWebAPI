@@ -337,6 +337,7 @@ await ( await fetch("https://АДРЕС ЛК/shop/group/new", {
   "body": JSON.stringify({
         "displayName": "Product 1",
         "description": "Description 1",
+        "name": "HD",
         "server": "global",
         "world": "global",
         "context": "{}",
