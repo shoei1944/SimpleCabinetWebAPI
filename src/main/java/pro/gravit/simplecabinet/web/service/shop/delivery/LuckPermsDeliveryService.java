@@ -1,6 +1,5 @@
 package pro.gravit.simplecabinet.web.service.shop.delivery;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +8,7 @@ import pro.gravit.simplecabinet.web.model.GroupProduct;
 import pro.gravit.simplecabinet.web.model.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -18,7 +18,7 @@ import java.util.Locale;
 public class LuckPermsDeliveryService implements GroupDeliveryService {
     @Value("${shop.group.luckperms.table}")
     private String table;
-    @Autowired
+    @PersistenceContext
     private EntityManager manager;
 
     @Override

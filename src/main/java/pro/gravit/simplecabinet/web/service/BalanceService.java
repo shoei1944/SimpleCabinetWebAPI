@@ -15,6 +15,7 @@ import pro.gravit.simplecabinet.web.repository.BalanceTransactionsRepository;
 import pro.gravit.simplecabinet.web.repository.UserRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class BalanceService {
     private ExchangeRateService exchangeRateService;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
+    @PersistenceContext
     private EntityManager entityManager;
 
     public Optional<ExchangeRate> findExchangeRate(String fromCurrency, String toCurrency) {
