@@ -148,9 +148,19 @@ await ( await fetch("https://АДРЕС ЛК/cabinet/money/balance/id/1", {
   "method": "GET"
 }) ).json()
 ```
-- `/cabinet/money/transfer`
-```
-TODO
+- `/cabinet/money/transfer/transfer/{fromCurrency}/to/{userId}/{toCurrency}` перевод средств другому игроку/в другую валюту  
+*При переводе между любыми валютами(в том числе одинаковыми) должен существовать курс валют*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/cabinet/money/transfer/transfer/ECO/to/1/ECO", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "count": 50.0,
+    "comment": "COMMENT"
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
 ```
 #### Личный кабинет: Пополнение баланса
 - `/cabinet/payment/create` создает новый платеж с заданной суммой и выдает ссылку на оплату
@@ -576,6 +586,60 @@ await ( await fetch("https://АДРЕС ЛК/admin/moderation/unban/1", {
 }) ).json()
 ```
 #### Администрирование: Экономика
+Методы экономики имеют несколько вариантов в зависимости от имеющейся у пользователя API информации.   
+Методы, помеченные как unchecked не гарантируют читаемой ошибки при пошибке в аргументах, однако они самые быстрые и выполняют меньше всего запросов к БД
+- `/admin/money/userbalance/id/{id}` получение баланса пользователя по ID баланса
+- `/admin/money/userbalance/userid/{userId}/{currency}` получение баланса пользователя по ID пользователя и валюте  
+*При отсутствии баланс будет создан автоматически*
+- `/admin/money/userbalance/uuid/{userUuid}/{currency}` получение баланса пользователя по UUID пользователя и валюте  
+*При отсутствии баланс будет создан автоматически*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/admin/money/userbalance/id/1", {
+  "method": "GET"
+}) ).json()
+```
+- `/admin/money/addmoney/unchecked/{balanceId}` Добавить монеты на баланс по его ID
+- `/admin/money/addmoney/byuuid/{userUUID}/{currency}` Добавить монеты на баланс по UUID пользователя и валюте
+- `/admin/money/addmoney/byid/{userId}/{currency}` Добавить монеты на баланс по ID пользователя и валюте
+- `/admin/money/removemoney/unchecked/{balanceId}` Снять монеты с баланса по его ID
+- `/admin/money/removemoney/byuuid/{userUUID}/{currency}` Снять монеты с баланса по UUID пользователя и валюте
+- `/admin/money/removemoney/byid/{userId}/{currency}` Снять монеты с баланса по ID пользователя и валюте
+```javascript
+await ( await fetch("https://АДРЕС ЛК/admin/money/addmoney/unchecked/1", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "count": 50.0,
+    "comment": "COMMENT"
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+- `/admin/money/transfer/byuuid/{fromUUID}/{fromCurrency}/to/{toUUID}/{toCurrency}` перевод от пользователя к пользователю по их UUID и валюте
+- `/admin/money/transfer/byid/{fromUserId}/{fromCurrency}/to/{toUserId}/{toCurrency}` перевод от пользователя к пользователю по их ID и валюте
+- `/admin/money/transfer/unchecked/multicurrency/{userId}/from/{fromId}/{fromCurrency}/to/{toId}/{toCurrency}` перевод от пользователя к пользователю по ID баланса и валюте   
+*Этот метод не проверяет соответствие валюты и ID баланса*  
+*Если параметр selfUser false то userId игнорируется (может принимать любые значения)*
+- `/admin/money/transfer/unchecked/nocurrency/{userId}/from/{fromId}/to/{toId}` перевод от пользователя к пользователю по ID баланса без учета валюты  
+*Этот метод не проверяет совпадение валют и игнорирует параметр strictRate*  
+*Если параметр selfUser false то userId игнорируется (может принимать любые значения)*
+```javascript
+await ( await fetch("https://АДРЕС ЛК/admin/money/transfer/byid/1/ECO/to/2/ECO", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "count": 50.0,
+    "selfUser": true,
+    "comment": "COMMENT",
+    "strictRate": true
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```  
+Если опция `strictRate` `true` то при совпадении валют перевода требуется наличие соответствующего курса  
+Если опция `selfUser` `true` то инициатор платежа - владелец, иначе - администратор.
 #### Администрирование: Управление HWID
 #### Администрирование: Выдача предметов
 #### Администрирование: Вход на сервера
