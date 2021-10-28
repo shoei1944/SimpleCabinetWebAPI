@@ -29,6 +29,28 @@ public class AdminMoneyController {
         return new UserBalanceDto(balance.get());
     }
 
+    @GetMapping("/userbalance/userid/{userId}/{currency}")
+    public UserBalanceDto getUserBalanceByUserIdAndCurrency(@PathVariable long userId, @PathVariable String currency) {
+        var userOptional = userService.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        var user = userOptional.get();
+        var balance = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, currency);
+        return new UserBalanceDto(balance);
+    }
+
+    @GetMapping("/userbalance/uuid/{userUuid}/{currency}")
+    public UserBalanceDto getUserBalanceByUuidAndCurrency(@PathVariable UUID userUuid, @PathVariable String currency) {
+        var userOptional = userService.findByUUID(userUuid);
+        if (userOptional.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        var user = userOptional.get();
+        var balance = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, currency);
+        return new UserBalanceDto(balance);
+    }
+
     @PostMapping("/addmoney/unchecked/{balanceId}")
     public BalanceTransactionDto addMoneyUnchecked(@PathVariable long balanceId, @RequestBody AddMoneyRequest request) throws BalanceException {
         var transaction = balanceService.addMoney(balanceId, request.count, request.comment);
@@ -77,28 +99,6 @@ public class AdminMoneyController {
         var balanceTo = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, currency);
         var transaction = balanceService.removeMoney(balanceTo.getId(), request.count, request.comment);
         return new BalanceTransactionDto(transaction);
-    }
-
-    @GetMapping("/userbalance/userid/{userId}/{currency}")
-    public UserBalanceDto getUserBalanceByUserIdAndCurrency(@PathVariable long userId, @PathVariable String currency) {
-        var userOptional = userService.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        }
-        var user = userOptional.get();
-        var balance = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, currency);
-        return new UserBalanceDto(balance);
-    }
-
-    @GetMapping("/userbalance/uuid/{userUuid}/{currency}")
-    public UserBalanceDto getUserBalanceByUuidAndCurrency(@PathVariable UUID userUuid, @PathVariable String currency) {
-        var userOptional = userService.findByUUID(userUuid);
-        if (userOptional.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        }
-        var user = userOptional.get();
-        var balance = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, currency);
-        return new UserBalanceDto(balance);
     }
 
     @PostMapping("/transfer/byuuid/{fromUUID}/{fromCurrency}/to/{toUUID}/{toCurrency}")

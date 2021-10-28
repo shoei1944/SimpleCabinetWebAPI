@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserSession;
 import pro.gravit.simplecabinet.web.repository.UserSessionRepository;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -16,6 +19,8 @@ import java.util.Optional;
 public class SessionService {
     @Autowired
     private UserSessionRepository repository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public UserSession create(User user, String client) {
         UserSession session = new UserSession();
@@ -51,6 +56,13 @@ public class SessionService {
 
     public Page<UserSession> findByUserPublic(User user, Pageable pageable) {
         return repository.findByUserAndDeleted(user, false, pageable);
+    }
+
+    @Transactional
+    public void deactivateAllByUser(User user) {
+        var query = entityManager.createQuery("update UserSession s set s.deleted = true where s.user = :user");
+        query.setParameter("user", user);
+        query.executeUpdate();
     }
 
     public Optional<UserSession> findById(Long aLong) {

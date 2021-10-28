@@ -75,6 +75,9 @@ public class AuthController {
             throw new AuthException("Session not found");
         }
         var sessionObject = session.get();
+        if (sessionObject.isDeleted()) {
+            throw new AuthException("Session not found");
+        }
         sessionService.update(sessionObject);
         var token = jwtProvider.generateToken(sessionObject);
         return new AuthResponse(token.token(), sessionObject.getRefreshToken(), token.getExpire());
