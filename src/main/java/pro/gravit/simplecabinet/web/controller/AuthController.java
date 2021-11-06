@@ -39,22 +39,22 @@ public class AuthController {
     public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request) {
         var optional = userService.findByUsername(request.username);
         if (optional.isEmpty()) {
-            throw new AuthException("User not found");
+            throw new AuthException("User not found", 3);
         }
         var user = optional.get();
         if (user.getBanInfo() != null) {
-            throw new AuthException("User banned");
+            throw new AuthException("User banned", 4);
         }
         var success = passwordCheckService.checkPassword(user, request.password);
         if (!success) {
-            throw new AuthException("Password not correct");
+            throw new AuthException("Password not correct", 5);
         }
         if (user.getTotpSecretKey() != null) {
             if (request.totpPassword == null) {
-                throw new AuthException("auth.require2fa");
+                throw new AuthException("auth.require2fa", 7);
             }
             if (!passwordCheckService.checkTotpPassword(user, request.totpPassword)) {
-                throw new AuthException("2FA Password not correct");
+                throw new AuthException("2FA Password not correct", 6);
             }
         }
         var session = sessionService.create(user, "Basic");
