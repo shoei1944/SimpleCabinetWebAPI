@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import pro.gravit.simplecabinet.web.controller.admin.AdminHardwareController;
 import pro.gravit.simplecabinet.web.model.HardwareId;
 import pro.gravit.simplecabinet.web.repository.HardwareIdRepository;
 
@@ -22,11 +23,12 @@ public class HardwareIdService {
         return repository.findById(aLong);
     }
 
-    public Optional<HardwareId> findByHardware(HardwareId id) {
-        if (id.getId() > 0) {
-            throw new IllegalArgumentException();
-        }
-        return repository.findByHwDiskId(id.getHwDiskId());
+    public HardwareId getById(Long aLong) {
+        return repository.getById(aLong);
+    }
+
+    public Optional<HardwareId> findByHardware(AdminHardwareController.HardwareSearchRequest id) {
+        return repository.findByHwDiskId(id.hwDiskId());
     }
 
     public Optional<HardwareId> findByPublicKey(byte[] publicKey) {

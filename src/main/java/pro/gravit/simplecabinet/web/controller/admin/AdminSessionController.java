@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.dto.UserSessionDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
+import pro.gravit.simplecabinet.web.service.HardwareIdService;
 import pro.gravit.simplecabinet.web.service.SessionService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
@@ -16,6 +17,8 @@ public class AdminSessionController {
     private SessionService sessionService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private HardwareIdService hardwareIdService;
 
     @GetMapping("/id/{id}")
     public UserSessionDto getById(@PathVariable long id) {
@@ -34,6 +37,18 @@ public class AdminSessionController {
         }
         var session = optional.get();
         session.setDeleted(true);
+        sessionService.save(session);
+    }
+
+    @PostMapping("/id/{id}/sethardware")
+    public void setHardwareById(@PathVariable long id, @RequestBody SessionUpdateHardwareRequest request) {
+        var optional = sessionService.findById(id);
+        if (optional.isEmpty()) {
+            throw new EntityNotFoundException("UserSession not found");
+        }
+        var session = optional.get();
+        var hardwareId = hardwareIdService.getById(request.id);
+        session.setHardwareId(hardwareId);
         sessionService.save(session);
     }
 
@@ -64,5 +79,8 @@ public class AdminSessionController {
             throw new EntityNotFoundException("User not found");
         }
         sessionService.deactivateAllByUser(user.get());
+    }
+
+    public record SessionUpdateHardwareRequest(long id) {
     }
 }

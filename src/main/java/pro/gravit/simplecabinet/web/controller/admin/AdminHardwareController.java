@@ -37,10 +37,19 @@ public class AdminHardwareController {
         hardwareIdService.save(hardware);
     }
 
-    @GetMapping("/publickey/{publickey}")
+    @GetMapping("/publickey/{publicKey}")
     public HardwareInfoDto findByPublicKey(@PathVariable String publicKey) {
-        byte[] pubKey = Base64.getDecoder().decode(publicKey);
+        byte[] pubKey = Base64.getUrlDecoder().decode(publicKey);
         var hardwareOptional = hardwareIdService.findByPublicKey(pubKey);
+        if (hardwareOptional.isEmpty()) {
+            throw new EntityNotFoundException("HardwareId not found");
+        }
+        return new HardwareInfoDto(hardwareOptional.get());
+    }
+
+    @PostMapping("/search")
+    public HardwareInfoDto findByData(@RequestBody HardwareSearchRequest request) {
+        var hardwareOptional = hardwareIdService.findByHardware(request);
         if (hardwareOptional.isEmpty()) {
             throw new EntityNotFoundException("HardwareId not found");
         }
@@ -54,7 +63,7 @@ public class AdminHardwareController {
     }
 
     @PutMapping("/new")
-    public void create(@RequestBody HardwareCreateRequest request) {
+    public HardwareInfoDto create(@RequestBody HardwareCreateRequest request) {
         var hw = new HardwareId();
         hw.setBitness(request.bitness());
         hw.setTotalMemory(request.totalMemory());
@@ -67,6 +76,7 @@ public class AdminHardwareController {
         hw.setBaseboardSerialNumber(request.baseboardSerialNumber());
         hw.setPublicKey(Base64.getDecoder().decode(request.publicKey()));
         hardwareIdService.save(hw);
+        return new HardwareInfoDto(hw);
     }
 
     public record HardwareCreateRequest(int bitness,
@@ -78,6 +88,17 @@ public class AdminHardwareController {
                                         String hwDiskId,
                                         String displayId,
                                         String baseboardSerialNumber, String publicKey) {
+    }
+
+    public record HardwareSearchRequest(int bitness,
+                                        long totalMemory,
+                                        int logicalProcessors,
+                                        int physicalProcessors,
+                                        long processorMaxFreq,
+                                        boolean battery,
+                                        String hwDiskId,
+                                        String displayId,
+                                        String baseboardSerialNumber) {
     }
 
     public record SetPublicKeyRequest(String publicKey) {
