@@ -127,11 +127,11 @@ public class UserTests {
     @Test
     @Transactional
     public void testGetUser() throws Exception {
-        var result = userController.getById(basicUserId);
+        var result = userController.getById(basicUserId, true);
         testUserDto(result);
-        result = userController.getByUsername(result.username);
+        result = userController.getByUsername(result.username, true);
         testUserDto(result);
-        result = userController.getByUUID(result.uuid);
+        result = userController.getByUUID(result.uuid, true);
         testUserDto(result);
     }
 

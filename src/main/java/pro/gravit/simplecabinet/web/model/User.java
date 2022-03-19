@@ -45,6 +45,8 @@ public class User implements BasicUser {
     private List<UserGroup> groups;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserSession> sessions;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<UserAsset> assets;
 
     public static boolean isCorrectEmail(String email) //Very simple check
     {
@@ -153,6 +155,14 @@ public class User implements BasicUser {
 
     public void setBanInfo(BanInfoEntity banInfo) {
         this.banInfo = banInfo;
+    }
+
+    public List<UserAsset> getAssets() {
+        return assets;
+    }
+
+    public void setAssets(List<UserAsset> assets) {
+        this.assets = assets;
     }
 
     public enum HashType {

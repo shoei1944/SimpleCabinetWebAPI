@@ -7,6 +7,7 @@ import pro.gravit.simplecabinet.web.configuration.jwt.JwtProvider;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserGroup;
+import pro.gravit.simplecabinet.web.service.PasswordCheckService;
 import pro.gravit.simplecabinet.web.service.SessionService;
 import pro.gravit.simplecabinet.web.service.UserGroupService;
 import pro.gravit.simplecabinet.web.service.UserService;
@@ -15,6 +16,7 @@ import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Random;
 
 @RestController
 public class SetupController {
@@ -26,6 +28,8 @@ public class SetupController {
     public SessionService sessionService;
     @Autowired
     public JwtProvider jwtProvider;
+    @Autowired
+    private PasswordCheckService passwordCheckService;
 
     @GetMapping("/setup")
     public SetupResponse setup() {
@@ -45,6 +49,15 @@ public class SetupController {
         var session = sessionService.create(user, "Setup Session");
         var token = jwtProvider.generateNoExpiredJWTToken(session);
         return new SetupResponse(user.getUsername(), password, token.token());
+    }
+
+    @GetMapping("/preftest")
+    public void test() {
+        Random random = new Random();
+        for (int i = 0; i < 100000; ++i) {
+            String username = "v".concat(Integer.toString(i));
+            User user = userService.register(username, username.concat("@example.com"), username);
+        }
     }
 
     @GetMapping("/myip")

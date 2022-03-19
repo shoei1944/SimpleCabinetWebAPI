@@ -3,13 +3,19 @@ package pro.gravit.simplecabinet.web.controller.cabinet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pro.gravit.simplecabinet.web.dto.UserDto;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.User;
+import pro.gravit.simplecabinet.web.model.UserAsset;
+import pro.gravit.simplecabinet.web.service.DtoService;
 import pro.gravit.simplecabinet.web.service.SkinService;
+import pro.gravit.simplecabinet.web.service.UserAssetService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/cabinet")
@@ -17,54 +23,64 @@ public class CabinetController {
     @Autowired
     public SkinService skinService;
     @Autowired
+    public UserAssetService userAssetService;
+    @Autowired
     public UserService userService;
+    @Autowired
+    public DtoService dtoService;
 
-    @PostMapping("/upload/skin")
-    public void uploadSkin(@RequestParam("variant") String variant, @RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping("/upload/{name}")
+    public UserDto.UserTexture uploadAsset(@PathVariable String name, @RequestPart("options") UserAssetService.AssetOptions options, @RequestPart("file") MultipartFile file) {
         var user = userService.getCurrentUser();
-        var ref = user.getReference();
-        var path = skinService.getSkinPath(user);
-        var limits = skinService.getSkinLimits(user);
-        if (!skinService.checkLimitsPre(file, limits)) {
+        if (!userAssetService.isAllowed(name)) {
+            throw new InvalidParametersException("Asset name not allowed", 20);
+        }
+        var limits = userAssetService.getAssetLimits(name, user);
+        if (!userAssetService.checkLimitsPre(file, limits)) {
             throw new InvalidParametersException("File too large", 7);
         }
-        file.transferTo(path);
-        if (!skinService.checkLimitsPost(path, limits)) {
-            Files.delete(path);
+        byte[] bytes;
+        try {
+            bytes = file.getBytes();
+        } catch (IOException e) {
+            throw new InvalidParametersException("File upload failure", 21);
+        }
+        if (!userAssetService.checkLimitsPost(new ByteArrayInputStream(bytes), limits)) {
             throw new InvalidParametersException("File height or width exceeds the limit", 8);
         }
-        ref.setSkinModel(variant);
-        userService.save(ref);
-    }
-
-    @PostMapping("/upload/cloak")
-    public void uploadCloak(@RequestParam("file") MultipartFile file) throws IOException {
-        var user = userService.getCurrentUser();
-        var path = skinService.getCloakPath(user);
-        var limits = skinService.getCloakLimits(user);
-        if (!skinService.checkLimitsPre(file, limits)) {
-            throw new InvalidParametersException("File too large", 7);
+        String hash = userAssetService.calculateHash(bytes);
+        String metadata = userAssetService.createMetadata(name, options);
+        var asset = userAssetService.findByUserAndName(user.getReference(), name);
+        UserAsset newAsset;
+        if (asset.isEmpty()) {
+            newAsset = new UserAsset();
+            newAsset.setUser(user.getReference());
+        } else {
+            newAsset = asset.get();
         }
-        file.transferTo(path);
-        if (!skinService.checkLimitsPost(path, limits)) {
-            Files.delete(path);
-            throw new InvalidParametersException("File height or width exceeds the limit", 8);
+        newAsset.setHash(hash);
+        newAsset.setName(name);
+        newAsset.setMetadata(metadata);
+        Path path = userAssetService.getAssetPath(newAsset);
+        if (!Files.exists(path)) {
+            try {
+                Files.write(path, bytes);
+            } catch (IOException e) {
+                throw new InvalidParametersException("File upload failure", 22);
+            }
         }
+        userAssetService.save(newAsset);
+        return dtoService.getUserTexture(newAsset);
     }
 
-
-    @DeleteMapping("/upload/skin")
-    public void deleteSkin() throws IOException {
+    @DeleteMapping("/upload/{name}")
+    public void deleteAsset(@PathVariable String name) {
         var user = userService.getCurrentUser();
-        var path = skinService.getSkinPath(user);
-        Files.deleteIfExists(path);
-    }
-
-    @DeleteMapping("/upload/cloak")
-    public void deleteCloak() throws IOException {
-        var user = userService.getCurrentUser();
-        var path = skinService.getCloakPath(user);
-        Files.deleteIfExists(path);
+        if (!userAssetService.isAllowed(name)) {
+            throw new InvalidParametersException("Asset name not allowed", 20);
+        }
+        var asset = userAssetService.findByUserAndName(user.getReference(), name);
+        asset.ifPresent(userAsset -> userAssetService.delete(userAsset));
     }
 
     @PostMapping("/setstatus")

@@ -15,10 +15,9 @@ public class UserDto {
     public final String status;
     public final LocalDateTime registrationDate;
     public final List<UserGroupDto> groups;
-    public final UserTexture skin;
-    public final UserTexture cloak;
+    public final Map<String, UserTexture> assets;
 
-    public UserDto(long id, String username, UUID uuid, User.Gender gender, String status, LocalDateTime registrationDate, List<UserGroupDto> groups, UserTexture skin, UserTexture cloak) {
+    public UserDto(long id, String username, UUID uuid, User.Gender gender, String status, LocalDateTime registrationDate, List<UserGroupDto> groups, Map<String, UserTexture> assets) {
         this.id = id;
         this.username = username;
         this.uuid = uuid;
@@ -26,8 +25,7 @@ public class UserDto {
         this.status = status;
         this.registrationDate = registrationDate;
         this.groups = groups;
-        this.skin = skin;
-        this.cloak = cloak;
+        this.assets = assets;
     }
 
     public static class UserTexture {

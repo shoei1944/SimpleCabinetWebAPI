@@ -11,32 +11,30 @@ import pro.gravit.simplecabinet.web.dto.UserDto;
 import pro.gravit.simplecabinet.web.dto.UserGroupDto;
 import pro.gravit.simplecabinet.web.model.ItemDelivery;
 import pro.gravit.simplecabinet.web.model.User;
+import pro.gravit.simplecabinet.web.model.UserAsset;
 import pro.gravit.simplecabinet.web.model.UserGroup;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class DtoService {
     @Autowired
-    private SkinService skinService;
+    private UserAssetService userAssetService;
     @Autowired
     private ObjectMapper objectMapper;
 
     @Transactional
     public UserDto toPublicUserDto(User user) {
         var groups = getUserGroups(user).stream().map(UserGroupDto::new).collect(Collectors.toList());
-        var skin = skinService.getSkinTexture(user);
-        var cloak = skinService.getCloakTexture(user);
         return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
-                groups, skin, cloak);
+                groups, getUserTextures(user));
     }
 
     public UserDto toMiniUserDto(User user) {
-        var skin = skinService.getSkinTexture(user);
-        var cloak = skinService.getCloakTexture(user);
         return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
-                null, skin, cloak);
+                null, getUserTextures(user));
     }
 
     public ItemDeliveryDto itemDeliveryDto(ItemDelivery delivery) {
@@ -53,6 +51,25 @@ public class DtoService {
             list = null;
         }
         return new ItemDeliveryDto(delivery.getId(), delivery.getItemName(), delivery.getItemExtra(), list, delivery.getItemNbt(), delivery.getPart(), delivery.isCompleted());
+    }
+
+    private Map<String, String> deserializeMetadata(String metadata) {
+        try {
+            TypeReference<Map<String, String>> type = new TypeReference<>() {
+            };
+            return objectMapper.readValue(metadata, type);
+        } catch (JsonProcessingException e) {
+            return Map.of();
+        }
+    }
+
+    public Map<String, UserDto.UserTexture> getUserTextures(User user) {
+        return user.getAssets().stream().collect(Collectors.toMap(UserAsset::getName,
+                this::getUserTexture));
+    }
+
+    public UserDto.UserTexture getUserTexture(UserAsset asset) {
+        return new UserDto.UserTexture(userAssetService.makeAssetUrl(asset), asset.getHash(), deserializeMetadata(asset.getMetadata()));
     }
 
     public List<UserGroup> getUserGroups(User user) {

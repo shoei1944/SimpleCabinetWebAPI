@@ -87,7 +87,7 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     public UserDto getUserInfo() {
         var details = SecurityUtils.getUser();
-        var userOptional = userService.findById(details.getUserId());
+        var userOptional = userService.findByIdFetchAssets(details.getUserId());
         if (userOptional.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }

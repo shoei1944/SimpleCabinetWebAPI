@@ -35,12 +35,25 @@ public class UserService {
         return repository.findById(aLong);
     }
 
+    public Optional<User> findByIdFetchAssets(Long id) {
+        return repository.findByIdFetchAssets(id);
+    }
+
     public Optional<User> findByUsername(String username) {
         return repository.findByUsername(username);
     }
 
     public Optional<User> findByUUID(UUID uuid) {
         return repository.findByUuid(uuid);
+    }
+
+
+    public Optional<User> findByUsernameFetchAssets(String username) {
+        return repository.findByUsernameFetchAssets(username);
+    }
+
+    public Optional<User> findByUuidFetchAssets(UUID uuid) {
+        return repository.findByUuidFetchAssets(uuid);
     }
 
     public Page<User> findAll(Pageable pageable) {

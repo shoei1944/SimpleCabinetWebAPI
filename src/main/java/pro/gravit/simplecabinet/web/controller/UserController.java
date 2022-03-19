@@ -22,8 +22,8 @@ UserController {
     private DtoService dtoService;
 
     @GetMapping("/id/{userId}")
-    public UserDto getById(@PathVariable long userId) {
-        var optional = service.findById(userId);
+    public UserDto getById(@PathVariable long userId, @RequestParam boolean assets) {
+        var optional = assets ? service.findByIdFetchAssets(userId) : service.findById(userId);
         if (optional.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }
@@ -53,8 +53,8 @@ UserController {
     }
 
     @GetMapping("/name/{name}")
-    public UserDto getByUsername(@PathVariable String name) {
-        var optional = service.findByUsername(name);
+    public UserDto getByUsername(@PathVariable String name, @RequestParam boolean assets) {
+        var optional = assets ? service.findByUsernameFetchAssets(name) : service.findByUsername(name);
         if (optional.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }
@@ -62,8 +62,8 @@ UserController {
     }
 
     @GetMapping("/uuid/{uuid}")
-    public UserDto getByUUID(@PathVariable UUID uuid) {
-        var optional = service.findByUUID(uuid);
+    public UserDto getByUUID(@PathVariable UUID uuid, @RequestParam boolean assets) {
+        var optional = assets ? service.findByUuidFetchAssets(uuid) : service.findByUUID(uuid);
         if (optional.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }

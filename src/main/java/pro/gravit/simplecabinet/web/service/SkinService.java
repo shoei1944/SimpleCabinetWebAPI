@@ -18,6 +18,7 @@ import java.util.Base64;
 import java.util.Map;
 
 @Service
+@Deprecated
 public class SkinService {
     private static final SkinLimits DEFAULT_SKIN_LIMITS = new SkinLimits(64, 64, 32 * 1024);
     @Value("${skins.path.skin}")
