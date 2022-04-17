@@ -36,10 +36,16 @@ public class SessionService {
         return repository.save(entity);
     }
 
-    public UserSession update(UserSession session) {
-        session.setRefreshToken(SecurityUtils.generateRandomString(32));
-        repository.save(session);
-        return session;
+    @Transactional
+    public Optional<UserSession> updateRefreshToken(String refreshToken) {
+        String newToken = SecurityUtils.generateRandomString(32);
+        int count = repository.refreshSession(newToken, refreshToken);
+        if (count > 0) {
+            var result = repository.findByRefreshToken(newToken);
+            result.ifPresent((x) -> x.setRefreshToken(newToken)); // Cache (?)
+            return result;
+        }
+        return Optional.empty();
     }
 
     public Optional<UserSession> findByRefreshToken(String refreshToken) {
@@ -71,5 +77,10 @@ public class SessionService {
 
     public void delete(UserSession entity) {
         repository.delete(entity);
+    }
+
+    @Transactional
+    public boolean deactivateById(long id) {
+        return repository.deactivateById(id) > 0;
     }
 }

@@ -8,7 +8,6 @@ import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserAsset;
 import pro.gravit.simplecabinet.web.service.DtoService;
-import pro.gravit.simplecabinet.web.service.SkinService;
 import pro.gravit.simplecabinet.web.service.UserAssetService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
@@ -20,8 +19,6 @@ import java.nio.file.Path;
 @RestController
 @RequestMapping("/cabinet")
 public class CabinetController {
-    @Autowired
-    public SkinService skinService;
     @Autowired
     public UserAssetService userAssetService;
     @Autowired

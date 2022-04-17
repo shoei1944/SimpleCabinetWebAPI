@@ -70,17 +70,30 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public AuthResponse refreshToken(@RequestBody RefreshTokenRequest request) {
-        var session = sessionService.findByRefreshToken(request.refreshToken);
-        if (session.isEmpty()) {
-            throw new AuthException("Session not found");
+        var sessionOptional = sessionService.updateRefreshToken(request.refreshToken);
+        if (sessionOptional.isEmpty()) {
+            throw new AuthException("Invalid refreshToken", 8);
         }
-        var sessionObject = session.get();
-        if (sessionObject.isDeleted()) {
-            throw new AuthException("Session not found");
+        var session = sessionOptional.get();
+        var token = jwtProvider.generateToken(session);
+        return new AuthResponse(token.token(), session.getRefreshToken(), token.getExpire());
+    }
+
+    @PostMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> logout() {
+        var details = SecurityUtils.getUser();
+        if (!sessionService.deactivateById(details.getSessionId())) {
+            throw new AuthException("Invalid session", 9);
         }
-        sessionService.update(sessionObject);
-        var token = jwtProvider.generateToken(sessionObject);
-        return new AuthResponse(token.token(), sessionObject.getRefreshToken(), token.getExpire());
+        HttpCookie cookie = ResponseCookie.from("session", "deleted")
+                .path("/")
+                .sameSite("Strict")
+                .maxAge(0)
+                .build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", cookie.toString());
+        return ResponseEntity.ok().headers(headers).build();
     }
 
     @GetMapping("/userinfo")

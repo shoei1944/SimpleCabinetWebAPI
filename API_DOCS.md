@@ -56,21 +56,37 @@ await ( await fetch("https://АДРЕС ЛК/auth/register", {
   }
 }) ).json()
 ```
+
 - `/auth/userinfo` информация о текущем пользователе
+
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/auth/userinfo", {
   "method": "GET"
 }) ).json()
 ```
+
+- `/auth/logout` выход из аккаунта
+
+```javascript
+await fetch("https://АДРЕС ЛК/auth/logout", {
+  "method": "POST"
+})
+```
+
 #### Личный кабинет: Управление скинами
+
 - Загрузка скина (SLIM)
+
 ```
 curl -H "Authorization: Bearer TOKEN" -F variant=slim -F file="@/path/to/file.png"  https://АДРЕС ЛК/cabinet/upload/skin
 ```
+
 - Загрузка скина (DEFAULT)
+
 ```
 curl -H "Authorization: Bearer TOKEN" -F variant=default -F file="@/path/to/file.png"  https://АДРЕС ЛК/cabinet/upload/skin
 ```
+
 - Загрузка плаща
 ```
 curl -H "Authorization: Bearer TOKEN" -F variant=default -F file="@/path/to/file.png"  https://АДРЕС ЛК/cabinet/upload/cloak
