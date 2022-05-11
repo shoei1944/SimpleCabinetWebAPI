@@ -2,6 +2,7 @@ package pro.gravit.simplecabinet.web.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pro.gravit.simplecabinet.web.exception.AbstractCabinetException;
@@ -24,6 +25,12 @@ public class CustomRestExceptionHandler {
     @ExceptionHandler(SecurityException.class)
     public ResponseEntity<ApiError> handleSecurityException(SecurityException e) {
         ApiError error = new ApiError(498, e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException e) {
+        ApiError error = new ApiError(498, "Access is denied");
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 

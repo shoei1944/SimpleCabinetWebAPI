@@ -8,6 +8,7 @@ import pro.gravit.simplecabinet.web.dto.UserPaymentDto;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.PaymentService;
 import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.payment.BasicPaymentService;
 import pro.gravit.simplecabinet.web.service.payment.QiwiPaymentService;
 import pro.gravit.simplecabinet.web.service.payment.YooPaymentService;
 
@@ -27,15 +28,16 @@ public class PaymentController {
     private UserService userService;
 
     @PostMapping("/create")
-    public PaymentInfoDto paymentCreate(@RequestBody BalancePaymentCreateRequest request) throws IOException, InterruptedException, URISyntaxException {
+    public PaymentInfoDto paymentCreate(@RequestBody BalancePaymentCreateRequest request) throws Exception {
         PaymentService.PaymentCreationInfo info;
         var user = userService.getCurrentUser();
         var ref = user.getReference();
-        info = switch (request.system) {
-            case "Yoo" -> yooPaymentService.createBalancePayment(ref, request.sum);
-            case "Qiwi" -> qiwiPaymentService.createBalancePayment(ref, request.sum);
+        BasicPaymentService basicPaymentService = switch (request.system) {
+            case "Yoo" -> yooPaymentService;
+            case "Qiwi" -> qiwiPaymentService;
             default -> throw new InvalidParametersException("Payment system not found", 11);
         };
+        info = basicPaymentService.createBalancePayment(ref, request.sum);
         return new PaymentInfoDto(info.redirect(), new UserPaymentDto(info.paymentInfo()));
     }
 

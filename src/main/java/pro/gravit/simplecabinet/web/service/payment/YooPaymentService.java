@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class YooPaymentService {
+public class YooPaymentService implements BasicPaymentService {
     @Autowired
     private PaymentService paymentService;
     @Autowired

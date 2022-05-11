@@ -24,7 +24,7 @@ import java.util.Currency;
 import java.util.UUID;
 
 @Service
-public class QiwiPaymentService {
+public class QiwiPaymentService implements BasicPaymentService {
     @Autowired
     private PaymentService paymentService;
     @Autowired
