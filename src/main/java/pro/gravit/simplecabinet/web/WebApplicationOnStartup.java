@@ -25,13 +25,7 @@ public class WebApplicationOnStartup {
                 }
             }
             {
-                Path dir = Paths.get("skins");
-                if (Files.notExists(dir)) {
-                    Files.createDirectories(dir);
-                }
-            }
-            {
-                Path dir = Paths.get("cloaks");
+                Path dir = Paths.get("assets");
                 if (Files.notExists(dir)) {
                     Files.createDirectories(dir);
                 }
