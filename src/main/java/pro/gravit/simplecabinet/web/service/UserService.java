@@ -64,6 +64,10 @@ public class UserService {
         return repository.getById(aLong);
     }
 
+    public Optional<User> findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
     public void delete(User entity) {
         repository.delete(entity);
     }
@@ -81,6 +85,10 @@ public class UserService {
         user.setGroups(new ArrayList<>());
         repository.save(user);
         return user;
+    }
+
+    public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
+        return repository.findByUsernameOrEmail(usernameOrEmail);
     }
 
     public CurrentUser getCurrentUser() {

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.model.BasicUser;
+import pro.gravit.simplecabinet.web.model.PrepareUser;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.repository.UserRepository;
 
@@ -72,5 +73,10 @@ public class PasswordCheckService {
     public void setPassword(User user, String password) {
         user.setHashType(User.HashType.BCRYPT);
         user.setRawPassword(bcryptEncoder.encode(password));
+    }
+
+    public void setPassword(PrepareUser user, String password) {
+        user.setHashType(User.HashType.BCRYPT);
+        user.setPassword(bcryptEncoder.encode(password));
     }
 }

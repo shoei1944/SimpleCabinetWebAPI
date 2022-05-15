@@ -45,7 +45,7 @@ public class UserTests {
         var setup = setupController.setup();
         adminToken = setup.accessToken();
         adminPassword = setup.password();
-        var result = authController.register(new AuthController.RegisterRequest("test", "test@example.com", "test"));
+        var result = authController.register(new AuthController.RegisterRequest("test", "test@example.com", "test123"));
         Assertions.assertNotNull(result);
         var id = result.id();
         Assertions.assertTrue(id > 0);
@@ -55,7 +55,7 @@ public class UserTests {
     @Test
     @Transactional
     public void testAuthorization() throws Exception {
-        var result = authController.auth(new AuthController.AuthRequest("test", "test", null));
+        var result = authController.auth(new AuthController.AuthRequest("test", "test123", null));
         Assertions.assertTrue(result.getStatusCode().is2xxSuccessful());
         Assertions.assertTrue(result.getHeaders().containsKey("Set-Cookie"));
         var body = result.getBody();
@@ -104,16 +104,16 @@ public class UserTests {
     @Transactional
     public void testBan() {
         {
-            var result = authController.register(new AuthController.RegisterRequest("testBan", "testBan@example.com", "test"));
+            var result = authController.register(new AuthController.RegisterRequest("testBan", "testBan@example.com", "test123"));
             adminModerationController.banUser(result.id(), new AdminModerationController.BanRequest("Test Reason", 5, false));
             try {
-                authController.auth(new AuthController.AuthRequest("testBan", "test", null));
+                authController.auth(new AuthController.AuthRequest("testBan", "test123", null));
                 Assertions.fail("Success auth with banned user");
             } catch (Exception ignored) {
 
             }
             adminModerationController.unbanUser(result.id());
-            authController.auth(new AuthController.AuthRequest("testBan", "test", null));
+            authController.auth(new AuthController.AuthRequest("testBan", "test123", null));
         }
     }
 

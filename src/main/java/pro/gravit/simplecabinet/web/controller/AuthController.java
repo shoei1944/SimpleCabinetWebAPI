@@ -8,11 +8,7 @@ import pro.gravit.simplecabinet.web.configuration.jwt.JwtProvider;
 import pro.gravit.simplecabinet.web.dto.UserDto;
 import pro.gravit.simplecabinet.web.exception.AuthException;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
-import pro.gravit.simplecabinet.web.model.User;
-import pro.gravit.simplecabinet.web.service.DtoService;
-import pro.gravit.simplecabinet.web.service.PasswordCheckService;
-import pro.gravit.simplecabinet.web.service.SessionService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.*;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
 @RestController
@@ -28,11 +24,14 @@ public class AuthController {
     private SessionService sessionService;
     @Autowired
     private DtoService dtoService;
+    @Autowired
+    private RegisterService registerService;
 
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody RegisterRequest request) {
-        User user = userService.register(request.username, request.email, request.password);
-        return new RegisterResponse(user.getId());
+        registerService.check(request.username, request.email, request.password);
+        var result = registerService.register(request.username, request.email, request.password);
+        return new RegisterResponse(result.id()); // TODO
     }
 
     @PostMapping("/authorize")

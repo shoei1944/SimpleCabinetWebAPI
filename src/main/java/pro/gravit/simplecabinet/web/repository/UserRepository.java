@@ -8,7 +8,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    @Query("select u from User u where u.username = :usernameOrEmail or u.email = :usernameOrEmail")
+    Optional<User> findByUsernameOrEmail(String usernameOrEmail);
+
     Optional<User> findByUsername(String username);
+
+    Optional<User> findByEmail(String email);
 
     Optional<User> findByUuid(UUID uuid);
 
