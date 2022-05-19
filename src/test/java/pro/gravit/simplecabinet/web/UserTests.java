@@ -11,7 +11,9 @@ import pro.gravit.simplecabinet.web.controller.AuthController;
 import pro.gravit.simplecabinet.web.controller.SetupController;
 import pro.gravit.simplecabinet.web.controller.UserController;
 import pro.gravit.simplecabinet.web.controller.admin.AdminModerationController;
+import pro.gravit.simplecabinet.web.controller.admin.AdminMoneyController;
 import pro.gravit.simplecabinet.web.controller.cabinet.CabinetController;
+import pro.gravit.simplecabinet.web.controller.cabinet.CabinetMoneyController;
 import pro.gravit.simplecabinet.web.controller.cabinet.CabinetSecurityController;
 import pro.gravit.simplecabinet.web.dto.UserDto;
 import pro.gravit.simplecabinet.web.security.WithCabinetUser;
@@ -35,6 +37,10 @@ public class UserTests {
     private AdminModerationController adminModerationController;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CabinetMoneyController cabinetMoneyController;
+    @Autowired
+    private AdminMoneyController adminMoneyController;
     @Autowired
     private PasswordCheckService passwordCheckService;
     @Autowired

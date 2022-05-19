@@ -13,7 +13,7 @@
             <column name="email" type="VARCHAR(255)"/>
             <column name="password" type="VARCHAR(255)"/>
             <column name="hash_type" type="INTEGER"/>
-            <column name="confirmToken" type="VARCHAR(255)"/>
+            <column name="confirm_token" type="VARCHAR(255)"/>
             <column name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
         </createTable>
     </changeSet>

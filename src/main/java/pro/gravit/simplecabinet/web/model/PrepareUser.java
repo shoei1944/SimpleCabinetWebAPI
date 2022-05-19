@@ -18,6 +18,7 @@ public class PrepareUser {
     @Column(name = "hash_type")
     @Enumerated(EnumType.ORDINAL)
     private User.HashType hashType = User.HashType.BCRYPT;
+    @Column(name = "confirm_token")
     private String confirmToken;
     private LocalDateTime date;
 
