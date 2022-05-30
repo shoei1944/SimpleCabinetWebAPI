@@ -480,21 +480,37 @@ await ( await fetch("https://АДРЕС ЛК/users/id/1", {
   "method": "DELETE"
 }) ).json()
 ```
+
 - DELETE `/users/id/{id}/status` удаление статуса пользователя по ID  
-*Требуются права администратора*
+  *Требуются права администратора*
+
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/users/id/1/status", {
   "method": "DELETE"
 }) ).json()
 ```
+
+- DELETE `/users/id/{id}/asset/{assetName}` удаление ассета пользователя ID и названию ассета(SKIN/CAPE)  
+  *Требуются права администратора*
+
+```javascript
+await ( await fetch("https://АДРЕС ЛК/users/id/1/asset/SKIN", {
+  "method": "DELETE"
+}) ).json()
+```
+
 #### Новости
+
 - `/news/page/{pageId}` просмотр новостей по страницам
+
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/news/page/0", {
   "method": "GET"
 }) ).json()
 ```
+
 - `/news/id/{id}` просмотр новости по ID
+
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/news/id/1", {
   "method": "GET"

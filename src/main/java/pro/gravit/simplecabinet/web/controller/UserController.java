@@ -8,8 +8,10 @@ import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.dto.UserDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.service.DtoService;
+import pro.gravit.simplecabinet.web.service.UserAssetService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
+import java.util.Locale;
 import java.util.UUID;
 
 @RestController
@@ -18,6 +20,8 @@ public class
 UserController {
     @Autowired
     private UserService service;
+    @Autowired
+    private UserAssetService userAssetService;
     @Autowired
     private DtoService dtoService;
 
@@ -40,6 +44,17 @@ UserController {
         var user = optional.get();
         user.setStatus(null);
         service.save(user);
+    }
+
+    @DeleteMapping("/id/{userId}/asset/{assetName}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void deleteStatus(@PathVariable long userId, @PathVariable String assetName) {
+        var optional = userAssetService.findByUserAndName(service.getReference(userId), assetName.toLowerCase(Locale.ROOT));
+        if (optional.isEmpty()) {
+            throw new EntityNotFoundException("User/Asset not found");
+        }
+        var asset = optional.get();
+        userAssetService.delete(asset);
     }
 
     @DeleteMapping("/id/{userId}")
