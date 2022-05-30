@@ -606,9 +606,10 @@ await ( await fetch("https://АДРЕС ЛК/admin/moderation/unban/1", {
 Методы, помеченные как unchecked не гарантируют читаемой ошибки при пошибке в аргументах, однако они самые быстрые и выполняют меньше всего запросов к БД
 - `/admin/money/userbalance/id/{id}` получение баланса пользователя по ID баланса
 - `/admin/money/userbalance/userid/{userId}/{currency}` получение баланса пользователя по ID пользователя и валюте  
-*При отсутствии баланс будет создан автоматически*
+  *При отсутствии баланс будет создан автоматически*
+- `/admin/money/userbalance/all/userid/{userId}/page/{pageId}` получение всех балансов пользователя по ID пользователя
 - `/admin/money/userbalance/uuid/{userUuid}/{currency}` получение баланса пользователя по UUID пользователя и валюте  
-*При отсутствии баланс будет создан автоматически*
+  *При отсутствии баланс будет создан автоматически*
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/admin/money/userbalance/id/1", {
   "method": "GET"

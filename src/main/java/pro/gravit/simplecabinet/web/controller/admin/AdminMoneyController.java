@@ -1,8 +1,10 @@
 package pro.gravit.simplecabinet.web.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.dto.BalanceTransactionDto;
+import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.dto.UserBalanceDto;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
@@ -38,6 +40,17 @@ public class AdminMoneyController {
         var user = userOptional.get();
         var balance = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, currency);
         return new UserBalanceDto(balance);
+    }
+
+    @GetMapping("/userbalance/all/userid/{userId}/page/{pageId}")
+    public PageDto<UserBalanceDto> getUserBalanceByUser(@PathVariable long userId, @PathVariable int pageId) {
+        var userOptional = userService.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        var user = userOptional.get();
+        var list = balanceService.findUserBalanceByUser(user, PageRequest.of(pageId, 10));
+        return new PageDto<>(list.map(UserBalanceDto::new));
     }
 
     @GetMapping("/userbalance/uuid/{userUuid}/{currency}")
