@@ -12,6 +12,7 @@ import pro.gravit.simplecabinet.web.model.UserSession;
 
 import javax.persistence.EntityManager;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,22 +39,25 @@ public class UserDetailsService {
     }
 
     @Transactional
-    public Map<String, String> collectUserPermissions(User user) { // Optimize this!
+    public Map<String, String> collectUserPermissions(User user) {
         var groups = user.getGroups();
-        groups.sort(Comparator.comparingLong(UserGroup::getPriority));
-        Map<String, String> permissions = new HashMap<>();
-        //Default group
-        {
-            for (var p : permissionService.findByGroupName("USER")) {
-                permissions.putIfAbsent(p.getName(), p.getValue());
+        List<String> groupNames = new ArrayList<>(groups.stream().map(UserGroup::getGroupName).toList());
+        groupNames.add("USER"); // Default group
+        var permissions = permissionService.findByGroupNames(groupNames);
+        Function<String, UserGroup> findGroup = name -> {
+            for (var e : groups) {
+                if (e.getGroupName().equals(name)) {
+                    return e;
+                }
             }
+            return null;
+        };
+        permissions.sort(Comparator.comparingLong(x -> -findGroup.apply(x.getGroupName()).getPriority()));
+        Map<String, String> map = new HashMap<>();
+        for (var p : permissions) {
+            map.putIfAbsent(p.getName(), p.getValue());
         }
-        for (var group : groups) {
-            for (var p : permissionService.findByGroupName(group.getGroupName())) {
-                permissions.putIfAbsent(p.getName(), p.getValue());
-            }
-        }
-        return permissions;
+        return map;
     }
 
     public class CabinetUserDetails implements UserDetails {

@@ -14,6 +14,15 @@ public class UserPermission {
     private String name;
     private String value;
 
+    public UserPermission() {
+    }
+
+    public UserPermission(String groupName, String name, String value) {
+        this.groupName = groupName;
+        this.name = name;
+        this.value = value;
+    }
+
     public long getId() {
         return id;
     }

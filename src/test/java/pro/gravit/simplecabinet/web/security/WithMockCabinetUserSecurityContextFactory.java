@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
+import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserSession;
 import pro.gravit.simplecabinet.web.service.SessionService;
 import pro.gravit.simplecabinet.web.service.UserDetailsService;
@@ -21,7 +22,15 @@ public class WithMockCabinetUserSecurityContextFactory implements WithSecurityCo
     @Override
     public SecurityContext createSecurityContext(WithCabinetUser annotation) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        UserSession session = sessionService.create(userService.findById(annotation.userId()).orElseThrow(), "Test");
+        User user;
+        if (annotation.userId() > 0) {
+            user = userService.findById(annotation.userId()).orElseThrow();
+        } else if (annotation.username() != null && !annotation.username().isEmpty()) {
+            user = userService.findByUsername(annotation.username()).orElseThrow();
+        } else {
+            throw new SecurityException("User not found");
+        }
+        UserSession session = sessionService.create(user, "Test");
         var details = detailsService.create(session);
         context.setAuthentication(new UsernamePasswordAuthenticationToken(details, null, details.getAuthorities()));
         return context;

@@ -17,7 +17,9 @@ public class UserDto {
     public final List<UserGroupDto> groups;
     public final Map<String, UserTexture> assets;
 
-    public UserDto(long id, String username, UUID uuid, User.Gender gender, String status, LocalDateTime registrationDate, List<UserGroupDto> groups, Map<String, UserTexture> assets) {
+    public final Map<String, String> permissions;
+
+    public UserDto(long id, String username, UUID uuid, User.Gender gender, String status, LocalDateTime registrationDate, List<UserGroupDto> groups, Map<String, UserTexture> assets, Map<String, String> permissions) {
         this.id = id;
         this.username = username;
         this.uuid = uuid;
@@ -26,6 +28,7 @@ public class UserDto {
         this.registrationDate = registrationDate;
         this.groups = groups;
         this.assets = assets;
+        this.permissions = permissions;
     }
 
     public static class UserTexture {

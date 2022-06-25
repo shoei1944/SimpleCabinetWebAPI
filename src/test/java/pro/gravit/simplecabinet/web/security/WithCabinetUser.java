@@ -8,5 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(factory = WithMockCabinetUserSecurityContextFactory.class)
 public @interface WithCabinetUser {
-    long userId() default 1;
+    long userId() default -1;
+
+    String username() default "";
 }

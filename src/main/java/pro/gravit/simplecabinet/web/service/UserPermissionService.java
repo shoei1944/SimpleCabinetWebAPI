@@ -19,6 +19,10 @@ public class UserPermissionService {
         return repository.findByGroupName(groupName);
     }
 
+    public List<UserPermission> findByGroupNames(List<String> groupNames) {
+        return repository.findByGroupNames(groupNames);
+    }
+
     public Page<UserPermission> findByGroupName(String groupName, Pageable pageable) {
         return repository.findByGroupName(groupName, pageable);
     }

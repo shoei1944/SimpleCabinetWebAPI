@@ -18,6 +18,7 @@ import pro.gravit.simplecabinet.web.controller.cabinet.CabinetSecurityController
 import pro.gravit.simplecabinet.web.dto.UserDto;
 import pro.gravit.simplecabinet.web.security.WithCabinetUser;
 import pro.gravit.simplecabinet.web.service.PasswordCheckService;
+import pro.gravit.simplecabinet.web.service.UserDetailsService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
 @SpringBootTest
@@ -37,6 +38,8 @@ public class UserTests {
     private AdminModerationController adminModerationController;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserDetailsService userDetailsService;
     @Autowired
     private CabinetMoneyController cabinetMoneyController;
     @Autowired
@@ -121,6 +124,14 @@ public class UserTests {
             adminModerationController.unbanUser(result.id());
             authController.auth(new AuthController.AuthRequest("testBan", "test123", null));
         }
+    }
+
+    @Test
+    @Transactional
+    public void testRoles() {
+        var result = userDetailsService.collectUserRoles(userService.getReference(1L));
+        Assertions.assertEquals(result.size(), 1);
+        Assertions.assertEquals(result.get(0), "ADMIN");
     }
 
     @Test

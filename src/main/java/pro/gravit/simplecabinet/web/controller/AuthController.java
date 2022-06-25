@@ -103,7 +103,7 @@ public class AuthController {
         if (userOptional.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }
-        return dtoService.toPublicUserDto(userOptional.get());
+        return dtoService.toPrivateUserDto(userOptional.get());
     }
 
     public static record RegisterResponse(long id) {

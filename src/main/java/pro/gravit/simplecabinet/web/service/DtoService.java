@@ -23,18 +23,27 @@ public class DtoService {
     @Autowired
     private UserAssetService userAssetService;
     @Autowired
+    private UserDetailsService userDetailsService;
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Transactional
     public UserDto toPublicUserDto(User user) {
         var groups = getUserGroups(user).stream().map(UserGroupDto::new).collect(Collectors.toList());
         return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
-                groups, getUserTextures(user));
+                groups, getUserTextures(user), null);
+    }
+
+    @Transactional
+    public UserDto toPrivateUserDto(User user) {
+        var groups = getUserGroups(user).stream().map(UserGroupDto::new).collect(Collectors.toList());
+        return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
+                groups, getUserTextures(user), userDetailsService.collectUserPermissions(user));
     }
 
     public UserDto toMiniUserDto(User user) {
         return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
-                null, getUserTextures(user));
+                null, getUserTextures(user), null);
     }
 
     public ItemDeliveryDto itemDeliveryDto(ItemDelivery delivery) {
