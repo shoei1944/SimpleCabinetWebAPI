@@ -1,6 +1,8 @@
 package pro.gravit.simplecabinet.web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.model.UserPermission;
 import pro.gravit.simplecabinet.web.repository.UserPermissionRepository;
@@ -15,6 +17,10 @@ public class UserPermissionService {
 
     public List<UserPermission> findByGroupName(String groupName) {
         return repository.findByGroupName(groupName);
+    }
+
+    public Page<UserPermission> findByGroupName(String groupName, Pageable pageable) {
+        return repository.findByGroupName(groupName, pageable);
     }
 
     public <S extends UserPermission> S save(S entity) {

@@ -467,14 +467,26 @@ await ( await fetch("https://АДРЕС ЛК/users/name/Gravita", {
   "method": "GET"
 }) ).json()
 ```
+
 - `/users/name/{name}` просмотр информации о пользователях по страницам
+
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/users/page/0", {
   "method": "GET"
 }) ).json()
 ```
+
+- GET `/users/id/{id}/group/{name}` получить информацию о группе пользователя
+
+```javascript
+await ( await fetch("https://АДРЕС ЛК/users/id/1/group/PREMIUM", {
+  "method": "GET",
+}) ).json()
+```
+
 - DELETE `/users/id/{id}` удаление пользователя по ID  
-*Требуются права администратора*
+  *Требуются права администратора*
+
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/users/id/1", {
   "method": "DELETE"
@@ -487,6 +499,31 @@ await ( await fetch("https://АДРЕС ЛК/users/id/1", {
 ```javascript
 await ( await fetch("https://АДРЕС ЛК/users/id/1/status", {
   "method": "DELETE"
+}) ).json()
+```
+
+- POST `/users/id/{id}/group/{name}` добавить группу пользователю  
+  *Требуются права администратора*
+
+```javascript
+await ( await fetch("https://АДРЕС ЛК/users/id/1/group/PREMIUM", {
+  "method": "POST",
+  "body": JSON.stringify({
+    "days": 16,
+    "priority": 1
+  }),
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}) ).json()
+```
+
+- DELETE `/users/id/{id}/group/{name}` исключить пользователя из группы  
+  *Требуются права администратора*
+
+```javascript
+await ( await fetch("https://АДРЕС ЛК/users/id/1/group/PREMIUM", {
+  "method": "DELETE",
 }) ).json()
 ```
 

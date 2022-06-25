@@ -13,7 +13,6 @@ import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Random;
 
 @RestController
 public class SetupController {
@@ -48,15 +47,6 @@ public class SetupController {
         var session = sessionService.create(user, "Setup Session");
         var token = jwtProvider.generateNoExpiredJWTToken(session);
         return new SetupResponse(user.getUsername(), password, token.token());
-    }
-
-    @GetMapping("/preftest")
-    public void test() {
-        Random random = new Random();
-        for (int i = 0; i < 100000; ++i) {
-            String username = "v".concat(Integer.toString(i));
-            User user = registerService.createUser(username, username.concat("@example.com"), username);
-        }
     }
 
     @GetMapping("/myip")

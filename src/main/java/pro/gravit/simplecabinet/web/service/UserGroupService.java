@@ -2,6 +2,7 @@ package pro.gravit.simplecabinet.web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserGroup;
 import pro.gravit.simplecabinet.web.repository.UserGroupRepository;
 
@@ -18,5 +19,13 @@ public class UserGroupService {
 
     public Optional<UserGroup> findById(Long aLong) {
         return repository.findById(aLong);
+    }
+
+    public Optional<UserGroup> findByGroupNameAndUser(String groupName, User user) {
+        return repository.findByGroupNameAndUser(groupName, user);
+    }
+
+    public void delete(UserGroup userGroup) {
+        repository.delete(userGroup);
     }
 }
