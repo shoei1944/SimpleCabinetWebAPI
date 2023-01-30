@@ -21,6 +21,9 @@ import pro.gravit.simplecabinet.web.service.PasswordCheckService;
 import pro.gravit.simplecabinet.web.service.UserDetailsService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 @SpringBootTest
 public class UserTests {
     private static long basicUserId;
@@ -114,7 +117,7 @@ public class UserTests {
     public void testBan() {
         {
             var result = authController.register(new AuthController.RegisterRequest("testBan", "testBan@example.com", "test123"));
-            adminModerationController.banUser(result.id(), new AdminModerationController.BanRequest("Test Reason", 5, false));
+            adminModerationController.banUser(result.id(), new AdminModerationController.BanRequest("Test Reason", LocalDateTime.now().plus(Duration.ofHours(1)), false));
             try {
                 authController.auth(new AuthController.AuthRequest("testBan", "test123", null));
                 Assertions.fail("Success auth with banned user");

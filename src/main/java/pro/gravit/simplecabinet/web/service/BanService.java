@@ -1,5 +1,7 @@
 package pro.gravit.simplecabinet.web.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,11 +12,13 @@ import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.repository.BanInfoRepository;
 import pro.gravit.simplecabinet.web.repository.UserRepository;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class BanService {
+    private final Logger logger = LoggerFactory.getLogger(BanService.class);
     @Autowired
     private BanInfoRepository repository;
     @Autowired
@@ -29,26 +33,27 @@ public class BanService {
     }
 
     @Transactional
-    public BanInfoEntity ban(User target, User moderator, String reason, long expireMinutes) {
+    public BanInfoEntity ban(User target, User moderator, String reason, LocalDateTime endDate) {
         BanInfoEntity entity = new BanInfoEntity();
         entity.setTarget(target);
         entity.setModerator(moderator);
         entity.setReason(reason);
         var now = LocalDateTime.now();
         entity.setCreatedAt(now);
-        if (expireMinutes > 0) {
-            entity.setEndAt(now.plusMinutes(expireMinutes));
-        }
+        entity.setEndAt(endDate);
         repository.save(entity);
-        target.setBanInfo(entity);
-        userRepository.save(target);
         return entity;
     }
 
     @Transactional
+    public Optional<BanInfoEntity> findBanByUser(User user) {
+        return repository.findBanByUser(user, LocalDateTime.now());
+    }
+
+    @Transactional
     public void unban(BanInfoEntity entity) {
-        var user = entity.getTarget();
-        user.setBanInfo(null);
+        entity.setEndAt(LocalDateTime.now().minus(Duration.ofSeconds(1)));
+        repository.save(entity);
     }
 
     public Optional<BanInfoEntity> findById(Long aLong) {

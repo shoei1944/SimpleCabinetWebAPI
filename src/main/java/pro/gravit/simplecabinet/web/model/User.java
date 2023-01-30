@@ -28,8 +28,6 @@ public class User implements BasicUser {
     //Special
     @Column(unique = true)
     private String email;
-    @OneToOne(mappedBy = "target", fetch = FetchType.LAZY)
-    private BanInfoEntity banInfo;
     //Skin info
     @Column(name = "skin_model")
     private String skinModel;
@@ -147,14 +145,6 @@ public class User implements BasicUser {
 
     public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
-    }
-
-    public BanInfoEntity getBanInfo() {
-        return banInfo;
-    }
-
-    public void setBanInfo(BanInfoEntity banInfo) {
-        this.banInfo = banInfo;
     }
 
     public List<UserAsset> getAssets() {

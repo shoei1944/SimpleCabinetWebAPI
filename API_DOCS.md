@@ -637,7 +637,7 @@ await ( await fetch("https://АДРЕС ЛК/admin/moderation/ban/1", {
   "method": "POST",
   "body": JSON.stringify({
     "reason": "2.4",
-    "expireMinutes": "30",
+    "endDate": "2024-08-12T20:17:46.384Z",
     "isHardware": false
   }),
   "headers": {

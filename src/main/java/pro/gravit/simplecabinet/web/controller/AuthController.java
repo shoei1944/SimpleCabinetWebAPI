@@ -17,6 +17,8 @@ public class AuthController {
     @Autowired
     private UserService userService;
     @Autowired
+    private BanService banService;
+    @Autowired
     private PasswordCheckService passwordCheckService;
     @Autowired
     private JwtProvider jwtProvider;
@@ -41,8 +43,10 @@ public class AuthController {
             throw new AuthException("User not found", 3);
         }
         var user = optional.get();
-        if (user.getBanInfo() != null) {
-            throw new AuthException("User banned", 4);
+        var banInfo = banService.findBanByUser(user);
+        if (banInfo.isPresent()) {
+            var info = banInfo.get();
+            throw new AuthException(String.format("You banned: %s expired %s", info.getReason(), info.getEndAt() == null ? "never" : info.getEndAt().toString()), 4);
         }
         var success = passwordCheckService.checkPassword(user, request.password);
         if (!success) {

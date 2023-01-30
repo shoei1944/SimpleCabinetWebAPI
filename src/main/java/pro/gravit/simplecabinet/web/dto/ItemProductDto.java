@@ -5,6 +5,8 @@ import pro.gravit.simplecabinet.web.model.Product;
 
 public class ItemProductDto {
     public final long id;
+    public final double price;
+    public final String currency;
     public final String displayName;
     public final String description;
     public final String pictureUrl;
@@ -13,6 +15,8 @@ public class ItemProductDto {
 
     public ItemProductDto(ItemProduct entity) {
         this.id = entity.getId();
+        this.price = entity.getPrice();
+        this.currency = entity.getCurrency();
         this.displayName = entity.getDisplayName();
         this.description = entity.getDescription();
         this.pictureUrl = entity.getPictureUrl();

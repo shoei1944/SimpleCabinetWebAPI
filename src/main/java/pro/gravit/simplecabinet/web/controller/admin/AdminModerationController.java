@@ -8,6 +8,8 @@ import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.BanService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/admin/moderation")
 public class AdminModerationController {
@@ -22,8 +24,17 @@ public class AdminModerationController {
         if (user.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }
+        if (request.endDate != null && !request.endDate.isAfter(LocalDateTime.now())) {
+            throw new InvalidParametersException("endDate is not after current date", 32);
+        }
+        {
+            var banInfo = banService.findBanByUser(user.get());
+            if (banInfo.isPresent()) {
+                throw new InvalidParametersException("User already banned", 33);
+            }
+        }
         var moderator = userService.getCurrentUser();
-        var banInfo = banService.ban(user.get(), moderator.getReference(), request.reason, request.expireMinutes);
+        var banInfo = banService.ban(user.get(), moderator.getReference(), request.reason, request.endDate);
         return new BanInfoDto(banInfo);
     }
 
@@ -33,13 +44,13 @@ public class AdminModerationController {
         if (user.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }
-        var banInfo = user.get().getBanInfo();
-        if (banInfo == null) {
+        var banInfo = banService.findBanByUser(user.get());
+        if (banInfo.isEmpty()) {
             throw new InvalidParametersException("User not banned", 5);
         }
-        banService.unban(banInfo);
+        banService.unban(banInfo.get());
     }
 
-    public static record BanRequest(String reason, long expireMinutes, boolean isHardware) {
+    public static record BanRequest(String reason, LocalDateTime endDate, boolean isHardware) {
     }
 }
