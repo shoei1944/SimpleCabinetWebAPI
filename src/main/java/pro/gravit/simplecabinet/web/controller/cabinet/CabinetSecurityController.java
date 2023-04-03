@@ -2,10 +2,7 @@ package pro.gravit.simplecabinet.web.controller.cabinet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.PasswordCheckService;
 import pro.gravit.simplecabinet.web.service.UserService;
@@ -29,12 +26,18 @@ public class CabinetSecurityController {
         userService.save(ref);
     }
 
+    @GetMapping("/info")
+    public SecurityInfo getInfo() {
+        var user = userService.getCurrentUser().getReference();
+        return new SecurityInfo(user.getTotpSecretKey() != null);
+    }
+
     @PostMapping("/prepare2fa")
     @Transactional
     public Prepare2FAResponse prepare2FA() {
         var user = userService.getCurrentUser().getReference();
         if (user.getTotpSecretKey() != null) {
-            throw new IllegalArgumentException("2FA already enabled");
+            throw new InvalidParametersException("2FA already enabled", 17);
         }
         var secret = passwordCheckService.newTotpSecret();
         return new Prepare2FAResponse(secret, passwordCheckService.makeQrCodeUri(user, secret));
@@ -45,11 +48,11 @@ public class CabinetSecurityController {
     public void enable2FA(@RequestBody Enable2FARequest request) {
         var user = userService.getCurrentUser().getReference();
         if (user.getTotpSecretKey() != null) {
-            throw new IllegalArgumentException("2FA already enabled");
+            throw new InvalidParametersException("2FA already enabled", 17);
         }
         var secret = request.secret;
         if (!passwordCheckService.checkTotpPassword(secret, request.code)) {
-            throw new IllegalArgumentException("Code incorrect");
+            throw new InvalidParametersException("Code incorrect", 18);
         }
         user.setTotpSecretKey(secret);
         userService.save(user);
@@ -60,10 +63,10 @@ public class CabinetSecurityController {
     public void disable2FA(@RequestBody Disable2FARequest request) {
         var user = userService.getCurrentUser().getReference();
         if (user.getTotpSecretKey() == null) {
-            throw new IllegalArgumentException("2FA already disabled");
+            throw new InvalidParametersException("2FA already disabled", 19);
         }
         if (!passwordCheckService.checkTotpPassword(user, request.code)) {
-            throw new IllegalArgumentException("Code incorrect");
+            throw new InvalidParametersException("Code incorrect", 18);
         }
         user.setTotpSecretKey(null);
         userService.save(user);
@@ -82,6 +85,10 @@ public class CabinetSecurityController {
     }
 
     public static record Prepare2FAResponse(String secret, String uri) {
+
+    }
+
+    public static record SecurityInfo(boolean enabled2FA) {
 
     }
 }
