@@ -37,7 +37,7 @@ public class PasswordCheckService {
                 return bcryptEncoder.matches(password, user.getPassword());
             }
             case DOUBLEMD5 -> {
-                return DigestUtils.md2Hex(DigestUtils.md5Hex(password)).equals(user.getPassword());
+                return DigestUtils.md5Hex(DigestUtils.md5Hex(password)).equals(user.getPassword());
             }
             case MD5 -> {
                 return DigestUtils.md5Hex(password).equals(user.getPassword());
