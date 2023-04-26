@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.utils;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import pro.gravit.simplecabinet.web.exception.AuthException;
 import pro.gravit.simplecabinet.web.service.UserDetailsService;
@@ -33,5 +34,16 @@ public class SecurityUtils {
             text[i] = CHARACTERS.charAt(rng.nextInt(CHARACTERS.length()));
         }
         return new String(text);
+    }
+
+    public static boolean verifyAuthMeSha256Password(String password, String hashedPassword) {
+        String[] splited = hashedPassword.split("\\$");
+        if (splited.length != 4) {
+            return false;
+        }
+        String salt = splited[2];
+        String saltedHash = splited[3];
+        String checkHash = DigestUtils.sha256Hex(DigestUtils.sha256Hex(password).concat(salt));
+        return saltedHash.equals(checkHash);
     }
 }

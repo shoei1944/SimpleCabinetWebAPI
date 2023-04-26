@@ -6,6 +6,7 @@ import dev.samstevens.totp.secret.DefaultSecretGenerator;
 import dev.samstevens.totp.secret.SecretGenerator;
 import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import pro.gravit.simplecabinet.web.model.BasicUser;
 import pro.gravit.simplecabinet.web.model.PrepareUser;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.repository.UserRepository;
+import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
 @Service
 public class PasswordCheckService {
@@ -26,19 +28,25 @@ public class PasswordCheckService {
     private UserRepository repository;
 
     public boolean checkPassword(User user, String password) {
+        if (password == null) {
+            return false;
+        }
         User.HashType type = user.getHashType();
         switch (type) {
-
             case BCRYPT -> {
                 return bcryptEncoder.matches(password, user.getPassword());
             }
             case DOUBLEMD5 -> {
+                return DigestUtils.md2Hex(DigestUtils.md5Hex(password)).equals(user.getPassword());
             }
             case MD5 -> {
+                return DigestUtils.md5Hex(password).equals(user.getPassword());
             }
             case SHA256 -> {
+                return DigestUtils.sha256Hex(password).equals(user.getPassword());
             }
             case AUTHMESHA256 -> {
+                return SecurityUtils.verifyAuthMeSha256Password(password, user.getPassword());
             }
             case PHPASS -> {
             }
