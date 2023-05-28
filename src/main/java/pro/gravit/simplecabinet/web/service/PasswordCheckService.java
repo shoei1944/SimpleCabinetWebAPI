@@ -8,6 +8,7 @@ import dev.samstevens.totp.time.SystemTimeProvider;
 import dev.samstevens.totp.time.TimeProvider;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class PasswordCheckService {
     private final SecretGenerator secretGenerator = new DefaultSecretGenerator(64);
     @Autowired
     private UserRepository repository;
+    @Value("{cabinet.2fa.name}")
+    private String qrCodeIssuerName;
 
     public boolean checkPassword(User user, String password) {
         if (password == null) {
@@ -66,7 +69,7 @@ public class PasswordCheckService {
         QrData data = new QrData.Builder()
                 .label(user.getUsername())
                 .secret(totpSecret)
-                .issuer("SimpleCabinet2")
+                .issuer(qrCodeIssuerName)
                 .algorithm(HashingAlgorithm.SHA1) // More on this below
                 .digits(6)
                 .period(30)

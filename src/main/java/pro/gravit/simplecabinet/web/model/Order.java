@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "orders")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Order {
+public abstract class Order<T extends Product> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_generator")
     @SequenceGenerator(name = "orders_generator", sequenceName = "orders_seq", allocationSize = 1)
@@ -65,6 +65,8 @@ public abstract class Order {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public abstract T getProduct();
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

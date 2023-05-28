@@ -1,5 +1,7 @@
 package pro.gravit.simplecabinet.web.controller.cabinet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,21 +12,23 @@ import pro.gravit.simplecabinet.web.model.UserAsset;
 import pro.gravit.simplecabinet.web.service.DtoService;
 import pro.gravit.simplecabinet.web.service.UserAssetService;
 import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.storage.StorageService;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/cabinet")
 public class CabinetController {
+    private static final Logger logger = LoggerFactory.getLogger(CabinetController.class);
     @Autowired
     public UserAssetService userAssetService;
     @Autowired
     public UserService userService;
     @Autowired
     public DtoService dtoService;
+    @Autowired
+    public StorageService storageService;
 
     @PostMapping("/upload/{name}")
     public UserDto.UserTexture uploadAsset(@PathVariable String name, @RequestPart("options") UserAssetService.AssetOptions options, @RequestPart("file") MultipartFile file) {
@@ -58,13 +62,11 @@ public class CabinetController {
         newAsset.setHash(hash);
         newAsset.setName(name);
         newAsset.setMetadata(metadata);
-        Path path = userAssetService.getAssetPath(newAsset);
-        if (!Files.exists(path)) {
-            try {
-                Files.write(path, bytes);
-            } catch (IOException e) {
-                throw new InvalidParametersException("File upload failure", 22);
-            }
+        try {
+            storageService.put(hash, bytes);
+        } catch (StorageService.StorageException e) {
+            logger.error("StorageService.put failed", e);
+            throw new InvalidParametersException("File upload failure", 22);
         }
         userAssetService.save(newAsset);
         return dtoService.getUserTexture(newAsset);

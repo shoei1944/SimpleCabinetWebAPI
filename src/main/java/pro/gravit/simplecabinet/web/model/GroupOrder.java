@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "group_orders")
-public class GroupOrder extends Order {
+public class GroupOrder extends Order<GroupProduct> {
     private String server;
     @ManyToOne
     @JoinColumn(name = "product_id")

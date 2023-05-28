@@ -103,10 +103,6 @@ public abstract class Product {
         this.available = available;
     }
 
-    enum ProductType {
-        GROUP, ITEM
-    }
-
     public record ProductLimitations(LocalDateTime endDate, long count, String groupName) {
     }
 

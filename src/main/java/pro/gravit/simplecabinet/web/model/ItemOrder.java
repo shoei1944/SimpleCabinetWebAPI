@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "item_orders")
-public class ItemOrder extends Order {
+public class ItemOrder extends Order<ItemProduct> {
     private long quantity;
     @Column(name = "custom_params")
     private String customParams;
