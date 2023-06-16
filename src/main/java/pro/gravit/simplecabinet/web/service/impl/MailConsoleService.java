@@ -8,7 +8,7 @@ import pro.gravit.simplecabinet.web.service.MailService;
 import javax.annotation.Priority;
 
 @Service
-@Priority(value = 0)
+@Priority(value = 1)
 public class MailConsoleService implements MailService {
     private transient final Logger logger = LoggerFactory.getLogger(MailConsoleService.class);
 

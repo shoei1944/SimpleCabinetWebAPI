@@ -10,7 +10,7 @@ import pro.gravit.simplecabinet.web.service.MailService;
 import javax.annotation.Priority;
 
 @Service
-@Priority(value = 1)
+@Priority(value = 0)
 @ConditionalOnProperty(
         value = "mail.enabled")
 public class MailSTMPService implements MailService {
