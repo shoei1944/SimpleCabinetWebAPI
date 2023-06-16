@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserAsset;
 import pro.gravit.simplecabinet.web.repository.UserAssetRepository;
+import pro.gravit.simplecabinet.web.service.storage.StorageService;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -29,6 +30,8 @@ public class UserAssetService {
     private static final AssetLimits DEFAULT_ASSET_LIMITS = new AssetLimits(64, 64, 32 * 1024);
     @Autowired
     private UserAssetRepository userAssetRepository;
+    @Autowired
+    private StorageService storageService;
     @Value("${skins.path}")
     private String path;
     @Value("${skins.url}")
@@ -62,7 +65,7 @@ public class UserAssetService {
     }
 
     public String makeAssetUrl(UserAsset userAsset) {
-        return url.concat(userAsset.getHash());
+        return storageService.getUrl(userAsset.getHash()).toString();
     }
 
     public Path getAssetPath(UserAsset userAsset) {

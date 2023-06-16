@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 @Service
-@Priority(value = 0)
+@Priority(value = 1)
 public class FileStorageService implements StorageService {
 
     @Autowired

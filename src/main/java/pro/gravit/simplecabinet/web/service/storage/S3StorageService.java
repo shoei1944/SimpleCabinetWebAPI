@@ -7,6 +7,7 @@ import pro.gravit.simplecabinet.web.configuration.properties.S3StorageConfig;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -17,7 +18,7 @@ import java.net.URI;
 import java.net.URL;
 
 @Service
-@Priority(value = 1)
+@Priority(value = 0)
 @ConditionalOnProperty(
         value = "storage.s3.enabled")
 public class S3StorageService implements StorageService {
@@ -30,6 +31,7 @@ public class S3StorageService implements StorageService {
         this.config = config;
         client = S3Client.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(config.getAccessKey(), config.getSecretKey())))
+                .region(Region.of(config.getRegion()))
                 .endpointOverride(URI.create(config.getEndpoint()))
                 .forcePathStyle(true)
                 .build();

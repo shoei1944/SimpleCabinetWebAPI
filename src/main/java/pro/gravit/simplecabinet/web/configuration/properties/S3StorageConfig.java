@@ -12,6 +12,8 @@ public class S3StorageConfig {
     private String endpoint;
     private String bucket;
 
+    private String region;
+
     public S3StorageConfig() {
     }
 
@@ -45,5 +47,13 @@ public class S3StorageConfig {
 
     public void setBucket(String bucket) {
         this.bucket = bucket;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }
