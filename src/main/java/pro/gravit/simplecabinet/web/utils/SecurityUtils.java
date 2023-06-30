@@ -1,10 +1,15 @@
 package pro.gravit.simplecabinet.web.utils;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import pro.gravit.simplecabinet.web.exception.AuthException;
 import pro.gravit.simplecabinet.web.service.UserDetailsService;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
@@ -34,6 +39,19 @@ public class SecurityUtils {
             text[i] = CHARACTERS.charAt(rng.nextInt(CHARACTERS.length()));
         }
         return new String(text);
+    }
+
+
+    public static String hmacSha256(String data, String key) {
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "HmacSHA256");
+        Mac mac = null;
+        try {
+            mac = Mac.getInstance("HmacSHA256");
+            mac.init(secretKeySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+        return Hex.encodeHexString(mac.doFinal(data.getBytes()));
     }
 
     public static boolean verifyAuthMeSha256Password(String password, String hashedPassword) {

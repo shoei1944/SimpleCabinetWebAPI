@@ -16,7 +16,7 @@ public class YooWebhookController {
     @Autowired
     private YooPaymentService service;
 
-    private static boolean matches(String ip, String subnet) {
+    static boolean matches(String ip, String subnet) {
         IpAddressMatcher ipAddressMatcher = new IpAddressMatcher(subnet);
         return ipAddressMatcher.matches(ip);
     }

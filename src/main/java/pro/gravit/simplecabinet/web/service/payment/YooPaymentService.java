@@ -78,8 +78,11 @@ public class YooPaymentService implements BasicPaymentService {
         if ("payment.succeeded".equals(notification.event)) {
             String id = notification.object.id;
             var payment = paymentService.findUserPaymentBySystemId("Yoo", id).orElseThrow();
+            var oldStatus = payment.getStatus();
             completePayment(payment, UserPayment.PaymentStatus.SUCCESS);
-            paymentService.deliveryPayment(payment);
+            if (oldStatus != UserPayment.PaymentStatus.SUCCESS) {
+                paymentService.deliveryPayment(payment);
+            }
         } else if ("payment.cancelled".equals(notification.event)) {
             String id = notification.object.id;
             var payment = paymentService.findUserPaymentBySystemId("Yoo", id).orElseThrow();

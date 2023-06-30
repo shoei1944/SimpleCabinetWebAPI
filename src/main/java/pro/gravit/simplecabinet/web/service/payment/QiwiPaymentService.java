@@ -74,8 +74,11 @@ public class QiwiPaymentService implements BasicPaymentService {
             case WAITING -> {
             }
             case PAID -> {
+                var oldStatus = payment.getStatus();
                 completePayment(payment, UserPayment.PaymentStatus.SUCCESS);
-                paymentService.deliveryPayment(payment);
+                if (oldStatus != UserPayment.PaymentStatus.SUCCESS) {
+                    paymentService.deliveryPayment(payment);
+                }
             }
             case REJECTED -> {
                 completePayment(payment, UserPayment.PaymentStatus.ERROR);

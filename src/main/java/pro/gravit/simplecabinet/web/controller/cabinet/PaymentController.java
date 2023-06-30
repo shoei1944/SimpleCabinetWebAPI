@@ -9,11 +9,9 @@ import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.PaymentService;
 import pro.gravit.simplecabinet.web.service.UserService;
 import pro.gravit.simplecabinet.web.service.payment.BasicPaymentService;
+import pro.gravit.simplecabinet.web.service.payment.FreekassaPaymentService;
 import pro.gravit.simplecabinet.web.service.payment.QiwiPaymentService;
 import pro.gravit.simplecabinet.web.service.payment.YooPaymentService;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("/cabinet/payment")
@@ -25,6 +23,8 @@ public class PaymentController {
     @Autowired
     private QiwiPaymentService qiwiPaymentService;
     @Autowired
+    private FreekassaPaymentService freekassaPaymentService;
+    @Autowired
     private UserService userService;
 
     @PostMapping("/create")
@@ -35,6 +35,7 @@ public class PaymentController {
         BasicPaymentService basicPaymentService = switch (request.system) {
             case "Yoo" -> yooPaymentService;
             case "Qiwi" -> qiwiPaymentService;
+            case "Freekassa" -> freekassaPaymentService;
             default -> throw new InvalidParametersException("Payment system not found", 11);
         };
         info = basicPaymentService.createBalancePayment(ref, request.sum);
