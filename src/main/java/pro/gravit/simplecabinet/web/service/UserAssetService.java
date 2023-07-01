@@ -3,7 +3,6 @@ package pro.gravit.simplecabinet.web.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,8 +15,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -32,10 +29,6 @@ public class UserAssetService {
     private UserAssetRepository userAssetRepository;
     @Autowired
     private StorageService storageService;
-    @Value("${skins.path}")
-    private String path;
-    @Value("${skins.url}")
-    private String url;
     @Autowired
     private ObjectMapper objectMapper;
     private List<String> allowedAssets = List.of("skin", "cape");
@@ -68,9 +61,6 @@ public class UserAssetService {
         return storageService.getUrl(userAsset.getHash()).toString();
     }
 
-    public Path getAssetPath(UserAsset userAsset) {
-        return Paths.get(path).resolve(userAsset.getHash());
-    }
 
     private MessageDigest makeMessageDigest() {
         try {

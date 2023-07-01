@@ -8,10 +8,7 @@ import pro.gravit.simplecabinet.web.dto.UserPaymentDto;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.PaymentService;
 import pro.gravit.simplecabinet.web.service.UserService;
-import pro.gravit.simplecabinet.web.service.payment.BasicPaymentService;
-import pro.gravit.simplecabinet.web.service.payment.FreekassaPaymentService;
-import pro.gravit.simplecabinet.web.service.payment.QiwiPaymentService;
-import pro.gravit.simplecabinet.web.service.payment.YooPaymentService;
+import pro.gravit.simplecabinet.web.service.payment.*;
 
 @RestController
 @RequestMapping("/cabinet/payment")
@@ -25,6 +22,8 @@ public class PaymentController {
     @Autowired
     private FreekassaPaymentService freekassaPaymentService;
     @Autowired
+    private TestPaymentService testPaymentService;
+    @Autowired
     private UserService userService;
 
     @PostMapping("/create")
@@ -36,6 +35,7 @@ public class PaymentController {
             case "Yoo" -> yooPaymentService;
             case "Qiwi" -> qiwiPaymentService;
             case "Freekassa" -> freekassaPaymentService;
+            case "Test" -> testPaymentService;
             default -> throw new InvalidParametersException("Payment system not found", 11);
         };
         info = basicPaymentService.createBalancePayment(ref, request.sum);
