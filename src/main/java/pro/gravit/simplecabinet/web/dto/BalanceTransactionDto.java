@@ -12,6 +12,9 @@ public class BalanceTransactionDto {
     public final double fromCount;
     public final double toCount;
     public final boolean multicurrency;
+
+    public final String fromCurrency;
+    public final String toCurrency;
     public final String comment;
     public final LocalDateTime createdAt;
 
@@ -20,6 +23,8 @@ public class BalanceTransactionDto {
         this.userId = entity.getUser() == null ? -1 : entity.getUser().getId();
         this.fromId = entity.getFrom() == null ? -1 : entity.getFrom().getId();
         this.toId = entity.getTo() == null ? -1 : entity.getTo().getId();
+        this.fromCurrency = entity.getFrom() == null ? null : entity.getFrom().getCurrency();
+        this.toCurrency = entity.getTo() == null ? null : entity.getTo().getCurrency();
         this.fromCount = entity.getFromCount();
         this.toCount = entity.getToCount();
         this.multicurrency = entity.isMulticurrency();

@@ -70,14 +70,14 @@ public class CabinetMoneyController {
 
     @PostMapping("/transfer/{fromCurrency}/to/{userId}/{toCurrency}")
     @Transactional
-    public BalanceTransactionDto transfer(@PathVariable String fromCurrency, @PathVariable long toId, @PathVariable String toCurrency, @RequestBody TransferRequest request) throws BalanceException {
+    public BalanceTransactionDto transfer(@PathVariable String fromCurrency, @PathVariable long userId, @PathVariable String toCurrency, @RequestBody TransferRequest request) throws BalanceException {
         var user = userService.getCurrentUser();
         var ref = user.getReference();
         var fromBalanceOptional = balanceService.findUserBalanceByUserAndCurrency(ref, fromCurrency);
         if (fromBalanceOptional.isEmpty()) {
             throw new EntityNotFoundException("Your balance not found");
         }
-        var targetUser = userService.findById(toId);
+        var targetUser = userService.findById(userId);
         if (targetUser.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }

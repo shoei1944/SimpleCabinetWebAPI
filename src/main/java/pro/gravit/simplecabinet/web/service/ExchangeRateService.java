@@ -10,6 +10,7 @@ import pro.gravit.simplecabinet.web.model.ExchangeRate;
 import pro.gravit.simplecabinet.web.repository.ExchangeRateRepository;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class ExchangeRateService {
         return exchangeRateRepository.findExchangeRateByFromCurrencyAndToCurrency(fromCurrency, toCurrency);
     }
 
-    public Iterable<ExchangeRate> findExchangeRateByFromCurrency(String fromCurrency) {
+    public List<ExchangeRate> findExchangeRateByFromCurrency(String fromCurrency) {
         return exchangeRateRepository.findExchangeRateByFromCurrency(fromCurrency);
     }
 

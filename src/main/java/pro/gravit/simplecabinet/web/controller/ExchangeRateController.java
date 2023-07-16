@@ -10,6 +10,8 @@ import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.service.BalanceService;
 import pro.gravit.simplecabinet.web.service.ExchangeRateService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/exchangerate")
 public class ExchangeRateController {
@@ -47,6 +49,12 @@ public class ExchangeRateController {
             throw new EntityNotFoundException("ExchangeRate not found");
         }
         return new ExchangeRateDto(optional.get());
+    }
+
+    @GetMapping("/get/{fromCurrency}")
+    public List<ExchangeRateDto> getByCurrency(@PathVariable String fromCurrency) {
+        var list = exchangeRateService.findExchangeRateByFromCurrency(fromCurrency);
+        return list.stream().map(ExchangeRateDto::new).toList();
     }
 
     public record ExchangeRateCreateRequest(String fromCurrency, String toCurrency, double value, boolean unsafe) {
