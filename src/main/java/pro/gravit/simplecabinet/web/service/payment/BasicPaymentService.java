@@ -4,5 +4,5 @@ import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.service.PaymentService;
 
 public interface BasicPaymentService {
-    PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum) throws Exception;
+    PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum, String ip) throws Exception;
 }

@@ -34,7 +34,7 @@ public class FreekassaPaymentService implements BasicPaymentService {
     private PaymentService paymentService;
 
     @Override
-    public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum) throws Exception {
+    public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum, String ip) throws Exception {
         var payment = paymentService.createBasic(user, sum);
         payment.setSystem("Freekassa");
         try {
@@ -45,7 +45,7 @@ public class FreekassaPaymentService implements BasicPaymentService {
                     "i", config.getPaymentSystemId(),
                     "email", user.getEmail(),
                     "amount", String.valueOf(sum),
-                    "ip", "",
+                    "ip", ip,
                     "currency", "RUB"), CreateOrderResponse.class);
             payment.setSystemPaymentId(String.valueOf(order.orderId()));
             paymentService.save(payment);
@@ -80,9 +80,11 @@ public class FreekassaPaymentService implements BasicPaymentService {
         List<String> keys = new ArrayList<>(parameters.keySet());
         Collections.sort(keys);
         StringBuilder signData = new StringBuilder();
-        for (var k : keys) {
-            signData.append(parameters.get(k));
-            signData.append("|");
+        for (int i = 0; i < keys.size(); i++) {
+            if (i != 0) {
+                signData.append("|");
+            }
+            signData.append(parameters.get(keys.get(i)));
         }
         parameters.put("signature", SecurityUtils.hmacSha256(signData.toString(), config.getApiKey() == null ? "TEST" : config.getApiKey()));
         String json = mapper.writeValueAsString(parameters);

@@ -10,6 +10,8 @@ import pro.gravit.simplecabinet.web.service.PaymentService;
 import pro.gravit.simplecabinet.web.service.UserService;
 import pro.gravit.simplecabinet.web.service.payment.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/cabinet/payment")
 public class PaymentController {
@@ -27,7 +29,7 @@ public class PaymentController {
     private UserService userService;
 
     @PostMapping("/create")
-    public PaymentInfoDto paymentCreate(@RequestBody BalancePaymentCreateRequest request) throws Exception {
+    public PaymentInfoDto paymentCreate(@RequestBody BalancePaymentCreateRequest request, HttpServletRequest servletRequest) throws Exception {
         PaymentService.PaymentCreationInfo info;
         var user = userService.getCurrentUser();
         var ref = user.getReference();
@@ -38,7 +40,7 @@ public class PaymentController {
             case "Test" -> testPaymentService;
             default -> throw new InvalidParametersException("Payment system not found", 11);
         };
-        info = basicPaymentService.createBalancePayment(ref, request.sum);
+        info = basicPaymentService.createBalancePayment(ref, request.sum, servletRequest.getRemoteAddr());
         return new PaymentInfoDto(info.redirect(), new UserPaymentDto(info.paymentInfo()));
     }
 

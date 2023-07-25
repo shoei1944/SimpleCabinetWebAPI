@@ -35,7 +35,7 @@ public class YooPaymentService implements BasicPaymentService {
         return "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
     }
 
-    public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum) throws IOException, InterruptedException, URISyntaxException {
+    public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum, String ip) throws IOException, InterruptedException, URISyntaxException {
         var payment = paymentService.createBasic(user, sum);
         payment.setSystem("Yoo");
         var request = new YooPaymentRequest(YooPaymentAmount.ofRub(sum), true, YooPaymentConfirmation.ofRedirect(config.redirectUrl), "Balance");

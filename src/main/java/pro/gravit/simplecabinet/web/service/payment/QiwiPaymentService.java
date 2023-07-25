@@ -30,7 +30,7 @@ public class QiwiPaymentService implements BasicPaymentService {
     @Autowired
     private QiwiPaymentConfig config;
 
-    public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum) throws URISyntaxException {
+    public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum, String ip) throws URISyntaxException {
         var payment = paymentService.createBasic(user, sum);
         payment.setSystem("Qiwi");
         BillPaymentClient client = BillPaymentClientFactory.createDefault(config.secretKey);

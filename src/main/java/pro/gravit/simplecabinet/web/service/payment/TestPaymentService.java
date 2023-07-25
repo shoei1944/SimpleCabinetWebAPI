@@ -21,7 +21,7 @@ public class TestPaymentService implements BasicPaymentService {
     private TestPaymentConfig config;
 
     @Override
-    public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum) throws Exception {
+    public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum, String ip) throws Exception {
         var payment = paymentService.createBasic(user, sum);
         payment.setSystem("Test");
         payment.setSystemPaymentId(String.valueOf(payment.getId()));
