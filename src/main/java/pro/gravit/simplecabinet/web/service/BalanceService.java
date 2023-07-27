@@ -81,7 +81,7 @@ public class BalanceService {
             throw new BalanceException("Illegal arguments: fromId and toId is null");
         }
         if (fromId != null) {
-            Query fromUpdate = entityManager.createQuery("update UserBalance f set f.balance = f.balance - :fromCount where f.id = :id and f.balance > :fromCount");
+            Query fromUpdate = entityManager.createQuery("update UserBalance f set f.balance = f.balance - :fromCount where f.id = :id and f.balance >= :fromCount");
             fromUpdate.setParameter("fromCount", fromCount);
             fromUpdate.setParameter("id", fromId);
             int updated = fromUpdate.executeUpdate();
