@@ -38,7 +38,7 @@ public class AuthController {
 
     @PostMapping("/authorize")
     public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request) {
-        var optional = userService.findByUsername(request.username);
+        var optional = userService.findByUsernameOrEmail(request.username);
         if (optional.isEmpty()) {
             throw new AuthException("User not found", 3);
         }
