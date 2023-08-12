@@ -27,7 +27,7 @@ public class PasswordCheckService {
     private final SecretGenerator secretGenerator = new DefaultSecretGenerator(64);
     @Autowired
     private UserRepository repository;
-    @Value("{cabinet.2fa.name}")
+    @Value("${cabinet.2fa.name}")
     private String qrCodeIssuerName;
 
     public boolean checkPassword(User user, String password) {
