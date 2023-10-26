@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.PasswordCheckService;
+import pro.gravit.simplecabinet.web.service.SessionService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
 @RestController
@@ -14,8 +15,11 @@ public class CabinetSecurityController {
     private PasswordCheckService passwordCheckService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SessionService sessionService;
 
     @PostMapping("/changepassword")
+    @Transactional
     public void changePassword(@RequestBody ChangePasswordRequest request) {
         var user = userService.getCurrentUser();
         var ref = user.getReference();
@@ -23,6 +27,7 @@ public class CabinetSecurityController {
             throw new InvalidParametersException("Old password wrong", 10);
         }
         passwordCheckService.setPassword(ref, request.newPassword);
+        sessionService.deactivateAllByUserWithExclude(ref, user.getSessionId());
         userService.save(ref);
     }
 

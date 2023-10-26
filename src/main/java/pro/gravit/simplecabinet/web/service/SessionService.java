@@ -71,6 +71,14 @@ public class SessionService {
         query.executeUpdate();
     }
 
+    @Transactional
+    public void deactivateAllByUserWithExclude(User user, Long excludeSessionId) {
+        var query = entityManager.createQuery("update UserSession s set s.deleted = true where s.user = :user and s.id != :excludeSessionId");
+        query.setParameter("user", user);
+        query.setParameter("excludeSessionId", excludeSessionId);
+        query.executeUpdate();
+    }
+
     public Optional<UserSession> findById(Long aLong) {
         return repository.findById(aLong);
     }
