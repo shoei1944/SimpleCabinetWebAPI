@@ -89,16 +89,6 @@ public class UserTests {
     @Transactional
     public void testBasicCabinet() {
         {
-            cabinetController.setSkinModel(new CabinetController.SetSkinModelRequest(null));
-            var user = userService.getCurrentUser();
-            Assertions.assertNull(user.getReference().getSkinModel());
-        }
-        {
-            cabinetController.setSkinModel(new CabinetController.SetSkinModelRequest("slim"));
-            var user = userService.getCurrentUser();
-            Assertions.assertEquals(user.getReference().getSkinModel(), "slim");
-        }
-        {
             cabinetController.setStatus(new CabinetController.SetStatusRequest("Status"));
             var user = userService.getCurrentUser();
             Assertions.assertEquals(user.getReference().getStatus(), "Status");

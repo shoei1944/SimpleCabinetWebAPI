@@ -62,7 +62,7 @@ public class PermissionTests {
     @Test
     @Transactional
     public void checkPermissionOrder() {
-        var map = userDetailsService.collectUserPermissions(userService.findByUsername(USERNAME).orElseThrow());
+        var map = userDetailsService.collectUserPermissions(userService.getUserGroups(userService.findByUsername(USERNAME).orElseThrow()));
         Assertions.assertEquals(map.get("permtest.two"), "one");
         Assertions.assertEquals(map.get("permtest.one"), "two");
         Assertions.assertEquals(map.get("permtest.none"), "none");

@@ -34,13 +34,12 @@ public class UserDetailsService {
 
     @Transactional
     public List<String> collectUserRoles(User user) {
-        var groups = user.getGroups();
+        var groups = service.getUserGroups(user);
         return groups.stream().sorted(Comparator.comparingLong(UserGroup::getPriority)).map(UserGroup::getGroupName).collect(Collectors.toList());
     }
 
     @Transactional
-    public Map<String, String> collectUserPermissions(User user) {
-        var groups = user.getGroups();
+    public Map<String, String> collectUserPermissions(Collection<UserGroup> groups) {
         List<String> groupNames = new ArrayList<>(groups.stream().map(UserGroup::getGroupName).toList());
         groupNames.add("USER"); // Default group
         var permissions = permissionService.findByGroupNames(groupNames);
@@ -93,7 +92,7 @@ public class UserDetailsService {
         public Map<String, String> getPermissions() { // Optimize this
             if (permissions == null) {
                 var user = service.getReference(userId);
-                permissions = collectUserPermissions(user);
+                permissions = collectUserPermissions(service.getUserGroups(user));
             }
             return permissions;
         }

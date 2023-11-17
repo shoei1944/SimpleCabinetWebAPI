@@ -17,6 +17,7 @@ import pro.gravit.simplecabinet.web.repository.UserRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -106,6 +107,7 @@ public class BalanceService {
         transaction.setToCount(toId == null ? 0.0 : toCount);
         transaction.setMulticurrency(multiCurrency);
         transaction.setComment(comment);
+        transaction.setCreatedAt(LocalDateTime.now());
         transactionsRepository.save(transaction);
         return transaction;
     }

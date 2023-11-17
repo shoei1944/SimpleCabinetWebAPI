@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pro.gravit.simplecabinet.web.dto.UserDto;
+import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserAsset;
@@ -95,14 +96,6 @@ public class CabinetController {
         var user = userService.getCurrentUser();
         var ref = user.getReference();
         ref.setGender(request.gender);
-        userService.save(ref);
-    }
-
-    @PostMapping("/setskinmodel")
-    public void setSkinModel(@RequestBody SetSkinModelRequest request) {
-        var user = userService.getCurrentUser();
-        var ref = user.getReference();
-        ref.setSkinModel(request.model);
         userService.save(ref);
     }
 

@@ -14,12 +14,16 @@ import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserAsset;
 import pro.gravit.simplecabinet.web.model.UserGroup;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class DtoService {
+    @Autowired
+    private UserService userService;
     @Autowired
     private UserAssetService userAssetService;
     @Autowired
@@ -29,16 +33,17 @@ public class DtoService {
 
     @Transactional
     public UserDto toPublicUserDto(User user) {
-        var groups = getUserGroups(user).stream().map(UserGroupDto::new).collect(Collectors.toList());
+        var groups = userService.getUserGroups(user).stream().map(UserGroupDto::new).collect(Collectors.toList());
         return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
                 groups, getUserTextures(user), null);
     }
 
     @Transactional
     public UserDto toPrivateUserDto(User user) {
-        var groups = getUserGroups(user).stream().map(UserGroupDto::new).collect(Collectors.toList());
+        var groups = userService.getUserGroups(user);
+        var groupsDto = groups.stream().map(UserGroupDto::new).collect(Collectors.toList());
         return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
-                groups, getUserTextures(user), userDetailsService.collectUserPermissions(user));
+                groupsDto, getUserTextures(user), userDetailsService.collectUserPermissions(groups));
     }
 
     public UserDto toMiniUserDto(User user) {
@@ -79,9 +84,5 @@ public class DtoService {
 
     public UserDto.UserTexture getUserTexture(UserAsset asset) {
         return new UserDto.UserTexture(userAssetService.makeAssetUrl(asset), asset.getHash(), deserializeMetadata(asset.getMetadata()));
-    }
-
-    public List<UserGroup> getUserGroups(User user) {
-        return user.getGroups();
     }
 }

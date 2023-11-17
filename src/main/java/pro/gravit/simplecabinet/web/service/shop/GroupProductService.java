@@ -79,6 +79,9 @@ public class GroupProductService {
         userGroup.setGroupName(product.getLocalName());
         userGroup.setUser(order.getUser());
         userGroup.setStartDate(LocalDateTime.now());
+        if(product.getExpireDays() > 0) {
+            userGroup.setEndDate(userGroup.getStartDate().plusDays(product.getExpireDays()*order.getQuantity()));
+        }
         return userGroup;
     }
 }

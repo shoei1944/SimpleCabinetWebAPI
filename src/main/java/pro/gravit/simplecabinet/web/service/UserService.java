@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.BasicUser;
 import pro.gravit.simplecabinet.web.model.User;
+import pro.gravit.simplecabinet.web.model.UserGroup;
 import pro.gravit.simplecabinet.web.repository.UserRepository;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -94,6 +92,11 @@ public class UserService {
     public CurrentUser getCurrentUser() {
         var details = SecurityUtils.getUser();
         return new CurrentUser(details);
+    }
+
+    public List<UserGroup> getUserGroups(User user) {
+        var currentTime = LocalDateTime.now();
+        return user.getGroups().stream().filter((g) -> g.getEndDate() == null || g.getEndDate().isAfter(currentTime)).toList();
     }
 
     public class CurrentUser implements BasicUser {

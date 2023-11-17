@@ -9,6 +9,6 @@ import pro.gravit.simplecabinet.web.model.BalanceTransaction;
 import pro.gravit.simplecabinet.web.model.UserBalance;
 
 public interface BalanceTransactionsRepository extends JpaRepository<BalanceTransaction, Long> {
-    @Query("select t from BalanceTransaction t where t.from = :balance or t.to = :balance order by id")
+    @Query("select t from BalanceTransaction t where t.from = :balance or t.to = :balance order by createdAt desc")
     Page<BalanceTransaction> findAllByBalance(@Param("balance") UserBalance balance, Pageable pageable);
 }
