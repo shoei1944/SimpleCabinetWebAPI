@@ -2,7 +2,6 @@ package pro.gravit.simplecabinet.web.controller.cabinet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.dto.BalanceTransactionDto;
@@ -11,6 +10,7 @@ import pro.gravit.simplecabinet.web.dto.UserBalanceDto;
 import pro.gravit.simplecabinet.web.exception.AuthException;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
+import pro.gravit.simplecabinet.web.model.ExchangeRate;
 import pro.gravit.simplecabinet.web.model.UserBalance;
 import pro.gravit.simplecabinet.web.service.BalanceService;
 import pro.gravit.simplecabinet.web.service.UserService;
@@ -82,21 +82,20 @@ public class CabinetMoneyController {
         if (targetUser.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }
-        boolean needCreate = fromCurrency.equals(toCurrency);
+        Optional<ExchangeRate> rate = balanceService.findExchangeRate(fromCurrency, toCurrency);
+        if (rate.isEmpty()) {
+            if (fromCurrency.equals(toCurrency)) {
+                throw new BalanceException(String.format("You can't transfer %s", fromCurrency));
+            }
+            throw new BalanceException(String.format("Can't convert money from %s to %s", fromCurrency, toCurrency));
+        }
         Optional<UserBalance> toBalanceOptional;
-        if (needCreate) {
-            toBalanceOptional = Optional.of(balanceService.findOrCreateUserBalanceByUserAndCurrency(targetUser.get(), toCurrency));
-        } else {
-            toBalanceOptional = balanceService.findUserBalanceByUserAndCurrency(targetUser.get(), toCurrency);
-        }
-        if (toBalanceOptional.isEmpty()) {
-            throw new EntityNotFoundException("Target balance not found");
-        }
+        toBalanceOptional = Optional.of(balanceService.findOrCreateUserBalanceByUserAndCurrency(targetUser.get(), toCurrency));
         var fromBalance = fromBalanceOptional.get();
         var toBalance = toBalanceOptional.get();
         var transaction = balanceService.transfer(user.getId(), fromBalance.getId(), toBalance.getId(),
                 fromBalance.getCurrency(), toBalance.getCurrency(),
-                request.count, request.comment, true);
+                request.count, request.comment, rate.get());
         return new BalanceTransactionDto(transaction);
     }
 

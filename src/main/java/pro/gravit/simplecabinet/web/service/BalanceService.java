@@ -118,18 +118,15 @@ public class BalanceService {
     }
 
     @Transactional
-    public BalanceTransaction transfer(Long userId, long fromId, long toId, String fromCurrency, String toCurrency, double count, String comment, boolean strictRate) {
+    public BalanceTransaction transfer(Long userId, long fromId, long toId, String fromCurrency, String toCurrency, double count, String comment, ExchangeRate exchangeRate) {
         if (fromCurrency == null || toCurrency == null) {
             throw new BalanceException("fromCurrency or toCurrency is null");
         }
-        Optional<ExchangeRate> rate = findExchangeRate(fromCurrency, toCurrency);
-        if (rate.isEmpty()) {
-            if (!fromCurrency.equals(toCurrency) || strictRate) {
-                throw new BalanceException(String.format("Can't convert money from %s to %s", fromCurrency, toCurrency));
-            }
-            return transfer(userId, fromId, toId, count, count, false, comment);
+        if (exchangeRate != null) {
+            return transfer(userId, fromId, toId, count, count * exchangeRate.getValue(), !fromCurrency.equals(toCurrency), comment);
+        } else {
+            return transfer(userId, fromId, toId, count, count, !fromCurrency.equals(toCurrency), comment);
         }
-        return transfer(userId, fromId, toId, count, count * rate.get().getValue(), true, comment);
     }
 
     @Transactional

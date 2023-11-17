@@ -8,10 +8,12 @@ import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.dto.UserBalanceDto;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
+import pro.gravit.simplecabinet.web.model.ExchangeRate;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.service.BalanceService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -132,8 +134,15 @@ public class AdminMoneyController {
         } else {
             user = null;
         }
+
+        Optional<ExchangeRate> rate = balanceService.findExchangeRate(fromCurrency, toCurrency);
+        if (rate.isEmpty()) {
+            if (!fromCurrency.equals(toCurrency) || request.strictRate) {
+                throw new BalanceException(String.format("Can't convert money from %s to %s", fromCurrency, toCurrency));
+            }
+        }
         var transaction = balanceService.transfer(user == null ? null : user.getId(),
-                fromBalance.getId(), toBalance.getId(), fromBalance.getCurrency(), toBalance.getCurrency(), request.count, request.comment, request.strictRate);
+                fromBalance.getId(), toBalance.getId(), fromBalance.getCurrency(), toBalance.getCurrency(), request.count, request.comment, rate.orElse(null));
         return new BalanceTransactionDto(transaction);
     }
 
@@ -149,15 +158,27 @@ public class AdminMoneyController {
         } else {
             user = null;
         }
+        Optional<ExchangeRate> rate = balanceService.findExchangeRate(fromCurrency, toCurrency);
+        if (rate.isEmpty()) {
+            if (!fromCurrency.equals(toCurrency) || request.strictRate) {
+                throw new BalanceException(String.format("Can't convert money from %s to %s", fromCurrency, toCurrency));
+            }
+        }
         var transaction = balanceService.transfer(user == null ? null : user.getId(),
-                fromBalance.getId(), toBalance.getId(), fromBalance.getCurrency(), toBalance.getCurrency(), request.count, request.comment, request.strictRate);
+                fromBalance.getId(), toBalance.getId(), fromBalance.getCurrency(), toBalance.getCurrency(), request.count, request.comment, rate.orElse(null));
         return new BalanceTransactionDto(transaction);
     }
 
     @PostMapping("/transfer/unchecked/multicurrency/{userId}/from/{fromId}/{fromCurrency}/to/{toId}/{toCurrency}")
     public BalanceTransactionDto transferUncheckedMultiCurrency(@PathVariable Long userId, @PathVariable Long fromId, @PathVariable String fromCurrency, @PathVariable Long toId, @PathVariable String toCurrency, @RequestBody TransferMoneyRequest request) throws BalanceException {
+        Optional<ExchangeRate> rate = balanceService.findExchangeRate(fromCurrency, toCurrency);
+        if (rate.isEmpty()) {
+            if (!fromCurrency.equals(toCurrency) || request.strictRate) {
+                throw new BalanceException(String.format("Can't convert money from %s to %s", fromCurrency, toCurrency));
+            }
+        }
         var transaction = balanceService.transfer(userId,
-                fromId, toId, fromCurrency, toCurrency, request.count, request.comment, request.strictRate);
+                fromId, toId, fromCurrency, toCurrency, request.count, request.comment, rate.orElse(null));
         return new BalanceTransactionDto(transaction);
     }
 
