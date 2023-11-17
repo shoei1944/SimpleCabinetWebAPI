@@ -13,13 +13,13 @@ public class ItemProductDto {
     // Limitations
     public final Product.ProductLimitations limitations;
 
-    public ItemProductDto(ItemProduct entity) {
-        this.id = entity.getId();
-        this.price = entity.getPrice();
-        this.currency = entity.getCurrency();
-        this.displayName = entity.getDisplayName();
-        this.description = entity.getDescription();
-        this.pictureUrl = entity.getPictureUrl();
-        this.limitations = entity.getLimitations();
+    public ItemProductDto(long id, double price, String currency, String displayName, String description, String pictureUrl, Product.ProductLimitations limitations) {
+        this.id = id;
+        this.price = price;
+        this.currency = currency;
+        this.displayName = displayName;
+        this.description = description;
+        this.pictureUrl = pictureUrl;
+        this.limitations = limitations;
     }
 }

@@ -10,6 +10,7 @@ import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.ItemProduct;
+import pro.gravit.simplecabinet.web.service.DtoService;
 import pro.gravit.simplecabinet.web.service.UserService;
 import pro.gravit.simplecabinet.web.service.shop.ItemProductService;
 
@@ -20,11 +21,13 @@ public class ItemShopController {
     private ItemProductService productService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private DtoService dtoService;
 
     @GetMapping("/page/{pageId}")
     public PageDto<ItemProductDto> getPage(@PathVariable int pageId) {
         var list = productService.findAllAvailable(PageRequest.of(pageId, 10));
-        return new PageDto<>(list.map(ItemProductDto::new));
+        return new PageDto<>(list.map(dtoService::toItemProductDto));
     }
 
     @GetMapping("/id/{id}")
@@ -33,7 +36,7 @@ public class ItemShopController {
         if (optional.isEmpty()) {
             throw new EntityNotFoundException("ItemProduct not found");
         }
-        return new ItemProductDto(optional.get());
+        return dtoService.toItemProductDto(optional.get());
     }
 
     @PostMapping("/id/{id}/setlimitations")
@@ -88,9 +91,10 @@ public class ItemShopController {
         product.setItemCustom(request.itemCustom);
         product.setItemQuantity(request.itemQuantity);
         product.setServer(request.server);
-        product.setAvailable(false);
+        product.setPictureUrl(request.pictureName);
+        product.setAvailable(true);
         productService.save(product);
-        return new ItemProductDto(product);
+        return dtoService.toItemProductDto(product);
     }
 
     @PostMapping("/buy")
@@ -113,7 +117,7 @@ public class ItemShopController {
 
     public record CreateItemRequest(String displayName, String description, double price,
                                     String currency, String itemName, String itemExtra, String itemNbt,
-                                    String itemCustom, int itemQuantity, String server) {
+                                    String itemCustom, int itemQuantity, String server, String pictureName) {
 
     }
 }

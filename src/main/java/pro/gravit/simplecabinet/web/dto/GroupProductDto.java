@@ -12,14 +12,14 @@ public class GroupProductDto {
     public final long expireDays;
     public final boolean available;
 
-    public GroupProductDto(GroupProduct entity) {
-        this.id = entity.getId();
-        this.price = entity.getPrice();
-        this.currency = entity.getCurrency();
-        this.displayName = entity.getDisplayName();
-        this.description = entity.getDescription();
-        this.pictureUrl = entity.getPictureUrl();
-        this.expireDays = entity.getExpireDays();
-        this.available = entity.isAvailable();
+    public GroupProductDto(long id, double price, String currency, String displayName, String description, String pictureUrl, long expireDays, boolean available) {
+        this.id = id;
+        this.price = price;
+        this.currency = currency;
+        this.displayName = displayName;
+        this.description = description;
+        this.pictureUrl = pictureUrl;
+        this.expireDays = expireDays;
+        this.available = available;
     }
 }

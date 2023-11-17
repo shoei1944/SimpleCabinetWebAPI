@@ -36,14 +36,14 @@ public class AdminUploadController {
         String hash = userAssetService.calculateHash(bytes);
         try {
             URL url = storageService.put(hash, bytes);
-            return new UploadedUrl(url.toString());
+            return new UploadedUrl(url.toString(), hash);
         } catch (StorageService.StorageException e) {
             logger.error("StorageService.put failed", e);
             throw new InvalidParametersException("File upload failure", 22);
         }
     }
 
-    public record UploadedUrl(String url) {
+    public record UploadedUrl(String url, String name) {
 
     }
 }

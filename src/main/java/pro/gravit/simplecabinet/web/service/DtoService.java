@@ -6,13 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pro.gravit.simplecabinet.web.dto.ItemDeliveryDto;
-import pro.gravit.simplecabinet.web.dto.UserDto;
-import pro.gravit.simplecabinet.web.dto.UserGroupDto;
-import pro.gravit.simplecabinet.web.model.ItemDelivery;
-import pro.gravit.simplecabinet.web.model.User;
-import pro.gravit.simplecabinet.web.model.UserAsset;
-import pro.gravit.simplecabinet.web.model.UserGroup;
+import pro.gravit.simplecabinet.web.dto.*;
+import pro.gravit.simplecabinet.web.model.*;
+import pro.gravit.simplecabinet.web.service.storage.StorageService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,7 +25,20 @@ public class DtoService {
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
+    private StorageService storageService;
+    @Autowired
     private ObjectMapper objectMapper;
+
+    public GroupProductDto toGroupProductDto(GroupProduct entity) {
+        return new GroupProductDto(entity.getId(), entity.getPrice(), entity.getCurrency(), entity.getDisplayName(), entity.getDescription(),
+                entity.getPictureUrl() != null ? storageService.getUrl(entity.getPictureUrl()).toString() : null, entity.getExpireDays(), entity.isAvailable());
+    }
+
+    public ItemProductDto toItemProductDto(ItemProduct entity) {
+        return new ItemProductDto(entity.getId(), entity.getPrice(), entity.getCurrency(), entity.getDisplayName(), entity.getDescription(),
+                entity.getPictureUrl() != null ? storageService.getUrl(entity.getPictureUrl()).toString() : null,
+                entity.getLimitations());
+    }
 
     @Transactional
     public UserDto toPublicUserDto(User user) {

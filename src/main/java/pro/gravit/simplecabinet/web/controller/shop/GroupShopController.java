@@ -10,6 +10,7 @@ import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.GroupProduct;
+import pro.gravit.simplecabinet.web.service.DtoService;
 import pro.gravit.simplecabinet.web.service.UserService;
 import pro.gravit.simplecabinet.web.service.shop.GroupProductService;
 
@@ -22,11 +23,13 @@ public class GroupShopController {
     private GroupProductService groupProductService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private DtoService dtoService;
 
     @GetMapping("/page/{pageId}")
     public PageDto<GroupProductDto> getPage(@PathVariable int pageId) {
         var list = groupProductService.findAllAvailable(PageRequest.of(pageId, 10));
-        return new PageDto<>(list.map(GroupProductDto::new));
+        return new PageDto<>(list.map(dtoService::toGroupProductDto));
     }
 
     @GetMapping("/id/{id}")
@@ -35,7 +38,7 @@ public class GroupShopController {
         if (optional.isEmpty()) {
             throw new EntityNotFoundException("GroupProduct not found");
         }
-        return new GroupProductDto(optional.get());
+        return dtoService.toGroupProductDto(optional.get());
     }
 
     @PostMapping("/buy")
@@ -67,9 +70,10 @@ public class GroupShopController {
         product.setCurrency(request.currency);
         product.setStackable(request.stackable);
         product.setLocalName(request.localName);
-        product.setAvailable(false);
+        product.setPictureUrl(request.pictureName);
+        product.setAvailable(true);
         groupProductService.save(product);
-        return new GroupProductDto(product);
+        return dtoService.toGroupProductDto(product);
     }
 
     @PostMapping("/id/{id}/setlimitations")
@@ -128,7 +132,7 @@ public class GroupShopController {
 
     public record GroupProductCreateRequest(String displayName, String description, String name, String server,
                                             String world, String context, long expireDays, boolean local, double price,
-                                            String currency, boolean stackable, String localName) {
+                                            String currency, boolean stackable, String localName, String pictureName) {
     }
 
     public record SetAvailableRequest(boolean available) {
