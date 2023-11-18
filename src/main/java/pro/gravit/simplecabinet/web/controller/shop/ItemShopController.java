@@ -105,6 +105,9 @@ public class ItemShopController {
         if (productOptional.isEmpty()) {
             throw new InvalidParametersException("ItemProduct not found", 1);
         }
+        if (request.quantity <= 0) {
+            throw new InvalidParametersException("quantity <= 0", 2);
+        }
         var product = productOptional.get();
         var order = productService.createItemOrder(product, request.quantity, user.getReference());
         productService.delivery(order);

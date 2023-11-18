@@ -48,6 +48,9 @@ public class GroupShopController {
         if (product.isEmpty()) {
             throw new InvalidParametersException("Product not found", 1);
         }
+        if (request.quantity <= 0) {
+            throw new InvalidParametersException("quantity <= 0", 2);
+        }
         var user = userService.getCurrentUser();
         var order = groupProductService.createGroupOrder(product.get(), request.quantity, user.getReference());
         groupProductService.delivery(order);
