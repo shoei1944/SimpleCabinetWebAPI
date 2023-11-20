@@ -6,6 +6,7 @@ import pro.gravit.simplecabinet.web.dto.BanInfoDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.BanService;
+import pro.gravit.simplecabinet.web.service.HardwareIdService;
 import pro.gravit.simplecabinet.web.service.UserService;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,8 @@ public class AdminModerationController {
     private UserService userService;
     @Autowired
     private BanService banService;
+    @Autowired
+    private HardwareIdService hardwareIdService;
 
     @PostMapping("/ban/{userId}")
     public BanInfoDto banUser(@PathVariable long userId, @RequestBody BanRequest request) {
@@ -35,6 +38,9 @@ public class AdminModerationController {
         }
         var moderator = userService.getCurrentUser();
         var banInfo = banService.ban(user.get(), moderator.getReference(), request.reason, request.endDate);
+        if (request.isHardware) {
+            hardwareIdService.banByUser(user.get().getId());
+        }
         return new BanInfoDto(banInfo);
     }
 
@@ -49,6 +55,7 @@ public class AdminModerationController {
             throw new InvalidParametersException("User not banned", 5);
         }
         banService.unban(banInfo.get());
+        hardwareIdService.unbanByUser(user.get().getId());
     }
 
     public static record BanRequest(String reason, LocalDateTime endDate, boolean isHardware) {

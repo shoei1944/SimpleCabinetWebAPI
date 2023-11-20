@@ -8,6 +8,8 @@ import pro.gravit.simplecabinet.web.controller.admin.AdminHardwareController;
 import pro.gravit.simplecabinet.web.model.HardwareId;
 import pro.gravit.simplecabinet.web.repository.HardwareIdRepository;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,5 +39,27 @@ public class HardwareIdService {
 
     public Page<HardwareId> findAll(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    public List<HardwareId> findByUser(long userId) {
+        return repository.findByUser(userId);
+    }
+
+    @Transactional
+    public void banByUser(long userId) {
+        var list = findByUser(userId);
+        for (var e : list) {
+            e.setBanned(true);
+        }
+        repository.saveAll(list);
+    }
+
+    @Transactional
+    public void unbanByUser(long userId) {
+        var list = findByUser(userId);
+        for (var e : list) {
+            e.setBanned(false);
+        }
+        repository.saveAll(list);
     }
 }
