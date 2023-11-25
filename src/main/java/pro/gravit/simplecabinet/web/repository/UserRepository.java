@@ -2,8 +2,10 @@ package pro.gravit.simplecabinet.web.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import pro.gravit.simplecabinet.web.model.HardwareId;
 import pro.gravit.simplecabinet.web.model.User;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,4 +27,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u left join fetch u.assets where u.id = :id")
     Optional<User> findByIdFetchAssets(Long id);
+
+    @Query("select u from UserSession session, User u where session.user = u and session.hardwareId = :hardwareId")
+    List<User> findByHardwareId(HardwareId hardwareId);
+
+    @Query("select u from UserSession session, User u join fetch u.assets where session.user = u and session.hardwareId = :hardwareId")
+    List<User> findByHardwareIdFetchAssets(HardwareId hardwareId);
 }

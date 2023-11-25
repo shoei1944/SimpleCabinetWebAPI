@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.BasicUser;
+import pro.gravit.simplecabinet.web.model.HardwareId;
 import pro.gravit.simplecabinet.web.model.User;
 import pro.gravit.simplecabinet.web.model.UserGroup;
 import pro.gravit.simplecabinet.web.repository.UserRepository;
@@ -64,6 +65,14 @@ public class UserService {
 
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email);
+    }
+
+    public List<User> findByHardwareId(HardwareId hardwareId) {
+        return repository.findByHardwareId(hardwareId);
+    }
+
+    public List<User> findByHardwareIdFetchAssets(HardwareId hardwareId) {
+        return repository.findByHardwareIdFetchAssets(hardwareId);
     }
 
     public void delete(User entity) {

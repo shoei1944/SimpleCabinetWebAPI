@@ -27,7 +27,7 @@ public class HardwareInfoDto {
         this.processorMaxFreq = entity.getProcessorMaxFreq();
         this.battery = entity.isBattery();
         this.hwDiskId = entity.getHwDiskId();
-        this.displayId = Base64.getEncoder().encodeToString(entity.getDisplayId());
+        this.displayId = entity.getDisplayId() == null ? null : Base64.getEncoder().encodeToString(entity.getDisplayId());
         this.baseboardSerialNumber = entity.getBaseboardSerialNumber();
         this.publicKey = Base64.getEncoder().encodeToString(entity.getPublicKey());
         this.banned = entity.isBanned();

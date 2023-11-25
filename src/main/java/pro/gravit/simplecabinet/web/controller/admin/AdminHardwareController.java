@@ -5,17 +5,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.dto.HardwareInfoDto;
 import pro.gravit.simplecabinet.web.dto.PageDto;
+import pro.gravit.simplecabinet.web.dto.UserDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.model.HardwareId;
+import pro.gravit.simplecabinet.web.service.DtoService;
 import pro.gravit.simplecabinet.web.service.HardwareIdService;
+import pro.gravit.simplecabinet.web.service.UserService;
 
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/hardware")
 public class AdminHardwareController {
     @Autowired
     private HardwareIdService hardwareIdService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private DtoService dtoService;
 
     @GetMapping("/id/{id}")
     public HardwareInfoDto findById(@PathVariable long id) {
@@ -62,6 +70,16 @@ public class AdminHardwareController {
         return new PageDto<>(result.map(HardwareInfoDto::new));
     }
 
+    @GetMapping("/getusersbyhardware/{hardwareId}")
+    public List<UserDto> getUsersByHardwareId(@PathVariable long hardwareId, @PathVariable boolean assets) {
+        var hardwareOptional = hardwareIdService.findById(hardwareId);
+        if (hardwareOptional.isEmpty()) {
+            throw new EntityNotFoundException("HardwareId not found");
+        }
+        var users = assets ? userService.findByHardwareIdFetchAssets(hardwareOptional.get()) : userService.findByHardwareId(hardwareOptional.get());
+        return users.stream().map(dtoService::toMiniUserDto).toList();
+    }
+
     @PutMapping("/new")
     public HardwareInfoDto create(@RequestBody HardwareCreateRequest request) {
         var hw = new HardwareId();
@@ -72,7 +90,7 @@ public class AdminHardwareController {
         hw.setProcessorMaxFreq(request.processorMaxFreq());
         hw.setBattery(request.battery());
         hw.setHwDiskId(request.hwDiskId());
-        hw.setDisplayId(Base64.getDecoder().decode(request.displayId()));
+        hw.setDisplayId(request.displayId() == null ? null : Base64.getDecoder().decode(request.displayId()));
         hw.setBaseboardSerialNumber(request.baseboardSerialNumber());
         hw.setPublicKey(Base64.getDecoder().decode(request.publicKey()));
         hardwareIdService.save(hw);

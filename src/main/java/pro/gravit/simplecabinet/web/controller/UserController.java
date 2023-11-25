@@ -4,17 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pro.gravit.simplecabinet.web.dto.HardwareInfoDto;
 import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.dto.UserDto;
 import pro.gravit.simplecabinet.web.dto.UserGroupDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.model.UserGroup;
-import pro.gravit.simplecabinet.web.service.DtoService;
-import pro.gravit.simplecabinet.web.service.UserAssetService;
-import pro.gravit.simplecabinet.web.service.UserGroupService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -28,6 +27,8 @@ public class UserController {
     @Autowired
     private UserAssetService userAssetService;
     @Autowired
+    private HardwareIdService hardwareIdService;
+    @Autowired
     private DtoService dtoService;
 
     @GetMapping("/id/{userId}")
@@ -37,6 +38,16 @@ public class UserController {
             throw new EntityNotFoundException("User not found");
         }
         return dtoService.toPublicUserDto(optional.get());
+    }
+
+    @GetMapping("/id/{userId}/hardware")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public List<HardwareInfoDto> getHardwareByUserId(@PathVariable long userId) {
+        var optional = service.findById(userId);
+        if (optional.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        return hardwareIdService.findByUser(optional.get().getId()).stream().map(HardwareInfoDto::new).toList();
     }
 
     @DeleteMapping("/id/{userId}/status")
