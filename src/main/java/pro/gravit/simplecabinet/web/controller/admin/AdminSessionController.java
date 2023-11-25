@@ -26,7 +26,7 @@ public class AdminSessionController {
         if (optional.isEmpty()) {
             throw new EntityNotFoundException("UserSession not found");
         }
-        return new UserSessionDto(optional.get());
+        return new UserSessionDto(optional.get(), true);
     }
 
     @PostMapping("/id/{id}/deactivate")
@@ -69,7 +69,16 @@ public class AdminSessionController {
             throw new EntityNotFoundException("User not found");
         }
         var list = sessionService.findByUser(user.get(), PageRequest.of(pageId, 10));
-        return new PageDto<>(list.map(UserSessionDto::new));
+        return new PageDto<>(list.map(x -> new UserSessionDto(x, true)));
+    }
+
+    @GetMapping("/serverid/{serverId}")
+    public UserSessionDto getByServerId(@PathVariable String serverId) {
+        var optional = sessionService.findByServerId(serverId);
+        if (optional.isEmpty()) {
+            throw new EntityNotFoundException("UserSession not found");
+        }
+        return new UserSessionDto(optional.get(), true);
     }
 
     @PostMapping("/usersession/{userId}/deactivateall")

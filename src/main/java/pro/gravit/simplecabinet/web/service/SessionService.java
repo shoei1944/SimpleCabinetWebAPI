@@ -56,6 +56,10 @@ public class SessionService {
         return repository.findByUserAndServerId(user, serverId);
     }
 
+    public Optional<UserSession> findByServerId(String serverId) {
+        return repository.findByServerId(serverId);
+    }
+
     public Page<UserSession> findByUser(User user, Pageable pageable) {
         return repository.findByUser(user, pageable);
     }
