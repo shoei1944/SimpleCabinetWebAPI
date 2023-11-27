@@ -59,11 +59,23 @@ public class GroupProductService {
 
     @Transactional
     public GroupOrder delivery(GroupOrder initialOrder) {
+        var product = initialOrder.getProduct();
         var user = initialOrder.getUser();
         var groups = user.getGroups();
-        var group = makeUserGroup(initialOrder);
-        var product = initialOrder.getProduct();
-        groups.add(group);
+        UserGroup group = null;
+        for (var userGroup : groups) {
+            if (userGroup.getGroupName() != null && userGroup.getGroupName().equals(product.getLocalName())) {
+                group = userGroup;
+            }
+        }
+        if (group == null) {
+            group = makeUserGroup(initialOrder);
+            groups.add(group);
+        } else if (product.isStackable()) {
+            group.setEndDate(group.getEndDate().plusDays(product.getExpireDays() * initialOrder.getQuantity()));
+        } else {
+            group.setEndDate(group.getStartDate().plusDays(product.getExpireDays() * initialOrder.getQuantity()));
+        }
         userGroupService.save(group);
         shopService.fillProcessDeliveryOrderProperties(initialOrder);
         orderRepository.save(initialOrder);
