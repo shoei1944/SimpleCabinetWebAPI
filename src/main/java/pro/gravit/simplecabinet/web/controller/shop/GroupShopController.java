@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pro.gravit.simplecabinet.web.dto.GroupOrderDto;
-import pro.gravit.simplecabinet.web.dto.GroupProductDto;
 import pro.gravit.simplecabinet.web.dto.PageDto;
+import pro.gravit.simplecabinet.web.dto.shop.GroupOrderDto;
+import pro.gravit.simplecabinet.web.dto.shop.GroupProductDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
-import pro.gravit.simplecabinet.web.model.GroupProduct;
+import pro.gravit.simplecabinet.web.model.shop.GroupProduct;
 import pro.gravit.simplecabinet.web.service.DtoService;
-import pro.gravit.simplecabinet.web.service.UserService;
-import pro.gravit.simplecabinet.web.service.shop.GroupProductService;
+import pro.gravit.simplecabinet.web.service.shop.group.GroupProductService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 import java.time.LocalDateTime;
 

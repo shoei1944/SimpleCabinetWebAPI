@@ -5,9 +5,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pro.gravit.simplecabinet.web.configuration.jwt.JwtProvider;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
-import pro.gravit.simplecabinet.web.model.User;
-import pro.gravit.simplecabinet.web.model.UserGroup;
-import pro.gravit.simplecabinet.web.service.*;
+import pro.gravit.simplecabinet.web.model.user.User;
+import pro.gravit.simplecabinet.web.model.user.UserGroup;
+import pro.gravit.simplecabinet.web.service.RegisterService;
+import pro.gravit.simplecabinet.web.service.user.PasswordCheckService;
+import pro.gravit.simplecabinet.web.service.user.SessionService;
+import pro.gravit.simplecabinet.web.service.user.UserGroupService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
 import javax.servlet.http.HttpServletRequest;

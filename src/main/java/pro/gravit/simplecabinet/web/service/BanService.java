@@ -8,9 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.gravit.simplecabinet.web.model.BanInfoEntity;
-import pro.gravit.simplecabinet.web.model.User;
+import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.repository.BanInfoRepository;
-import pro.gravit.simplecabinet.web.repository.UserRepository;
+import pro.gravit.simplecabinet.web.repository.user.UserRepository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

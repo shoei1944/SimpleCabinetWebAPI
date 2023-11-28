@@ -5,12 +5,17 @@ import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.configuration.jwt.JwtProvider;
-import pro.gravit.simplecabinet.web.dto.UserDto;
+import pro.gravit.simplecabinet.web.dto.user.UserDto;
 import pro.gravit.simplecabinet.web.exception.AuthException;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
-import pro.gravit.simplecabinet.web.service.*;
+import pro.gravit.simplecabinet.web.service.BanService;
+import pro.gravit.simplecabinet.web.service.DtoService;
+import pro.gravit.simplecabinet.web.service.RegisterService;
 import pro.gravit.simplecabinet.web.service.captcha.CaptchaService;
+import pro.gravit.simplecabinet.web.service.user.PasswordCheckService;
+import pro.gravit.simplecabinet.web.service.user.SessionService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
 @RestController

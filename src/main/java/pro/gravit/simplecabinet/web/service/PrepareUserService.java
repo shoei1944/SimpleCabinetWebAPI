@@ -2,8 +2,8 @@ package pro.gravit.simplecabinet.web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pro.gravit.simplecabinet.web.model.PrepareUser;
-import pro.gravit.simplecabinet.web.repository.PrepareUserRepository;
+import pro.gravit.simplecabinet.web.model.user.PrepareUser;
+import pro.gravit.simplecabinet.web.repository.user.PrepareUserRepository;
 
 import java.util.Optional;
 

@@ -6,8 +6,8 @@ import pro.gravit.simplecabinet.web.dto.BanInfoDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.BanService;
-import pro.gravit.simplecabinet.web.service.HardwareIdService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.user.HardwareIdService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 import java.time.LocalDateTime;
 

@@ -12,7 +12,7 @@ import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.model.News;
 import pro.gravit.simplecabinet.web.model.NewsComment;
 import pro.gravit.simplecabinet.web.service.NewsService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 @RestController
 @RequestMapping("/news")

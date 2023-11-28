@@ -1,5 +1,7 @@
 package pro.gravit.simplecabinet.web.model;
 
+import pro.gravit.simplecabinet.web.model.user.User;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

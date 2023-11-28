@@ -4,7 +4,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import pro.gravit.simplecabinet.web.exception.AuthException;
-import pro.gravit.simplecabinet.web.service.UserDetailsService;
+import pro.gravit.simplecabinet.web.service.user.UserDetailsService;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

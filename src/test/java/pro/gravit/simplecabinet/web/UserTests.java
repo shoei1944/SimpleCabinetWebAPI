@@ -15,11 +15,11 @@ import pro.gravit.simplecabinet.web.controller.admin.AdminMoneyController;
 import pro.gravit.simplecabinet.web.controller.cabinet.CabinetController;
 import pro.gravit.simplecabinet.web.controller.cabinet.CabinetMoneyController;
 import pro.gravit.simplecabinet.web.controller.cabinet.CabinetSecurityController;
-import pro.gravit.simplecabinet.web.dto.UserDto;
+import pro.gravit.simplecabinet.web.dto.user.UserDto;
 import pro.gravit.simplecabinet.web.security.WithCabinetUser;
-import pro.gravit.simplecabinet.web.service.PasswordCheckService;
-import pro.gravit.simplecabinet.web.service.UserDetailsService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.user.PasswordCheckService;
+import pro.gravit.simplecabinet.web.service.user.UserDetailsService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

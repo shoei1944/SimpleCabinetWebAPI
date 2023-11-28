@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.configuration.properties.QiwiPaymentConfig;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.exception.PaymentException;
-import pro.gravit.simplecabinet.web.model.User;
-import pro.gravit.simplecabinet.web.model.UserPayment;
-import pro.gravit.simplecabinet.web.service.PaymentService;
+import pro.gravit.simplecabinet.web.model.shop.Payment;
+import pro.gravit.simplecabinet.web.model.user.User;
+import pro.gravit.simplecabinet.web.service.shop.PaymentService;
 
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
@@ -55,7 +55,7 @@ public class QiwiPaymentService implements BasicPaymentService {
             paymentService.save(payment);
             return new PaymentService.PaymentCreationInfo(new PaymentService.PaymentRedirectInfo(response.getPayUrl()), payment);
         } catch (BillPaymentServiceException e) {
-            payment.setStatus(UserPayment.PaymentStatus.CANCELED);
+            payment.setStatus(Payment.PaymentStatus.CANCELED);
             paymentService.save(payment);
             throw new PaymentException(e.getResponse().getDescription(), 4);
         }
@@ -67,7 +67,7 @@ public class QiwiPaymentService implements BasicPaymentService {
         }
         String id = notification.getBill().getBillId();
         var payment = paymentService.findUserPaymentBySystemId("Qiwi", id).orElseThrow();
-        if (payment.getStatus() == UserPayment.PaymentStatus.SUCCESS) {
+        if (payment.getStatus() == Payment.PaymentStatus.SUCCESS) {
             return;
         }
         switch (notification.getBill().getStatus()) {
@@ -75,21 +75,21 @@ public class QiwiPaymentService implements BasicPaymentService {
             }
             case PAID -> {
                 var oldStatus = payment.getStatus();
-                completePayment(payment, UserPayment.PaymentStatus.SUCCESS);
-                if (oldStatus != UserPayment.PaymentStatus.SUCCESS) {
+                completePayment(payment, Payment.PaymentStatus.SUCCESS);
+                if (oldStatus != Payment.PaymentStatus.SUCCESS) {
                     paymentService.deliveryPayment(payment);
                 }
             }
             case REJECTED -> {
-                completePayment(payment, UserPayment.PaymentStatus.ERROR);
+                completePayment(payment, Payment.PaymentStatus.ERROR);
             }
             case EXPIRED -> {
-                completePayment(payment, UserPayment.PaymentStatus.CANCELED);
+                completePayment(payment, Payment.PaymentStatus.CANCELED);
             }
         }
     }
 
-    private void completePayment(UserPayment payment, UserPayment.PaymentStatus status) {
+    private void completePayment(Payment payment, Payment.PaymentStatus status) {
         payment.setStatus(status);
         paymentService.save(payment);
     }

@@ -5,11 +5,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-import pro.gravit.simplecabinet.web.model.User;
-import pro.gravit.simplecabinet.web.model.UserSession;
-import pro.gravit.simplecabinet.web.service.SessionService;
-import pro.gravit.simplecabinet.web.service.UserDetailsService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.model.user.User;
+import pro.gravit.simplecabinet.web.model.user.UserSession;
+import pro.gravit.simplecabinet.web.service.user.SessionService;
+import pro.gravit.simplecabinet.web.service.user.UserDetailsService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 public class WithMockCabinetUserSecurityContextFactory implements WithSecurityContextFactory<WithCabinetUser> {
     @Autowired

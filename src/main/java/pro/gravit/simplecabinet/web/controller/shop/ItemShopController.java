@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pro.gravit.simplecabinet.web.dto.ItemOrderDto;
-import pro.gravit.simplecabinet.web.dto.ItemProductDto;
 import pro.gravit.simplecabinet.web.dto.PageDto;
+import pro.gravit.simplecabinet.web.dto.shop.ItemOrderDto;
+import pro.gravit.simplecabinet.web.dto.shop.ItemProductDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
-import pro.gravit.simplecabinet.web.model.ItemProduct;
+import pro.gravit.simplecabinet.web.model.shop.ItemProduct;
 import pro.gravit.simplecabinet.web.service.DtoService;
-import pro.gravit.simplecabinet.web.service.UserService;
-import pro.gravit.simplecabinet.web.service.shop.ItemProductService;
+import pro.gravit.simplecabinet.web.service.shop.item.ItemProductService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 @RestController
 @RequestMapping("/shop/item/")

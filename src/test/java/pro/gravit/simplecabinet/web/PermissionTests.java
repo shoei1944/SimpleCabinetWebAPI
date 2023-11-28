@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import pro.gravit.simplecabinet.web.model.UserGroup;
-import pro.gravit.simplecabinet.web.model.UserPermission;
-import pro.gravit.simplecabinet.web.service.UserDetailsService;
-import pro.gravit.simplecabinet.web.service.UserGroupService;
-import pro.gravit.simplecabinet.web.service.UserPermissionService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.model.user.UserGroup;
+import pro.gravit.simplecabinet.web.model.user.UserPermission;
+import pro.gravit.simplecabinet.web.service.user.UserDetailsService;
+import pro.gravit.simplecabinet.web.service.user.UserGroupService;
+import pro.gravit.simplecabinet.web.service.user.UserPermissionService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;

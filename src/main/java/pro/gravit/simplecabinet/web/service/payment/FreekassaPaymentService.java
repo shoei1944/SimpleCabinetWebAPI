@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.configuration.properties.FreekassaPaymentConfig;
 import pro.gravit.simplecabinet.web.exception.PaymentException;
-import pro.gravit.simplecabinet.web.model.User;
-import pro.gravit.simplecabinet.web.model.UserPayment;
-import pro.gravit.simplecabinet.web.service.PaymentService;
+import pro.gravit.simplecabinet.web.model.shop.Payment;
+import pro.gravit.simplecabinet.web.model.user.User;
+import pro.gravit.simplecabinet.web.service.shop.PaymentService;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
 import javax.transaction.Transactional;
@@ -51,7 +51,7 @@ public class FreekassaPaymentService implements BasicPaymentService {
             paymentService.save(payment);
             return new PaymentService.PaymentCreationInfo(new PaymentService.PaymentRedirectInfo(order.location()), payment);
         } catch (Exception e) {
-            payment.setStatus(UserPayment.PaymentStatus.CANCELED);
+            payment.setStatus(Payment.PaymentStatus.CANCELED);
             paymentService.save(payment);
             if (e instanceof PaymentException) {
                 throw e;
@@ -70,8 +70,8 @@ public class FreekassaPaymentService implements BasicPaymentService {
         }
         var payment = paymentService.findUserPaymentBySystemId("Freekassa", webhookResponse.intid()).orElseThrow();
         var oldStatus = payment.getStatus();
-        completePayment(payment, UserPayment.PaymentStatus.SUCCESS);
-        if (oldStatus != UserPayment.PaymentStatus.SUCCESS) {
+        completePayment(payment, Payment.PaymentStatus.SUCCESS);
+        if (oldStatus != Payment.PaymentStatus.SUCCESS) {
             paymentService.deliveryPayment(payment);
         }
     }
@@ -100,7 +100,7 @@ public class FreekassaPaymentService implements BasicPaymentService {
         }
     }
 
-    private void completePayment(UserPayment payment, UserPayment.PaymentStatus status) {
+    private void completePayment(Payment payment, Payment.PaymentStatus status) {
         payment.setStatus(status);
         paymentService.save(payment);
     }

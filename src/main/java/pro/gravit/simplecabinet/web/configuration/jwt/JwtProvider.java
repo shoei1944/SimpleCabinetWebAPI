@@ -6,10 +6,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pro.gravit.simplecabinet.web.model.User;
-import pro.gravit.simplecabinet.web.model.UserSession;
+import pro.gravit.simplecabinet.web.model.user.User;
+import pro.gravit.simplecabinet.web.model.user.UserSession;
 import pro.gravit.simplecabinet.web.service.KeyManagementService;
-import pro.gravit.simplecabinet.web.service.UserDetailsService;
+import pro.gravit.simplecabinet.web.service.user.UserDetailsService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

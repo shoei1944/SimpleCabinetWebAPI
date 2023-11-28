@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.dto.PageDto;
-import pro.gravit.simplecabinet.web.dto.UserPermissionDto;
+import pro.gravit.simplecabinet.web.dto.user.UserPermissionDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
-import pro.gravit.simplecabinet.web.model.UserPermission;
-import pro.gravit.simplecabinet.web.service.UserGroupService;
-import pro.gravit.simplecabinet.web.service.UserPermissionService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.model.user.UserPermission;
+import pro.gravit.simplecabinet.web.service.user.UserGroupService;
+import pro.gravit.simplecabinet.web.service.user.UserPermissionService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 @RestController
 @RequestMapping("/admin/permissions")

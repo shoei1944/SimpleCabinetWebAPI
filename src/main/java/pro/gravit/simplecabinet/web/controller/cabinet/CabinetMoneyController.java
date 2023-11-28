@@ -6,14 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.dto.BalanceTransactionDto;
 import pro.gravit.simplecabinet.web.dto.PageDto;
-import pro.gravit.simplecabinet.web.dto.UserBalanceDto;
+import pro.gravit.simplecabinet.web.dto.user.UserBalanceDto;
 import pro.gravit.simplecabinet.web.exception.AuthException;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.model.ExchangeRate;
-import pro.gravit.simplecabinet.web.model.UserBalance;
-import pro.gravit.simplecabinet.web.service.BalanceService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.model.user.UserBalance;
+import pro.gravit.simplecabinet.web.service.user.BalanceService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 import java.util.Optional;
 

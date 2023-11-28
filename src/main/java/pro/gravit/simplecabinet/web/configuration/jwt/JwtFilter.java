@@ -5,7 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
-import pro.gravit.simplecabinet.web.service.UserDetailsService;
+import pro.gravit.simplecabinet.web.service.user.UserDetailsService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.model.BalanceTransaction;
-import pro.gravit.simplecabinet.web.model.Order;
-import pro.gravit.simplecabinet.web.model.Product;
-import pro.gravit.simplecabinet.web.model.User;
-import pro.gravit.simplecabinet.web.service.BalanceService;
+import pro.gravit.simplecabinet.web.model.shop.Order;
+import pro.gravit.simplecabinet.web.model.shop.Product;
+import pro.gravit.simplecabinet.web.model.user.User;
+import pro.gravit.simplecabinet.web.service.user.BalanceService;
 
 import java.time.LocalDateTime;
 

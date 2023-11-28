@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.dto.ExchangeRateDto;
 import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
-import pro.gravit.simplecabinet.web.service.BalanceService;
 import pro.gravit.simplecabinet.web.service.ExchangeRateService;
+import pro.gravit.simplecabinet.web.service.user.BalanceService;
 
 import java.util.List;
 

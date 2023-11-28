@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
-import pro.gravit.simplecabinet.web.service.PasswordCheckService;
-import pro.gravit.simplecabinet.web.service.SessionService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.user.PasswordCheckService;
+import pro.gravit.simplecabinet.web.service.user.SessionService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 @RestController
 @RequestMapping("/cabinet/security")

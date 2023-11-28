@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.model.AuditEntity;
-import pro.gravit.simplecabinet.web.model.User;
+import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.repository.AuditRepository;
 
 import java.time.LocalDateTime;

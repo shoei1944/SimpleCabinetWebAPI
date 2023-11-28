@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import pro.gravit.simplecabinet.web.model.BanInfoEntity;
-import pro.gravit.simplecabinet.web.model.User;
+import pro.gravit.simplecabinet.web.model.user.User;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

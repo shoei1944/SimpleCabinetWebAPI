@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pro.gravit.simplecabinet.web.configuration.jwt.JwtProvider;
-import pro.gravit.simplecabinet.web.dto.UserDto;
+import pro.gravit.simplecabinet.web.dto.user.UserDto;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.DtoService;
-import pro.gravit.simplecabinet.web.service.SessionService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.user.SessionService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 @RestController
 @RequestMapping("/admin/server")

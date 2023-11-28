@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import pro.gravit.simplecabinet.web.controller.cabinet.CabinetController;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
-import pro.gravit.simplecabinet.web.service.UserAssetService;
 import pro.gravit.simplecabinet.web.service.storage.StorageService;
+import pro.gravit.simplecabinet.web.service.user.UserAssetService;
 
 import java.io.IOException;
 import java.net.URL;

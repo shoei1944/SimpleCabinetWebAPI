@@ -3,10 +3,10 @@ package pro.gravit.simplecabinet.web.service.payment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.configuration.properties.TestPaymentConfig;
-import pro.gravit.simplecabinet.web.model.User;
-import pro.gravit.simplecabinet.web.model.UserPayment;
-import pro.gravit.simplecabinet.web.service.PaymentService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.model.shop.Payment;
+import pro.gravit.simplecabinet.web.model.user.User;
+import pro.gravit.simplecabinet.web.service.shop.PaymentService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 import java.net.http.HttpClient;
 
@@ -33,16 +33,16 @@ public class TestPaymentService implements BasicPaymentService {
         var payment = paymentService.findUserPaymentBySystemId("Test", webhookResponse.id()).orElseThrow();
         var oldStatus = payment.getStatus();
         if (webhookResponse.status().equalsIgnoreCase("SUCCESS")) {
-            completePayment(payment, UserPayment.PaymentStatus.SUCCESS);
-            if (oldStatus != UserPayment.PaymentStatus.SUCCESS) {
+            completePayment(payment, Payment.PaymentStatus.SUCCESS);
+            if (oldStatus != Payment.PaymentStatus.SUCCESS) {
                 paymentService.deliveryPayment(payment);
             }
         } else {
-            completePayment(payment, UserPayment.PaymentStatus.CANCELED);
+            completePayment(payment, Payment.PaymentStatus.CANCELED);
         }
     }
 
-    private void completePayment(UserPayment payment, UserPayment.PaymentStatus status) {
+    private void completePayment(Payment payment, Payment.PaymentStatus status) {
         payment.setStatus(status);
         paymentService.save(payment);
     }

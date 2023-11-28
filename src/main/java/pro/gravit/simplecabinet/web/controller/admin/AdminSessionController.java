@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.dto.PageDto;
-import pro.gravit.simplecabinet.web.dto.UserSessionDto;
+import pro.gravit.simplecabinet.web.dto.user.UserSessionDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
-import pro.gravit.simplecabinet.web.service.HardwareIdService;
-import pro.gravit.simplecabinet.web.service.SessionService;
-import pro.gravit.simplecabinet.web.service.UserService;
+import pro.gravit.simplecabinet.web.service.user.HardwareIdService;
+import pro.gravit.simplecabinet.web.service.user.SessionService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 @RestController
 @RequestMapping("/admin/session")

@@ -3,12 +3,12 @@ package pro.gravit.simplecabinet.web.controller.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-import pro.gravit.simplecabinet.web.dto.ItemDeliveryDto;
 import pro.gravit.simplecabinet.web.dto.PageDto;
+import pro.gravit.simplecabinet.web.dto.shop.ItemDeliveryDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.service.DtoService;
-import pro.gravit.simplecabinet.web.service.UserService;
-import pro.gravit.simplecabinet.web.service.shop.ItemDeliveryService;
+import pro.gravit.simplecabinet.web.service.shop.item.ItemDeliveryService;
+import pro.gravit.simplecabinet.web.service.user.UserService;
 
 @RestController
 @RequestMapping("/admin/delivery")
