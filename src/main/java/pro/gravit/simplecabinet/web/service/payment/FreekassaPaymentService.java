@@ -35,6 +35,9 @@ public class FreekassaPaymentService implements BasicPaymentService {
 
     @Override
     public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum, String ip) throws Exception {
+        if (!config.isEnable()) {
+            throw new PaymentException("This payment method is disabled", 6);
+        }
         var payment = paymentService.createBasic(user, sum);
         payment.setSystem("Freekassa");
         try {
@@ -60,6 +63,11 @@ public class FreekassaPaymentService implements BasicPaymentService {
                 throw new PaymentException("Error when processing request", 4);
             }
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return config.isEnable();
     }
 
     @Transactional

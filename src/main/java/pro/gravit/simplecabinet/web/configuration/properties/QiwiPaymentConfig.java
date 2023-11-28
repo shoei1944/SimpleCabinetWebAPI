@@ -6,12 +6,21 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "payment.qiwi")
 public class QiwiPaymentConfig {
+    public boolean enable;
     public String merchantId;
     public String secretKey;
     public String redirectUrl;
     public boolean test;
 
     public QiwiPaymentConfig() {
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     public String getMerchantId() {

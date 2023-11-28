@@ -1,6 +1,7 @@
 package pro.gravit.simplecabinet.web.service.shop;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class PaymentService {
     private PaymentRepository paymentRepository;
     @Autowired
     private BalanceService balanceService;
+    @Value("${payment.currency}")
+    private String currency;
 
     public Payment createBasic(User user, double sum) {
         var payment = new Payment();
@@ -45,7 +48,7 @@ public class PaymentService {
     public void deliveryPayment(Payment payment) throws BalanceException {
         System.out.printf("Delivery #%d sum %f", payment.getId(), payment.getSum());
         var user = payment.getUser();
-        var balance = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, "DONATE");
+        var balance = balanceService.findOrCreateUserBalanceByUserAndCurrency(user, currency);
         balanceService.addMoney(balance, payment.getSum(), String.format("Payment %d", payment.getId()));
     }
 

@@ -35,7 +35,15 @@ public class YooPaymentService implements BasicPaymentService {
         return "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
     }
 
+    @Override
+    public boolean isEnabled() {
+        return config.isEnable();
+    }
+
     public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum, String ip) throws IOException, InterruptedException, URISyntaxException {
+        if (!config.isEnable()) {
+            throw new PaymentException("This payment method is disabled", 6);
+        }
         var payment = paymentService.createBasic(user, sum);
         payment.setSystem("Yoo");
         var request = new YooPaymentRequest(YooPaymentAmount.ofRub(sum), true, YooPaymentConfirmation.ofRedirect(config.redirectUrl), "Balance");

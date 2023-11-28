@@ -31,6 +31,9 @@ public class QiwiPaymentService implements BasicPaymentService {
     private QiwiPaymentConfig config;
 
     public PaymentService.PaymentCreationInfo createBalancePayment(User user, double sum, String ip) throws URISyntaxException {
+        if (!config.isEnable()) {
+            throw new PaymentException("This payment method is disabled", 6);
+        }
         var payment = paymentService.createBasic(user, sum);
         payment.setSystem("Qiwi");
         BillPaymentClient client = BillPaymentClientFactory.createDefault(config.secretKey);
@@ -59,6 +62,11 @@ public class QiwiPaymentService implements BasicPaymentService {
             paymentService.save(payment);
             throw new PaymentException(e.getResponse().getDescription(), 4);
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return config.isEnable();
     }
 
     public void complete(Notification notification, String signature) throws BalanceException {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "payment.freekassa")
 public class FreekassaPaymentConfig {
+    public boolean enable;
     public String shopId;
     public String apiKey;
     public String paymentSystemId;
@@ -14,6 +15,15 @@ public class FreekassaPaymentConfig {
 
     public FreekassaPaymentConfig() {
     }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
 
     public String getShopId() {
         return shopId;

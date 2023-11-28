@@ -6,12 +6,21 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "payment.yoo")
 public class YooPaymentConfig {
+    public boolean enable;
     public String merchantId;
     public String secretKey;
     public String redirectUrl;
     public boolean test;
 
     public YooPaymentConfig() {
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     public String getMerchantId() {
