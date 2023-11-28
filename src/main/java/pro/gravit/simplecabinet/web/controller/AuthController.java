@@ -8,7 +8,9 @@ import pro.gravit.simplecabinet.web.configuration.jwt.JwtProvider;
 import pro.gravit.simplecabinet.web.dto.UserDto;
 import pro.gravit.simplecabinet.web.exception.AuthException;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
+import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.*;
+import pro.gravit.simplecabinet.web.service.captcha.CaptchaService;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
 @RestController
@@ -28,9 +30,14 @@ public class AuthController {
     private DtoService dtoService;
     @Autowired
     private RegisterService registerService;
+    @Autowired
+    private CaptchaService captchaService;
 
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody RegisterRequest request) {
+        if (!captchaService.verify(request.captcha)) {
+            throw new InvalidParametersException("Invalid captcha response", 36);
+        }
         registerService.check(request.username, request.email, request.password);
         var result = registerService.register(request.username, request.email, request.password);
         return new RegisterResponse(result.id()); // TODO
@@ -113,7 +120,7 @@ public class AuthController {
     public static record RegisterResponse(long id) {
     }
 
-    public static record RegisterRequest(String username, String email, String password) {
+    public static record RegisterRequest(String username, String email, String password, String captcha) {
     }
 
     public static record AuthRequest(String username, String password, String totpPassword) {
