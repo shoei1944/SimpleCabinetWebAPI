@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pro.gravit.simplecabinet.web.configuration.jwt.JwtProvider;
 import pro.gravit.simplecabinet.web.dto.user.UserDto;
+import pro.gravit.simplecabinet.web.dto.user.UserSessionDto;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.DtoService;
 import pro.gravit.simplecabinet.web.service.user.SessionService;
@@ -67,6 +68,20 @@ public class ServerCheckController {
         return dtoService.toPublicUserDto(userOptional.get());
     }
 
+    @PostMapping("/extendedcheckserver")
+    @Transactional
+    public ExtendedCheckServerResponse extendedCheckServer(@RequestBody CheckServerRequest request) {
+        var userOptional = userService.findByUsername(request.username);
+        if (userOptional.isEmpty()) {
+            throw new InvalidParametersException("User not found", 1);
+        }
+        var sessionOptional = sessionService.findByUserAndServerId(userOptional.get(), request.serverID);
+        if (sessionOptional.isEmpty()) {
+            throw new InvalidParametersException("Session not found", 5);
+        }
+        return new ExtendedCheckServerResponse(dtoService.toPublicUserDto(userOptional.get()), new UserSessionDto(sessionOptional.get()));
+    }
+
     public static record JoinServerRequest(String sessionId, String serverID) {
     }
 
@@ -77,5 +92,8 @@ public class ServerCheckController {
     }
 
     public static record CheckServerRequest(String username, String serverID) {
+    }
+
+    public static record ExtendedCheckServerResponse(UserDto user, UserSessionDto session) {
     }
 }
