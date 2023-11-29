@@ -79,7 +79,7 @@ public class ServerCheckController {
         if (sessionOptional.isEmpty()) {
             throw new InvalidParametersException("Session not found", 5);
         }
-        return new ExtendedCheckServerResponse(dtoService.toPublicUserDto(userOptional.get()), new UserSessionDto(sessionOptional.get()));
+        return new ExtendedCheckServerResponse(dtoService.toPublicUserDto(userOptional.get()), new UserSessionDto(sessionOptional.get(), true));
     }
 
     public static record JoinServerRequest(String sessionId, String serverID) {
