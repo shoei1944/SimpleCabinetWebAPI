@@ -28,9 +28,6 @@ public class User implements BasicUser {
     //Special
     @Column(unique = true)
     private String email;
-    //Skin info
-    @Column(name = "skin_model")
-    private String skinModel;
     //Addional info (may be null)
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
@@ -61,14 +58,6 @@ public class User implements BasicUser {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getSkinModel() {
-        return skinModel;
-    }
-
-    public void setSkinModel(String skinModel) {
-        this.skinModel = skinModel;
     }
 
     public Gender getGender() {
