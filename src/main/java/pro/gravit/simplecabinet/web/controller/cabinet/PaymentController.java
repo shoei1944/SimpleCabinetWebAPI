@@ -26,6 +26,8 @@ public class PaymentController {
     @Autowired
     private TestPaymentService testPaymentService;
     @Autowired
+    private StripePaymentService stripePaymentService;
+    @Autowired
     private UserService userService;
 
     @PostMapping("/create")
@@ -38,6 +40,7 @@ public class PaymentController {
             case "Qiwi" -> qiwiPaymentService;
             case "Freekassa" -> freekassaPaymentService;
             case "Test" -> testPaymentService;
+            case "Stripe" -> stripePaymentService;
             default -> throw new InvalidParametersException("Payment system not found", 11);
         };
         info = basicPaymentService.createBalancePayment(ref, request.sum, servletRequest.getRemoteAddr());
