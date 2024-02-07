@@ -3,9 +3,12 @@ package pro.gravit.simplecabinet.web.controller.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+import pro.gravit.simplecabinet.web.configuration.jwt.JwtProvider;
+import pro.gravit.simplecabinet.web.controller.AuthController;
 import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.dto.user.UserSessionDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
+import pro.gravit.simplecabinet.web.model.user.UserSession;
 import pro.gravit.simplecabinet.web.service.user.HardwareIdService;
 import pro.gravit.simplecabinet.web.service.user.SessionService;
 import pro.gravit.simplecabinet.web.service.user.UserService;
@@ -19,6 +22,8 @@ public class AdminSessionController {
     private UserService userService;
     @Autowired
     private HardwareIdService hardwareIdService;
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @GetMapping("/id/{id}")
     public UserSessionDto getById(@PathVariable long id) {
@@ -90,6 +95,30 @@ public class AdminSessionController {
         sessionService.deactivateAllByUser(user.get());
     }
 
+    @PostMapping("/sudo")
+    public AuthController.AuthResponse sudo(@RequestBody CreateSudoSessionRequest request) {
+        var user = userService.findById(request.userId());
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+        if (request.shadow()) {
+            UserSession userSession = new UserSession();
+            userSession.setRefreshToken("SUDO_TOKEN");
+            userSession.setClient(request.client());
+            userSession.setUser(user.get());
+            var token = jwtProvider.generateToken(userSession);
+            return new AuthController.AuthResponse(token.token(), userSession.getRefreshToken(), token.getExpire());
+        } else {
+            var session = sessionService.create(user.get(), request.client());
+            var token = jwtProvider.generateToken(session);
+            return new AuthController.AuthResponse(token.token(), session.getRefreshToken(), token.getExpire());
+        }
+    }
+
     public record SessionUpdateHardwareRequest(long id) {
+    }
+
+    public record CreateSudoSessionRequest(long userId, String client, boolean shadow) {
+
     }
 }
