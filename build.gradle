@@ -28,7 +28,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-    implementation 'com.qiwi:bill-payments-java-sdk:1.5.0'
     implementation 'com.stripe:stripe-java:24.7.0'
     implementation 'dev.samstevens.totp:totp:1.7.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'

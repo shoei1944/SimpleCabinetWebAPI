@@ -20,8 +20,6 @@ public class PaymentController {
     @Autowired
     private YooPaymentService yooPaymentService;
     @Autowired
-    private QiwiPaymentService qiwiPaymentService;
-    @Autowired
     private FreekassaPaymentService freekassaPaymentService;
     @Autowired
     private TestPaymentService testPaymentService;
@@ -37,7 +35,6 @@ public class PaymentController {
         var ref = user.getReference();
         BasicPaymentService basicPaymentService = switch (request.system) {
             case "Yoo" -> yooPaymentService;
-            case "Qiwi" -> qiwiPaymentService;
             case "Freekassa" -> freekassaPaymentService;
             case "Test" -> testPaymentService;
             case "Stripe" -> stripePaymentService;

@@ -14,7 +14,6 @@ module simplecabinet {
     requires spring.security.crypto;
     requires java.desktop;
     requires org.apache.commons.codec;
-    requires bill.payments.java.sdk;
     requires stripe.java;
     requires jjwt.api;
     requires spring.security.core;
