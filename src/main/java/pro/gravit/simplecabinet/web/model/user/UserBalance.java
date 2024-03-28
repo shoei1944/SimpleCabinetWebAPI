@@ -1,6 +1,6 @@
 package pro.gravit.simplecabinet.web.model.user;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "balance")

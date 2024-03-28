@@ -103,11 +103,11 @@ public class YooPaymentService implements BasicPaymentService {
         paymentService.save(payment);
     }
 
-    public static record YooError(String type, String id, String code, String description) {
+    public record YooError(String type, String id, String code, String description) {
 
     }
 
-    public static record YooPaymentAmount(String value, String currency) {
+    public record YooPaymentAmount(String value, String currency) {
         public static YooPaymentAmount ofRub(double sum) {
             return new YooPaymentAmount(String.valueOf(sum), "RUB");
         }
@@ -121,7 +121,7 @@ public class YooPaymentService implements BasicPaymentService {
         }
     }
 
-    public static record YooPaymentConfirmation(String type, String return_url) {
+    public record YooPaymentConfirmation(String type, String return_url) {
         public static YooPaymentConfirmation ofRedirect(String url) {
             return new YooPaymentConfirmation("redirect", url);
         }
@@ -135,7 +135,7 @@ public class YooPaymentService implements BasicPaymentService {
         }
     }
 
-    public static record YooPaymentConfirmationResponse(String type, String confirmation_url) {
+    public record YooPaymentConfirmationResponse(String type, String confirmation_url) {
 
         public PaymentService.PaymentRedirectInfo toRedirectInfo() {
             return new PaymentService.PaymentRedirectInfo(confirmation_url);
@@ -150,8 +150,8 @@ public class YooPaymentService implements BasicPaymentService {
         }
     }
 
-    public static record YooPaymentRequest(YooPaymentAmount amount, boolean capture,
-                                           YooPaymentConfirmation confirmation, String description) {
+    public record YooPaymentRequest(YooPaymentAmount amount, boolean capture,
+                                    YooPaymentConfirmation confirmation, String description) {
         @Override
         public String toString() {
             return "YooPaymentRequest{" +

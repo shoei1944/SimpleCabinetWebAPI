@@ -1,8 +1,8 @@
 package pro.gravit.simplecabinet.web.model;
 
+import jakarta.persistence.*;
 import pro.gravit.simplecabinet.web.model.user.User;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "BanInfo")

@@ -1,5 +1,7 @@
 package pro.gravit.simplecabinet.web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,6 +12,7 @@ import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 
 @ControllerAdvice
 public class CustomRestExceptionHandler {
+    private final Logger logger = LoggerFactory.getLogger(CustomRestExceptionHandler.class);
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFoundException(EntityNotFoundException e) {
         ApiError error = new ApiError(e.getCode(), e.getMessage());
@@ -36,7 +39,7 @@ public class CustomRestExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleAllException(Exception e) {
-        e.printStackTrace();
+        logger.error("Unhandled exception", e);
         ApiError error = new ApiError(2000, "Internal server error. Please contact administrator");
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }

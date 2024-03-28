@@ -1,5 +1,7 @@
 package pro.gravit.simplecabinet.web.service.user;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,8 +12,6 @@ import pro.gravit.simplecabinet.web.model.user.UserSession;
 import pro.gravit.simplecabinet.web.repository.user.UserSessionRepository;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.Optional;
 

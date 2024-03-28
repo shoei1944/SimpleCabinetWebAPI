@@ -1,6 +1,7 @@
 package pro.gravit.simplecabinet.web.model.shop;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity

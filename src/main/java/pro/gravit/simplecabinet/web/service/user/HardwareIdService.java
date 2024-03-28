@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pro.gravit.simplecabinet.web.controller.admin.AdminHardwareController;
 import pro.gravit.simplecabinet.web.model.user.HardwareId;
 import pro.gravit.simplecabinet.web.repository.user.HardwareIdRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +26,7 @@ public class HardwareIdService {
     }
 
     public HardwareId getById(Long aLong) {
-        return repository.getById(aLong);
+        return repository.getReferenceById(aLong);
     }
 
     public Optional<HardwareId> findByHardware(AdminHardwareController.HardwareSearchRequest id) {

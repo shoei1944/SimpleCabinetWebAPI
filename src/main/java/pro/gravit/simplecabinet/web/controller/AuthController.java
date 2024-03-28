@@ -50,7 +50,7 @@ public class AuthController {
 
     @PostMapping("/authorize")
     public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request) {
-        var optional = userService.findByUsernameOrEmail(request.username);
+        var optional = userService.findByUsernameOrEmailWithGroups(request.username);
         if (optional.isEmpty()) {
             throw new AuthException("User not found", 3);
         }
@@ -122,19 +122,19 @@ public class AuthController {
         return dtoService.toPrivateUserDto(userOptional.get());
     }
 
-    public static record RegisterResponse(long id) {
+    public record RegisterResponse(long id) {
     }
 
-    public static record RegisterRequest(String username, String email, String password, String captcha) {
+    public record RegisterRequest(String username, String email, String password, String captcha) {
     }
 
-    public static record AuthRequest(String username, String password, String totpPassword) {
+    public record AuthRequest(String username, String password, String totpPassword) {
     }
 
-    public static record AuthResponse(String accessToken, String refreshToken, long expire) {
+    public record AuthResponse(String accessToken, String refreshToken, long expire) {
     }
 
-    public static record RefreshTokenRequest(String refreshToken) {
+    public record RefreshTokenRequest(String refreshToken) {
 
     }
 }

@@ -1,6 +1,7 @@
 package pro.gravit.simplecabinet.web.model.user;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.UUID;
 
 @Entity(name = "PasswordReset")

@@ -57,7 +57,7 @@ public class UserTests {
         var setup = setupController.setup();
         adminToken = setup.accessToken();
         adminPassword = setup.password();
-        var result = authController.register(new AuthController.RegisterRequest("test", "test@example.com", "test123"));
+        var result = authController.register(new AuthController.RegisterRequest("test", "test@example.com", "test123", null));
         Assertions.assertNotNull(result);
         var id = result.id();
         Assertions.assertTrue(id > 0);
@@ -106,7 +106,7 @@ public class UserTests {
     @Transactional
     public void testBan() {
         {
-            var result = authController.register(new AuthController.RegisterRequest("testBan", "testBan@example.com", "test123"));
+            var result = authController.register(new AuthController.RegisterRequest("testBan", "testBan@example.com", "test123", null));
             adminModerationController.banUser(result.id(), new AdminModerationController.BanRequest("Test Reason", LocalDateTime.now().plus(Duration.ofHours(1)), false));
             try {
                 authController.auth(new AuthController.AuthRequest("testBan", "test123", null));
@@ -124,7 +124,7 @@ public class UserTests {
     public void testRoles() {
         var result = userDetailsService.collectUserRoles(userService.getReference(1L));
         Assertions.assertEquals(result.size(), 1);
-        Assertions.assertEquals(result.get(0), "ADMIN");
+        Assertions.assertEquals(result.getFirst(), "ADMIN");
     }
 
     @Test

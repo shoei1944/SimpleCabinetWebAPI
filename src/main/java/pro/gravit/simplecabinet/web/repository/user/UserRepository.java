@@ -10,8 +10,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("select u from User u where u.username = :usernameOrEmail or u.email = :usernameOrEmail")
-    Optional<User> findByUsernameOrEmail(String usernameOrEmail);
+    @Query("select u from User u left join fetch u.groups where u.username = :usernameOrEmail or u.email = :usernameOrEmail")
+    Optional<User> findByUsernameOrEmailWithGroups(String usernameOrEmail);
 
     Optional<User> findByUsername(String username);
 

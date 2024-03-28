@@ -1,6 +1,6 @@
 package pro.gravit.simplecabinet.web.model.shop;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "item_orders")

@@ -82,18 +82,18 @@ public class ServerCheckController {
         return new ExtendedCheckServerResponse(dtoService.toPublicUserDto(userOptional.get()), new UserSessionDto(sessionOptional.get(), true));
     }
 
-    public static record JoinServerRequest(String sessionId, String serverID) {
+    public record JoinServerRequest(String sessionId, String serverID) {
     }
 
-    public static record JoinServerPublicRequest(String username, String accessToken, String serverID) {
+    public record JoinServerPublicRequest(String username, String accessToken, String serverID) {
     }
 
-    public static record JoinServerResponse(boolean success) {
+    public record JoinServerResponse(boolean success) {
     }
 
-    public static record CheckServerRequest(String username, String serverID) {
+    public record CheckServerRequest(String username, String serverID) {
     }
 
-    public static record ExtendedCheckServerResponse(UserDto user, UserSessionDto session) {
+    public record ExtendedCheckServerResponse(UserDto user, UserSessionDto session) {
     }
 }

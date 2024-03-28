@@ -1,6 +1,7 @@
 package pro.gravit.simplecabinet.web.service.captcha;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Priority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +9,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.service.payment.FreekassaPaymentService;
 
-import javax.annotation.Priority;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;

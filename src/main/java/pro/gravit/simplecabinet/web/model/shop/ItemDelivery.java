@@ -1,8 +1,7 @@
 package pro.gravit.simplecabinet.web.model.shop;
 
+import jakarta.persistence.*;
 import pro.gravit.simplecabinet.web.model.user.User;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "item_delivery")

@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.service.storage;
 
+import jakarta.annotation.Priority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import javax.annotation.Priority;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
@@ -23,8 +23,8 @@ import java.net.URL;
         value = "storage.s3.enabled")
 public class S3StorageService implements StorageService {
 
-    private S3StorageConfig config;
-    private S3Client client;
+    private final S3StorageConfig config;
+    private final S3Client client;
 
     @Autowired
     public S3StorageService(S3StorageConfig config) {

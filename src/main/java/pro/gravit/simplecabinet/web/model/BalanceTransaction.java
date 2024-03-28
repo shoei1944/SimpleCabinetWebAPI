@@ -1,9 +1,9 @@
 package pro.gravit.simplecabinet.web.model;
 
+import jakarta.persistence.*;
 import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.model.user.UserBalance;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "BalanceTransaction")

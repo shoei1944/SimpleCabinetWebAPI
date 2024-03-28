@@ -98,13 +98,13 @@ public class CabinetController {
         userService.save(ref);
     }
 
-    public static record SetStatusRequest(String status) {
+    public record SetStatusRequest(String status) {
     }
 
-    public static record SetGenderRequest(User.Gender gender) {
+    public record SetGenderRequest(User.Gender gender) {
     }
 
-    public static record SetSkinModelRequest(String model) {
+    public record SetSkinModelRequest(String model) {
 
     }
 }

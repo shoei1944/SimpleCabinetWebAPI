@@ -60,7 +60,7 @@ public class UserService {
     }
 
     public User getReference(Long aLong) {
-        return repository.getById(aLong);
+        return repository.getReferenceById(aLong);
     }
 
     public Optional<User> findByEmail(String email) {
@@ -94,8 +94,8 @@ public class UserService {
         return user;
     }
 
-    public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
-        return repository.findByUsernameOrEmail(usernameOrEmail);
+    public Optional<User> findByUsernameOrEmailWithGroups(String usernameOrEmail) {
+        return repository.findByUsernameOrEmailWithGroups(usernameOrEmail);
     }
 
     public CurrentUser getCurrentUser() {
@@ -118,7 +118,7 @@ public class UserService {
 
         public User getReference() {
             if (user == null) {
-                user = repository.getById(getId());
+                user = repository.getReferenceById(getId());
             }
             return user;
         }

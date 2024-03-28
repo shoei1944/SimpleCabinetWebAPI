@@ -1,6 +1,6 @@
 package pro.gravit.simplecabinet.web.model.user;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity(name = "UserPermission")
 @Table(name = "user_permissions")

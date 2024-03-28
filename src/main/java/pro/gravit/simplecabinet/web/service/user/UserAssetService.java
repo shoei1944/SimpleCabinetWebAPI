@@ -31,7 +31,7 @@ public class UserAssetService {
     private StorageService storageService;
     @Autowired
     private ObjectMapper objectMapper;
-    private List<String> allowedAssets = List.of("skin", "cape");
+    private final List<String> allowedAssets = List.of("skin", "cape");
 
     public Optional<UserAsset> findById(Long aLong) {
         return userAssetRepository.findById(aLong);

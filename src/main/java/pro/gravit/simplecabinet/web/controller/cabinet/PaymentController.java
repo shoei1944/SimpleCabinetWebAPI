@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.controller.cabinet;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +10,6 @@ import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.service.payment.*;
 import pro.gravit.simplecabinet.web.service.shop.PaymentService;
 import pro.gravit.simplecabinet.web.service.user.UserService;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/cabinet/payment")
@@ -51,11 +50,11 @@ public class PaymentController {
         return new PageDto<>(list.map(PaymentDto::new));
     }
 
-    public static record PaymentInfoDto(PaymentService.PaymentRedirectInfo redirect, PaymentDto payment) {
+    public record PaymentInfoDto(PaymentService.PaymentRedirectInfo redirect, PaymentDto payment) {
 
     }
 
-    public static record BalancePaymentCreateRequest(String system, double sum) {
+    public record BalancePaymentCreateRequest(String system, double sum) {
 
     }
 }

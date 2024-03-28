@@ -52,9 +52,9 @@ public class PaymentService {
         balanceService.addMoney(balance, payment.getSum(), String.format("Payment %d", payment.getId()));
     }
 
-    public static record PaymentRedirectInfo(String url) {
+    public record PaymentRedirectInfo(String url) {
     }
 
-    public static record PaymentCreationInfo(PaymentRedirectInfo redirect, Payment paymentInfo) {
+    public record PaymentCreationInfo(PaymentRedirectInfo redirect, Payment paymentInfo) {
     }
 }

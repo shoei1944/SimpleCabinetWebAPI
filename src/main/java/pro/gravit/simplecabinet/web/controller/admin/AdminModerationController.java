@@ -58,6 +58,6 @@ public class AdminModerationController {
         hardwareIdService.unbanByUser(user.get().getId());
     }
 
-    public static record BanRequest(String reason, LocalDateTime endDate, boolean isHardware) {
+    public record BanRequest(String reason, LocalDateTime endDate, boolean isHardware) {
     }
 }

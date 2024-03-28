@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.service.user;
 
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,7 +11,6 @@ import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.model.user.UserGroup;
 import pro.gravit.simplecabinet.web.model.user.UserSession;
 
-import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;

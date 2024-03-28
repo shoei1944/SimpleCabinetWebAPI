@@ -130,7 +130,7 @@ public class GroupShopController {
         groupProductService.save(product);
     }
 
-    public static record BuyGroupRequest(long id, int quantity) {
+    public record BuyGroupRequest(long id, int quantity) {
     }
 
     public record GroupProductCreateRequest(String displayName, String description, String name, String server,

@@ -1,6 +1,7 @@
 package pro.gravit.simplecabinet.web.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity(name = "News")

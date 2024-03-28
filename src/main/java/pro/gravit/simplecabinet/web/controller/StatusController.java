@@ -20,6 +20,6 @@ public class StatusController {
         return new PublicStatusInfo(WebApplication.VERSION, Base64.getEncoder().encodeToString(keyManagementService.getPublicKey().getEncoded()));
     }
 
-    public static record PublicStatusInfo(String version, String jwtPublicKey) {
+    public record PublicStatusInfo(String version, String jwtPublicKey) {
     }
 }

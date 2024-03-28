@@ -189,10 +189,10 @@ public class AdminMoneyController {
         return new BalanceTransactionDto(transaction);
     }
 
-    public static record AddMoneyRequest(double count, String comment) {
+    public record AddMoneyRequest(double count, String comment) {
 
     }
 
-    public static record TransferMoneyRequest(double count, boolean selfUser, String comment, boolean strictRate) {
+    public record TransferMoneyRequest(double count, boolean selfUser, String comment, boolean strictRate) {
     }
 }

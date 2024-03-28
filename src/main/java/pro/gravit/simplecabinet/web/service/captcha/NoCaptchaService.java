@@ -1,8 +1,7 @@
 package pro.gravit.simplecabinet.web.service.captcha;
 
+import jakarta.annotation.Priority;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Priority;
 
 @Service
 @Priority(value = 1)

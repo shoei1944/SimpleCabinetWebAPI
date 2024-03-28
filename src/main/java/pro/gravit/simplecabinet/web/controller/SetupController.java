@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,6 @@ import pro.gravit.simplecabinet.web.service.user.UserGroupService;
 import pro.gravit.simplecabinet.web.service.user.UserService;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -58,7 +58,7 @@ public class SetupController {
         return request.getRemoteAddr();
     }
 
-    public static record SetupResponse(String username, String password, String accessToken) {
+    public record SetupResponse(String username, String password, String accessToken) {
 
     }
 }

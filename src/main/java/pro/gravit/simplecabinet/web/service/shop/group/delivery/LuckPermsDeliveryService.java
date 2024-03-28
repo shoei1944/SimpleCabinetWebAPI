@@ -1,5 +1,8 @@
 package pro.gravit.simplecabinet.web.service.shop.group.delivery;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,9 +10,6 @@ import pro.gravit.simplecabinet.web.model.shop.GroupOrder;
 import pro.gravit.simplecabinet.web.model.shop.GroupProduct;
 import pro.gravit.simplecabinet.web.model.user.User;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Locale;

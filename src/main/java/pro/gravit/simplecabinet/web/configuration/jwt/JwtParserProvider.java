@@ -12,9 +12,9 @@ public class JwtParserProvider {
     private KeyManagementService service;
 
     public JwtParser makeParser() {
-        return Jwts.parserBuilder()
+        return Jwts.parser()
                 .requireIssuer("SimpleCabinet")
-                .setSigningKey(service.getPublicKey())
+                .verifyWith(service.getPublicKey())
                 .build();
     }
 }

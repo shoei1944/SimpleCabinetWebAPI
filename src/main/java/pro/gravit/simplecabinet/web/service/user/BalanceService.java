@@ -1,5 +1,8 @@
 package pro.gravit.simplecabinet.web.service.user;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +18,6 @@ import pro.gravit.simplecabinet.web.repository.user.BalanceRepository;
 import pro.gravit.simplecabinet.web.repository.user.UserRepository;
 import pro.gravit.simplecabinet.web.service.ExchangeRateService;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -51,7 +51,7 @@ public class BalanceService {
     }
 
     public UserBalance getReference(Long aLong) {
-        return repository.getById(aLong);
+        return repository.getReferenceById(aLong);
     }
 
     public UserBalance create(User user, String currency) {
@@ -101,9 +101,9 @@ public class BalanceService {
             }
         }
         BalanceTransaction transaction = new BalanceTransaction();
-        transaction.setUser(userId == null ? null : userRepository.getById(userId));
-        transaction.setFrom(fromId == null ? null : repository.getById(fromId));
-        transaction.setTo(toId == null ? null : repository.getById(toId));
+        transaction.setUser(userId == null ? null : userRepository.getReferenceById(userId));
+        transaction.setFrom(fromId == null ? null : repository.getReferenceById(fromId));
+        transaction.setTo(toId == null ? null : repository.getReferenceById(toId));
         transaction.setFromCount(fromId == null ? 0.0 : -fromCount);
         transaction.setToCount(toId == null ? 0.0 : toCount);
         transaction.setMulticurrency(multiCurrency);

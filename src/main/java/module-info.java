@@ -1,5 +1,4 @@
 module simplecabinet {
-    requires java.persistence;
     requires spring.web;
     requires spring.beans;
     requires spring.security.web;
@@ -19,10 +18,12 @@ module simplecabinet {
     requires spring.security.core;
     requires spring.boot;
     requires spring.data.commons;
-    requires java.transaction;
     requires totp;
     requires software.amazon.awssdk.auth;
     requires software.amazon.awssdk.core;
     requires software.amazon.awssdk.regions;
     requires software.amazon.awssdk.services.s3;
+    requires jakarta.persistence;
+    requires spring.security.config;
+    requires spring.data.jpa;
 }

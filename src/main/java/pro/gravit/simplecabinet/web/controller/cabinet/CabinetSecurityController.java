@@ -77,23 +77,23 @@ public class CabinetSecurityController {
         userService.save(user);
     }
 
-    public static record ChangePasswordRequest(String oldPassword, String newPassword) {
+    public record ChangePasswordRequest(String oldPassword, String newPassword) {
 
     }
 
-    public static record Enable2FARequest(String secret, String code) {
+    public record Enable2FARequest(String secret, String code) {
 
     }
 
-    public static record Disable2FARequest(String code) {
+    public record Disable2FARequest(String code) {
 
     }
 
-    public static record Prepare2FAResponse(String secret, String uri) {
+    public record Prepare2FAResponse(String secret, String uri) {
 
     }
 
-    public static record SecurityInfo(boolean enabled2FA) {
+    public record SecurityInfo(boolean enabled2FA) {
 
     }
 }
