@@ -17,7 +17,7 @@ public class StatusController {
 
     @GetMapping("/publicinfo")
     public PublicStatusInfo getPublicInfo() {
-        return new PublicStatusInfo(WebApplication.VERSION, Base64.getEncoder().encodeToString(keyManagementService.getPublicKey().getEncoded()));
+        return new PublicStatusInfo(WebApplication.VERSION, Base64.getEncoder().encodeToString(keyManagementService.getEncodedPublicKey()));
     }
 
     public record PublicStatusInfo(String version, String jwtPublicKey) {
