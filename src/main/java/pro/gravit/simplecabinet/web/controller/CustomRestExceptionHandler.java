@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.controller;
 
+import jakarta.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,12 @@ public class CustomRestExceptionHandler {
     public ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException e) {
         ApiError error = new ApiError(498, "Access is denied");
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ServletException.class)
+    public ResponseEntity<ApiError> handleServletException(ServletException e) {
+        ApiError error = new ApiError(499, e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
