@@ -68,6 +68,7 @@ public class NewsController {
             throw new EntityNotFoundException("News not found");
         }
         var comment = new NewsComment();
+        comment.setNews(news.get());
         comment.setUser(userService.getCurrentUser().getReference());
         comment.setText(createCommentRequest.text);
         newsService.save(comment);
