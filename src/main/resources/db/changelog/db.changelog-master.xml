@@ -7,5 +7,6 @@
     <include file="db/changelog/changelog-100222.xml"/>
     <include file="db/changelog/changelog-150522.xml"/>
     <include file="db/changelog/changelog-291123.xml"/>
+    <include file="db/changelog/changelog-080424.xml"/>
 
 </databaseChangeLog>

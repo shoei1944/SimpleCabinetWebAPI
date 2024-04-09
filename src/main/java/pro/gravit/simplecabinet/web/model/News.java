@@ -23,6 +23,7 @@ public class News {
     private String miniText;
     private String text;
     private int commentsCount;
+    private String pictureURL;
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<NewsComment> comments;
 
@@ -34,8 +35,16 @@ public class News {
         return header;
     }
 
+    public String getPicture () {
+        return pictureURL;
+    }
+
     public void setHeader(String header) {
         this.header = header;
+    }
+
+    public void setPicture (String pictureURL) {
+        this.pictureURL = pictureURL;
     }
 
     public String getMiniText() {

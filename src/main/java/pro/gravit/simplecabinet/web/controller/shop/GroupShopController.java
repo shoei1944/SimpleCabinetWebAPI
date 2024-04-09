@@ -41,6 +41,18 @@ public class GroupShopController {
         return dtoService.toGroupProductDto(optional.get());
     }
 
+    @PostMapping("/id/{id}/updatepicture")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void updatePicture(@PathVariable long id, @RequestBody GroupShopController.GroupProductUpdatePictureRequest request) {
+        var optional = groupProductService.findById(id);
+        if (optional.isEmpty()) {
+            throw new EntityNotFoundException("Item not found");
+        }
+        var product = optional.get();
+        product.setPictureUrl(request.pictureName);
+        groupProductService.save(product);
+    }
+
     @PostMapping("/buy")
     @PreAuthorize("isAuthenticated()")
     public GroupOrderDto buyGroup(@RequestBody BuyGroupRequest request) {
@@ -148,5 +160,8 @@ public class GroupShopController {
     }
 
     public record SetLimitationsRequest(LocalDateTime endDate, long count, String groupName) {
+    }
+
+    public record GroupProductUpdatePictureRequest(String pictureName) {
     }
 }

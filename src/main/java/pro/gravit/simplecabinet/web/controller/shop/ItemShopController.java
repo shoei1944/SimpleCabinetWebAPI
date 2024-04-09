@@ -65,6 +65,31 @@ public class ItemShopController {
         productService.save(product);
     }
 
+    @PostMapping("/id/{id}/update")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void update(@PathVariable long id, @RequestBody ItemShopController.ItemProductUpdateRequest request) {
+        var optional = productService.findById(id);
+        if (optional.isEmpty()) {
+            throw new EntityNotFoundException("Item not found");
+        }
+        var product = optional.get();
+        product.setDisplayName(request.displayName);
+        product.setDescription(request.description);
+        productService.save(product);
+    }
+
+    @PostMapping("/id/{id}/updatepicture")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void updatePicture(@PathVariable long id, @RequestBody ItemShopController.ItemProductUpdatePictureRequest request) {
+        var optional = productService.findById(id);
+        if (optional.isEmpty()) {
+            throw new EntityNotFoundException("Item not found");
+        }
+        var product = optional.get();
+        product.setPictureUrl(request.pictureName);
+        productService.save(product);
+    }
+
     @PostMapping("/id/{id}/setprice")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void setPrice(@PathVariable long id, @RequestBody GroupShopController.SetPriceRequest request) {
@@ -121,6 +146,13 @@ public class ItemShopController {
     public record CreateItemRequest(String displayName, String description, double price,
                                     String currency, String itemName, String itemExtra, String itemNbt,
                                     String itemCustom, int itemQuantity, String server, String pictureName) {
+
+    }
+    public record ItemProductUpdateRequest(String displayName, String description) {
+
+    }
+
+    public record ItemProductUpdatePictureRequest(String pictureName) {
 
     }
 }

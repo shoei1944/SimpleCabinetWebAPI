@@ -9,7 +9,7 @@ public class NewsCommentDto {
 
     public NewsCommentDto(NewsComment comment) {
         this.id = comment.getId();
-        this.userId = 0;
+        this.userId = comment.getUser().getId();
         this.text = comment.getText();
     }
 }
