@@ -9,7 +9,7 @@ import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pro.gravit.simplecabinet.web.configuration.properties.StripePaymentConfig;
+import pro.gravit.simplecabinet.web.configuration.properties.payment.StripePaymentConfig;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.exception.PaymentException;
 import pro.gravit.simplecabinet.web.model.shop.Payment;

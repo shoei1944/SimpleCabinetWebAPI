@@ -3,7 +3,7 @@ package pro.gravit.simplecabinet.web.service.payment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pro.gravit.simplecabinet.web.configuration.properties.YooPaymentConfig;
+import pro.gravit.simplecabinet.web.configuration.properties.payment.YooPaymentConfig;
 import pro.gravit.simplecabinet.web.exception.BalanceException;
 import pro.gravit.simplecabinet.web.exception.PaymentException;
 import pro.gravit.simplecabinet.web.model.shop.Payment;

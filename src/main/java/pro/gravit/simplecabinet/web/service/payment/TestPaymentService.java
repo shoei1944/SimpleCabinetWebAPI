@@ -2,7 +2,7 @@ package pro.gravit.simplecabinet.web.service.payment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pro.gravit.simplecabinet.web.configuration.properties.TestPaymentConfig;
+import pro.gravit.simplecabinet.web.configuration.properties.payment.TestPaymentConfig;
 import pro.gravit.simplecabinet.web.exception.PaymentException;
 import pro.gravit.simplecabinet.web.model.shop.Payment;
 import pro.gravit.simplecabinet.web.model.user.User;

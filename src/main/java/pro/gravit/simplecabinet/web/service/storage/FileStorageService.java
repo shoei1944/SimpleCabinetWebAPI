@@ -3,7 +3,7 @@ package pro.gravit.simplecabinet.web.service.storage;
 import jakarta.annotation.Priority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pro.gravit.simplecabinet.web.configuration.properties.FileStorageConfig;
+import pro.gravit.simplecabinet.web.configuration.properties.storage.FileStorageConfig;
 
 import java.io.*;
 import java.net.*;

@@ -1,17 +1,22 @@
 package pro.gravit.simplecabinet.web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pro.gravit.simplecabinet.web.configuration.properties.RegistrationConfig;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.user.PrepareUser;
 import pro.gravit.simplecabinet.web.model.user.User;
+import pro.gravit.simplecabinet.web.service.mail.MailService;
 import pro.gravit.simplecabinet.web.service.user.PasswordCheckService;
 import pro.gravit.simplecabinet.web.service.user.UserService;
+import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -24,26 +29,18 @@ public class RegisterService {
     private UserService userService;
     @Autowired
     private PasswordCheckService passwordCheckService;
-    @Value("${registration.enabled}")
-    private boolean enabled;
-    @Value("${registration.prepare}")
-    private boolean prepare;
-    @Value("${registration.password.min}")
-    private int minPasswordLength;
-    @Value("${registration.password.max}")
-    private int maxPasswordLength;
+    @Autowired
+    private MailService mailService;
+    @Autowired
+    private RegistrationConfig config;
 
     public boolean isEnabled() {
-        return enabled;
-    }
-
-    public boolean isPrepare() {
-        return prepare;
+        return config.isEnabled();
     }
 
     @Transactional
     public void check(String username, String email, String password) {
-        if (!enabled) {
+        if (!config.isEnabled()) {
             throw new InvalidParametersException("Registration disabled", 31);
         }
         if (!USERNAME_PATTERN.matcher(username).matches()) {
@@ -52,8 +49,9 @@ public class RegisterService {
         if (password.isEmpty()) {
             throw new InvalidParametersException("Empty password", 36);
         }
-        if (password.length() < minPasswordLength || password.length() > maxPasswordLength) {
-            throw new InvalidParametersException(String.format("Password length must be between %d and %d characters", minPasswordLength, maxPasswordLength), 36);
+        if (password.length() < config.getMinPasswordLength() || password.length() > config.getMaxPasswordLength()) {
+            throw new InvalidParametersException(String.format("Password length must be between %d and %d characters",
+                    config.getMinPasswordLength(), config.getMaxPasswordLength()), 36);
         }
         if (prepareUserService.findByUsername(username).isPresent() || userService.findByUsername(username).isPresent()) {
             throw new InvalidParametersException("Username already registered", 34);
@@ -65,14 +63,44 @@ public class RegisterService {
 
     public RegisterResult register(String username, String email, String password) {
         long id;
-        if (prepare) {
-            var user = createPrepareUser(username, email, password);
-            id = user.getId();
-        } else {
-            var user = createUser(username, email, password);
-            id = user.getId();
+        switch (config.getMode()) {
+            case DEFAULT -> {
+                var user = createUser(username, email, password);
+                id = user.getId();
+            }
+            case ADMIN_ACCEPT -> {
+                var user = createPrepareUser(username, email, password);
+                id = user.getId();
+            }
+            case EMAIL_CONFIRM -> {
+                var user = createPrepareUser(username, email, password);
+                id = user.getId();
+                mailService.sendTemplateEmail(user.getEmail(), "email-regconfirm.html", "%username%", URLEncoder.encode(username, StandardCharsets.UTF_8),
+                        "%url%", String.format(config.getConfirmUrl(), user.getConfirmToken()));
+            }
+            default -> {
+                throw new InvalidParametersException("Registration method not supported", 36);
+            }
         }
-        return new RegisterResult(prepare, false, id);
+        return new RegisterResult(config.getMode() == RegistrationConfig.RegistrationMode.DEFAULT,
+                config.getMode() == RegistrationConfig.RegistrationMode.EMAIL_CONFIRM, id);
+    }
+
+    public Optional<User> confirm(String confirmToken) {
+        var prepared = prepareUserService.findByConfirmToken(confirmToken);
+        if (prepared.isEmpty()) {
+            return Optional.empty();
+        }
+        var user = prepared.get();
+        prepareUserService.delete(user);
+        User user0 = new User();
+        user0.setUsername(user.getUsername());
+        user0.setUuid(UUID.randomUUID());
+        user0.setEmail(user.getEmail());
+        user0.setRawPassword(user.getPassword());
+        user0.setRegistrationDate(LocalDateTime.now());
+        user0.setGroups(new ArrayList<>());
+        return Optional.of(userService.save(user0));
     }
 
     public User createUser(String username, String email, String password) {
@@ -83,8 +111,7 @@ public class RegisterService {
         passwordCheckService.setPassword(user, password);
         user.setRegistrationDate(LocalDateTime.now());
         user.setGroups(new ArrayList<>());
-        userService.save(user);
-        return user;
+        return userService.save(user);
     }
 
     public PrepareUser createPrepareUser(String username, String email, String password) {
@@ -93,7 +120,8 @@ public class RegisterService {
         prepareUser.setEmail(email);
         passwordCheckService.setPassword(prepareUser, password);
         prepareUser.setDate(LocalDateTime.now());
-        return prepareUser;
+        prepareUser.setConfirmToken(SecurityUtils.generateRandomString(32));
+        return prepareUserService.save(prepareUser);
     }
 
     public record RegisterResult(boolean prepared, boolean needConfirm, long id) {

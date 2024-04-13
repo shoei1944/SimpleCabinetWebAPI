@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pro.gravit.simplecabinet.web.configuration.properties.FreekassaPaymentConfig;
+import pro.gravit.simplecabinet.web.configuration.properties.payment.FreekassaPaymentConfig;
 import pro.gravit.simplecabinet.web.exception.PaymentException;
 import pro.gravit.simplecabinet.web.model.shop.Payment;
 import pro.gravit.simplecabinet.web.model.user.User;

@@ -1,4 +1,4 @@
-package pro.gravit.simplecabinet.web.configuration.properties;
+package pro.gravit.simplecabinet.web.configuration.properties.payment;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

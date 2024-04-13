@@ -12,11 +12,31 @@ import java.nio.file.Paths;
 
 public class WebApplicationOnStartup {
     public static void prepare() throws IOException {
-        Path path = Paths.get("application.properties");
+        if (unpack(Path.of("application.properties"), "application.properties")) {
+            {
+                Path dir = Paths.get("assets");
+                if (Files.notExists(dir)) {
+                    Files.createDirectories(dir);
+                }
+            }
+            {
+                Path dir = Paths.get("templates");
+                if (Files.notExists(dir)) {
+                    Files.createDirectories(dir);
+                }
+            }
+            unpack(Path.of("templates", "email-passwordreset.html"), "templates/email-passwordreset.html");
+            unpack(Path.of("templates", "email-regconfirm.html"), "templates/email-regconfirm.html");
+            System.out.println("File 'application.properties' created. Stop...");
+            System.exit(0);
+        }
+    }
+
+    public static boolean unpack(Path path, String resourceUrl) throws IOException {
         if (Files.notExists(path)) {
-            URL url = WebApplicationOnStartup.class.getResource("/application.properties");
+            URL url = WebApplicationOnStartup.class.getResource("/" + resourceUrl);
             if (url == null) {
-                throw new RuntimeException("Resource 'application.properties' not found");
+                throw new RuntimeException(String.format("Resource '%s' not found", resourceUrl));
             }
             URLConnection c = url.openConnection();
             try (InputStream input = c.getInputStream()) {
@@ -24,15 +44,8 @@ public class WebApplicationOnStartup {
                     input.transferTo(output);
                 }
             }
-            {
-                Path dir = Paths.get("assets");
-                if (Files.notExists(dir)) {
-                    Files.createDirectories(dir);
-                }
-            }
-
-            System.out.println("File 'application.properties' created. Stop...");
-            System.exit(0);
+            return true;
         }
+        return false;
     }
 }

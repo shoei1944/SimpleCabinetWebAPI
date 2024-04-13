@@ -1,18 +1,18 @@
-package pro.gravit.simplecabinet.web.configuration.properties;
+package pro.gravit.simplecabinet.web.configuration.properties.payment;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "payment.yoo")
-public class YooPaymentConfig {
+@ConfigurationProperties(prefix = "payment.qiwi")
+public class QiwiPaymentConfig {
     public boolean enable;
     public String merchantId;
     public String secretKey;
     public String redirectUrl;
     public boolean test;
 
-    public YooPaymentConfig() {
+    public QiwiPaymentConfig() {
     }
 
     public boolean isEnable() {

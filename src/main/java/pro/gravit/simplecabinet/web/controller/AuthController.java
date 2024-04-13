@@ -48,6 +48,14 @@ public class AuthController {
         return new RegisterResponse(result.id()); // TODO
     }
 
+    @PostMapping("/regconfirm")
+    public void regConfirm(@RequestBody RegConfirm regConfirm) {
+        var user = registerService.confirm(regConfirm.token);
+        if (user.isEmpty()) {
+            throw new AuthException("Confirm token not found", 19);
+        }
+    }
+
     @PostMapping("/authorize")
     public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request) {
         var optional = userService.findByUsernameOrEmailWithGroups(request.username);
@@ -135,6 +143,10 @@ public class AuthController {
     }
 
     public record RefreshTokenRequest(String refreshToken) {
+
+    }
+
+    public record RegConfirm(String token) {
 
     }
 }

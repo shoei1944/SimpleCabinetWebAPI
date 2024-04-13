@@ -4,7 +4,7 @@ import jakarta.annotation.Priority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import pro.gravit.simplecabinet.web.configuration.properties.S3StorageConfig;
+import pro.gravit.simplecabinet.web.configuration.properties.storage.S3StorageConfig;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
