@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.controller.admin;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -96,7 +97,7 @@ public class AdminSessionController {
     }
 
     @PostMapping("/sudo")
-    public AuthController.AuthResponse sudo(@RequestBody CreateSudoSessionRequest request) {
+    public AuthController.AuthResponse sudo(@RequestBody CreateSudoSessionRequest request, HttpServletRequest servletRequest) {
         var user = userService.findById(request.userId());
         if (user.isEmpty()) {
             throw new EntityNotFoundException("User not found");
@@ -109,7 +110,7 @@ public class AdminSessionController {
             var token = jwtProvider.generateToken(userSession);
             return new AuthController.AuthResponse(token.token(), userSession.getRefreshToken(), token.getExpire());
         } else {
-            var session = sessionService.create(user.get(), request.client());
+            var session = sessionService.create(user.get(), request.client(), servletRequest.getRemoteAddr());
             var token = jwtProvider.generateToken(session);
             return new AuthController.AuthResponse(token.token(), session.getRefreshToken(), token.getExpire());
         }

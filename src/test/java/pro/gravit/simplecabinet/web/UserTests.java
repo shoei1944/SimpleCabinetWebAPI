@@ -67,7 +67,7 @@ public class UserTests {
     @Test
     @Transactional
     public void testAuthorization() throws Exception {
-        var result = authController.auth(new AuthController.AuthRequest("test", "test123", null));
+        var result = authController.auth(new AuthController.AuthRequest("test", "test123", null), null);
         Assertions.assertTrue(result.getStatusCode().is2xxSuccessful());
         Assertions.assertTrue(result.getHeaders().containsKey("Set-Cookie"));
         var body = result.getBody();
@@ -109,13 +109,13 @@ public class UserTests {
             var result = authController.register(new AuthController.RegisterRequest("testBan", "testBan@example.com", "test123", null));
             adminModerationController.banUser(result.id(), new AdminModerationController.BanRequest("Test Reason", LocalDateTime.now().plus(Duration.ofHours(1)), false));
             try {
-                authController.auth(new AuthController.AuthRequest("testBan", "test123", null));
+                authController.auth(new AuthController.AuthRequest("testBan", "test123", null), null);
                 Assertions.fail("Success auth with banned user");
             } catch (Exception ignored) {
 
             }
             adminModerationController.unbanUser(result.id());
-            authController.auth(new AuthController.AuthRequest("testBan", "test123", null));
+            authController.auth(new AuthController.AuthRequest("testBan", "test123", null), null);
         }
     }
 

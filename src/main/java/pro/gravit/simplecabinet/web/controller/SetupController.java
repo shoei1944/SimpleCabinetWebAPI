@@ -48,7 +48,7 @@ public class SetupController {
         user.setGroups(new ArrayList<>());
         user.getGroups().add(admin);
         userService.save(user);
-        var session = sessionService.create(user, "Setup Session");
+        var session = sessionService.create(user, "Setup Session", "127.0.0.1");
         var token = jwtProvider.generateNoExpiredJWTToken(session);
         return new SetupResponse(user.getUsername(), password, token.token());
     }

@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.service.user;
 
+import io.hypersistence.utils.hibernate.type.basic.Inet;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,13 @@ public class SessionService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public UserSession create(User user, String client) {
+    public UserSession create(User user, String client, String ip) {
         UserSession session = new UserSession();
         session.setUser(user);
         session.setClient(client);
         session.setRefreshToken(SecurityUtils.generateRandomString(32));
         session.setCreatedAt(LocalDateTime.now());
+        session.setIp(new Inet(ip));
         repository.save(session);
         return session;
     }

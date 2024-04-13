@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.model.user;
 
+import io.hypersistence.utils.hibernate.type.basic.Inet;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class UserSession {
     private User user;
     @Column(name = "refresh_token")
     private String refreshToken;
-    private String ip;
+    private Inet ip;
     private String client;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hwid_id")
@@ -78,11 +79,11 @@ public class UserSession {
         this.hardwareId = hardwareId;
     }
 
-    public String getIp() {
+    public Inet getIp() {
         return ip;
     }
 
-    public void setIp(String ip) {
+    public void setIp(Inet ip) {
         this.ip = ip;
     }
 

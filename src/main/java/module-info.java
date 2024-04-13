@@ -26,4 +26,6 @@ module simplecabinet {
     requires jakarta.persistence;
     requires spring.security.config;
     requires spring.data.jpa;
+    requires io.hypersistence.utils.hibernate.type;
+    requires org.hibernate.orm.core;
 }

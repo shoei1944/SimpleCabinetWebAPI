@@ -30,7 +30,7 @@ public class WithMockCabinetUserSecurityContextFactory implements WithSecurityCo
         } else {
             throw new SecurityException("User not found");
         }
-        UserSession session = sessionService.create(user, "Test");
+        UserSession session = sessionService.create(user, "Test", "127.0.0.1");
         var details = detailsService.create(session);
         context.setAuthentication(new UsernamePasswordAuthenticationToken(details, null, details.getAuthorities()));
         return context;

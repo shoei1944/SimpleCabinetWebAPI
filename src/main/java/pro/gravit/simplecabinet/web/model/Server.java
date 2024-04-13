@@ -1,6 +1,11 @@
 package pro.gravit.simplecabinet.web.model;
 
+import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "Server")
 @Table(name = "servers")
@@ -9,11 +14,20 @@ public class Server {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "servers_generator")
     @SequenceGenerator(name = "servers_generator", sequenceName = "servers_seq", allocationSize = 1)
     private long id;
-    private String ip;
-    private int port;
+    private String name;
+    private String displayName;
     @Column(name = "max_online")
     private int maxOnline;
     private int online;
+    private int tps;
+    @Type(ListArrayType.class)
+    @Column(
+            name = "users",
+            columnDefinition = "varchar[]"
+    )
+    private List<String> users;
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
 
     public long getId() {
         return id;
@@ -21,22 +35,6 @@ public class Server {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
     }
 
     public int getMaxOnline() {
@@ -53,5 +51,45 @@ public class Server {
 
     public void setOnline(int online) {
         this.online = online;
+    }
+
+    public List<String> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<String> users) {
+        this.users = users;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public LocalDateTime getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(LocalDateTime updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public int getTps() {
+        return tps;
+    }
+
+    public void setTps(int tps) {
+        this.tps = tps;
     }
 }

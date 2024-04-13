@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,7 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/authorize")
-    public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request, HttpServletRequest servletRequest) {
         var optional = userService.findByUsernameOrEmailWithGroups(request.username);
         if (optional.isEmpty()) {
             throw new AuthException("User not found", 3);
@@ -80,7 +81,7 @@ public class AuthController {
                 throw new AuthException("2FA Password not correct", 6);
             }
         }
-        var session = sessionService.create(user, "Basic");
+        var session = sessionService.create(user, "Basic", servletRequest.getRemoteAddr());
         var token = jwtProvider.generateToken(session);
         HttpCookie cookie = ResponseCookie.from("session", token.token())
                 .path("/")
