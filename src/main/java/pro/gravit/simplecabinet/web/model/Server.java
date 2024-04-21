@@ -1,8 +1,6 @@
 package pro.gravit.simplecabinet.web.model;
 
-import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,11 +18,6 @@ public class Server {
     private int maxOnline;
     private int online;
     private int tps;
-    @Type(ListArrayType.class)
-    @Column(
-            name = "users",
-            columnDefinition = "varchar[]"
-    )
     private List<String> users;
     @Column(name = "update_date")
     private LocalDateTime updateDate;
