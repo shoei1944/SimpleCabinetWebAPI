@@ -6,6 +6,7 @@ import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.model.user.UserGroup;
 import pro.gravit.simplecabinet.web.repository.user.UserGroupRepository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -22,7 +23,7 @@ public class UserGroupService {
     }
 
     public Optional<UserGroup> findByGroupNameAndUser(String groupName, User user) {
-        return repository.findByGroupNameAndUser(groupName, user);
+        return repository.findByGroupNameAndUser(groupName, user, LocalDateTime.now());
     }
 
     public void delete(UserGroup userGroup) {
