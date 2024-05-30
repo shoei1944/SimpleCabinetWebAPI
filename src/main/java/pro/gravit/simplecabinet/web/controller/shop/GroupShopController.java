@@ -59,7 +59,7 @@ public class GroupShopController {
     public void updatePicture(@PathVariable long id, @RequestBody GroupShopController.GroupProductUpdatePictureRequest request) {
         var optional = groupProductService.findById(id);
         if (optional.isEmpty()) {
-            throw new EntityNotFoundException("Item not found");
+            throw new EntityNotFoundException("Group not found");
         }
         var product = optional.get();
         product.setPictureUrl(request.pictureName);

@@ -10,11 +10,13 @@ import pro.gravit.simplecabinet.web.controller.BanManagerController;
 import pro.gravit.simplecabinet.web.dto.shop.GroupProductDto;
 import pro.gravit.simplecabinet.web.dto.shop.ItemDeliveryDto;
 import pro.gravit.simplecabinet.web.dto.shop.ItemProductDto;
+import pro.gravit.simplecabinet.web.dto.shop.ServiceProductDto;
 import pro.gravit.simplecabinet.web.dto.user.UserDto;
 import pro.gravit.simplecabinet.web.dto.user.UserGroupDto;
 import pro.gravit.simplecabinet.web.model.shop.GroupProduct;
 import pro.gravit.simplecabinet.web.model.shop.ItemDelivery;
 import pro.gravit.simplecabinet.web.model.shop.ItemProduct;
+import pro.gravit.simplecabinet.web.model.shop.ServiceProduct;
 import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.model.user.UserAsset;
 import pro.gravit.simplecabinet.web.service.storage.StorageService;
@@ -40,13 +42,18 @@ public class DtoService {
     private ObjectMapper objectMapper;
 
     public GroupProductDto toGroupProductDto(GroupProduct entity) {
-        return new GroupProductDto(entity.getId(), entity.getServer(), entity.getPrice(), entity.getCurrency(), entity.getDisplayName(), entity.getDescription(),
+        return new GroupProductDto(entity.getId(), entity.getServer(), entity.getPrice(), entity.isStackable(), entity.getCurrency(), entity.getDisplayName(), entity.getDescription(),
                 entity.getPictureUrl() != null ? storageService.getUrl(entity.getPictureUrl()).toString() : null, entity.getExpireDays(), entity.isAvailable());
     }
 
     public ItemProductDto toItemProductDto(ItemProduct entity) {
         return new ItemProductDto(entity.getId(), entity.getServer(), entity.getPrice(), entity.getCurrency(), entity.getDisplayName(), entity.getDescription(),
+                entity.getPictureUrl() != null ? storageService.getUrl(entity.getPictureUrl()).toString() : null,
+                entity.getLimitations());
+    }
 
+    public ServiceProductDto toServiceProductDto(ServiceProduct entity) {
+        return new ServiceProductDto(entity.getId(), entity.getPrice(), entity.isStackable(), entity.getCurrency(), entity.getDisplayName(), entity.getDescription(),
                 entity.getPictureUrl() != null ? storageService.getUrl(entity.getPictureUrl()).toString() : null,
                 entity.getLimitations());
     }
