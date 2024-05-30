@@ -11,10 +11,7 @@ import pro.gravit.simplecabinet.web.dto.user.UserGroupDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
 import pro.gravit.simplecabinet.web.model.user.UserGroup;
 import pro.gravit.simplecabinet.web.service.DtoService;
-import pro.gravit.simplecabinet.web.service.user.HardwareIdService;
-import pro.gravit.simplecabinet.web.service.user.UserAssetService;
-import pro.gravit.simplecabinet.web.service.user.UserGroupService;
-import pro.gravit.simplecabinet.web.service.user.UserService;
+import pro.gravit.simplecabinet.web.service.user.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +21,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    @Autowired
+    private SerchUserService search;
     @Autowired
     private UserService service;
     @Autowired
@@ -86,7 +85,6 @@ public class UserController {
         }
         service.delete(optional.get());
     }
-
 
     @PutMapping("/id/{userId}/group/{name}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -152,6 +150,26 @@ public class UserController {
             throw new EntityNotFoundException("User not found");
         }
         return dtoService.toPublicUserDto(optional.get());
+    }
+
+    @GetMapping("/search/{data}/{pageId}")
+    public PageDto<UserDto> searchByData(@PathVariable String data, @PathVariable int pageId ) {
+                var page = PageRequest.of(pageId, 10);
+                var list = search.findByUsernameFetchAssets(data, page);
+                if (list.isEmpty()) {
+                    throw new EntityNotFoundException("User not found");
+                }
+                return new PageDto<>(list.map(dtoService::toMiniUserDto));
+    }
+
+    @GetMapping("/search/email/{data}/{pageId}")
+    public PageDto<UserDto> searchByEmail(@PathVariable String data,@PathVariable int pageId ) {
+        var page = PageRequest.of(pageId, 10);
+        var list = search.findByEmail(data, page);
+        if (list.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+            }
+        return new PageDto<>(list.map(dtoService::toMiniUserDto));
     }
 
     @GetMapping("/page/{pageId}")

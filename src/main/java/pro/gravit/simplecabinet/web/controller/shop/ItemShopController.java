@@ -12,6 +12,7 @@ import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.shop.ItemProduct;
 import pro.gravit.simplecabinet.web.service.DtoService;
 import pro.gravit.simplecabinet.web.service.shop.item.ItemProductService;
+import pro.gravit.simplecabinet.web.service.shop.item.ItemSearchService;
 import pro.gravit.simplecabinet.web.service.user.UserService;
 
 @RestController
@@ -23,10 +24,22 @@ public class ItemShopController {
     private UserService userService;
     @Autowired
     private DtoService dtoService;
+    @Autowired
+    private ItemSearchService search;
 
     @GetMapping("/page/{pageId}")
     public PageDto<ItemProductDto> getPage(@PathVariable int pageId) {
         var list = productService.findAllAvailable(PageRequest.of(pageId, 10));
+        return new PageDto<>(list.map(dtoService::toItemProductDto));
+    }
+
+    @GetMapping("/search/{data}/{pageId}")
+    public PageDto<ItemProductDto> searchByData(@PathVariable String data, @PathVariable int pageId ) {
+        var page = PageRequest.of(pageId, 10);
+        var list = search.findByDisplayName(data, page);
+        if (list.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
         return new PageDto<>(list.map(dtoService::toItemProductDto));
     }
 

@@ -12,6 +12,7 @@ import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.shop.GroupProduct;
 import pro.gravit.simplecabinet.web.service.DtoService;
 import pro.gravit.simplecabinet.web.service.shop.group.GroupProductService;
+import pro.gravit.simplecabinet.web.service.shop.group.GroupSearchService;
 import pro.gravit.simplecabinet.web.service.user.UserService;
 
 import java.time.LocalDateTime;
@@ -25,10 +26,22 @@ public class GroupShopController {
     private UserService userService;
     @Autowired
     private DtoService dtoService;
+    @Autowired
+    private GroupSearchService searchsr;
 
     @GetMapping("/page/{pageId}")
     public PageDto<GroupProductDto> getPage(@PathVariable int pageId) {
         var list = groupProductService.findAllAvailable(PageRequest.of(pageId, 10));
+        return new PageDto<>(list.map(dtoService::toGroupProductDto));
+    }
+
+    @GetMapping("/search/{data}/{pageId}")
+    public PageDto<GroupProductDto> searchByData(@PathVariable String data, @PathVariable int pageId ) {
+        var page = PageRequest.of(pageId, 10);
+        var list = searchsr.findByDisplayName(data, page);
+        if (list.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
         return new PageDto<>(list.map(dtoService::toGroupProductDto));
     }
 

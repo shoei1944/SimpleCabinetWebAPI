@@ -1,5 +1,6 @@
 package pro.gravit.simplecabinet.web.dto;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import pro.gravit.simplecabinet.web.model.News;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public class NewsDto {
     public final String text;
     public final String pictureURL;
     public final List<NewsCommentDto> comments;
+
 
     public NewsDto(long id, String header, String pictureURL , String miniText, String text, List<NewsCommentDto> comments) {
         this.id = id;

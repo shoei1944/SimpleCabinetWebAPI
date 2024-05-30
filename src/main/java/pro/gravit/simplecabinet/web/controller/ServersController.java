@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import pro.gravit.simplecabinet.web.dto.PageDto;
 import pro.gravit.simplecabinet.web.dto.ServerDto;
 import pro.gravit.simplecabinet.web.exception.EntityNotFoundException;
+import pro.gravit.simplecabinet.web.model.Server;
 import pro.gravit.simplecabinet.web.service.ServerService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/servers")
@@ -20,8 +22,22 @@ public class ServersController {
     @PostMapping("/new")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ServerDto create(@RequestBody CreateServerRequest request) {
-        var server = service.create(request.name(), request.displayName());
-        return new ServerDto(server);
+        Server newServer = new Server();
+        newServer.setName(request.name);
+        newServer.setDisplayName(request.displayName);
+        service.save(newServer);
+        return new ServerDto(newServer);
+
+    }
+    @PostMapping("/update")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ServerDto update(@RequestBody UpdateServerRequest request) {
+        Optional<Server> existingServerOptional = service.findByName(request.name());
+        Server serverUpdate = existingServerOptional.get();
+        serverUpdate.setName(request.name);
+        serverUpdate.setDisplayName(request.displayName);
+        service.save(serverUpdate);
+        return new ServerDto(serverUpdate);
     }
 
     @GetMapping("/id/{serverId}")
@@ -65,6 +81,9 @@ public class ServersController {
     }
 
     public record CreateServerRequest(String name, String displayName) {
+
+    }
+    public record UpdateServerRequest(String name, String displayName) {
 
     }
 }

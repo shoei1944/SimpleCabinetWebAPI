@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pro.gravit.simplecabinet.web.controller.BanManagerController;
 import pro.gravit.simplecabinet.web.dto.shop.GroupProductDto;
 import pro.gravit.simplecabinet.web.dto.shop.ItemDeliveryDto;
 import pro.gravit.simplecabinet.web.dto.shop.ItemProductDto;
@@ -55,6 +56,11 @@ public class DtoService {
         var groups = userService.getUserGroups(user).stream().map(UserGroupDto::new).collect(Collectors.toList());
         return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
                 groups, getUserTextures(user), null);
+    }
+
+    @Transactional
+    public BanManagerController.UserUUID toUsernameUuid(User user) {
+        return new BanManagerController.UserUUID(user.getUsername(),user.getUuid());
     }
 
     @Transactional
