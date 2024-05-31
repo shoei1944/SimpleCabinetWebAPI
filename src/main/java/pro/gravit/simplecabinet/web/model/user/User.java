@@ -43,6 +43,8 @@ public class User implements BasicUser {
     private List<UserSession> sessions;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserAsset> assets;
+    private String prefix;
+    private String suffix;
 
     public static boolean isCorrectEmail(String email) //Very simple check
     {
@@ -143,6 +145,22 @@ public class User implements BasicUser {
 
     public void setAssets(List<UserAsset> assets) {
         this.assets = assets;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 
     public enum HashType {

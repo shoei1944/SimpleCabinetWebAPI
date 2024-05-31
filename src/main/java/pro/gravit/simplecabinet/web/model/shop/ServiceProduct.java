@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 public class ServiceProduct extends Product {
     private ServiceType type;
     private boolean stackable;
+    private int days;
 
     public ServiceType getType() {
         return type;
@@ -25,7 +26,15 @@ public class ServiceProduct extends Product {
         this.stackable = stackable;
     }
 
-    public enum ServiceType {
+    public int getDays() {
+        return days;
+    }
 
+    public void setDays(int days) {
+        this.days = days;
+    }
+
+    public enum ServiceType {
+        CHANGE_PREFIX
     }
 }

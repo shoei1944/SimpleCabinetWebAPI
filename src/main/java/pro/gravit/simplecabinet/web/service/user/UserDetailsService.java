@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.model.user.UserGroup;
+import pro.gravit.simplecabinet.web.model.user.UserPermission;
 import pro.gravit.simplecabinet.web.model.user.UserSession;
 
 import java.util.*;
@@ -39,7 +40,7 @@ public class UserDetailsService {
     }
 
     @Transactional
-    public Map<String, String> collectUserPermissions(Collection<UserGroup> groups) {
+    public Map<String, UserPermission> collectUserPermissionsEx(Collection<UserGroup> groups) {
         List<String> groupNames = new ArrayList<>(groups.stream().map(UserGroup::getGroupName).toList());
         groupNames.add("USER"); // Default group
         var permissions = permissionService.findByGroupNames(groupNames);
@@ -52,8 +53,17 @@ public class UserDetailsService {
             return null;
         };
         permissions.sort(Comparator.comparingLong(x -> -findGroup.apply(x.getGroupName()).getPriority()));
-        Map<String, String> map = new HashMap<>();
+        Map<String, UserPermission> map = new HashMap<>();
         for (var p : permissions) {
+            map.putIfAbsent(p.getName(), p);
+        }
+        return map;
+    }
+
+    @Transactional
+    public Map<String, String> collectUserPermissions(Collection<UserGroup> groups) {
+        Map<String, String> map = new HashMap<>();
+        for (var p : collectUserPermissionsEx(groups).values()) {
             map.putIfAbsent(p.getName(), p.getValue());
         }
         return map;
@@ -66,7 +76,7 @@ public class UserDetailsService {
         private final List<GrantedAuthority> authorities;
         private final String client;
         private final long sessionId;
-        private Map<String, String> permissions;
+        private Map<String, UserPermission> permissions;
 
         public CabinetUserDetails(long userId, String password, String username, List<String> roles, String client, long sessionId) {
             this.userId = userId;
@@ -89,10 +99,10 @@ public class UserDetailsService {
             return sessionId;
         }
 
-        public Map<String, String> getPermissions() { // Optimize this
+        public Map<String, UserPermission> getPermissions() { // Optimize this
             if (permissions == null) {
                 var user = service.getReference(userId);
-                permissions = collectUserPermissions(service.getUserGroups(user));
+                permissions = collectUserPermissionsEx(service.getUserGroups(user));
             }
             return permissions;
         }

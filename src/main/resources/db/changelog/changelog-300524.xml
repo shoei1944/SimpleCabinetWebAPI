@@ -62,4 +62,12 @@
                                  initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
                                  referencedColumnNames="id" referencedTableName="users" validate="true"/>
     </changeSet>
+    <changeSet author="gravita (generated)" id="1717099005795-5">
+        <addColumn tableName="users">
+            <column name="prefix" type="VARCHAR(255)"/>
+        </addColumn>
+        <addColumn tableName="service_products">
+            <column name="days" type="INTEGER"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

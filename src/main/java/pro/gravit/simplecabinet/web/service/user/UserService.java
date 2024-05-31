@@ -6,10 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
-import pro.gravit.simplecabinet.web.model.user.BasicUser;
-import pro.gravit.simplecabinet.web.model.user.HardwareId;
-import pro.gravit.simplecabinet.web.model.user.User;
-import pro.gravit.simplecabinet.web.model.user.UserGroup;
+import pro.gravit.simplecabinet.web.model.user.*;
 import pro.gravit.simplecabinet.web.repository.user.UserRepository;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
@@ -131,7 +128,13 @@ public class UserService {
             return details.getSessionId();
         }
 
-        public String getPermission(String key) {
+        public String getPermissionValue(String key) {
+            var map = details.getPermissions();
+            var value = map.get(key);
+            return value != null ? value.getValue() : null;
+        }
+
+        public UserPermission getPermission(String key) {
             var map = details.getPermissions();
             return map.get(key);
         }
