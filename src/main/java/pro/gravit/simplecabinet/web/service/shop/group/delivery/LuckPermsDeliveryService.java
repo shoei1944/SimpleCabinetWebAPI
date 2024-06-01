@@ -28,7 +28,7 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
     public void insertPermission(UUID uuid, String permission, boolean value, String server, String world, long timestampExpire, String context) {
         Query query = manager.createNativeQuery(String.format("INSERT INTO %s (\"uuid\",\"permission\",value,\"server\",world,expiry,contexts) " +
                 " VALUES (?,?,true,?,?,?,?);", table));
-        query.setParameter(1, uuid);
+        query.setParameter(1, uuid.toString());
         query.setParameter(2, permission);
         query.setParameter(3, value);
         query.setParameter(4, server);
@@ -42,7 +42,7 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
     public List<LuckPermsPermission> searchUserPermission(UUID uuid, String prefix, String server, String world) {
         Query query = manager.createNativeQuery(String.format("SELECT uuid, permission, value, server, world, expiry, contexts from %s where uuid = ? and permission like ? escape \\ and server = ? and world = ? and (expiry = 0 or expiry > ?)", table),
                 LuckPermsDeliveryService.class);
-        query.setParameter(1, uuid);
+        query.setParameter(1, uuid.toString());
         query.setParameter(2, escapeLike(prefix, "\\") + "%");
         query.setParameter(3, server);
         query.setParameter(4, world);
@@ -50,12 +50,11 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
         return (List<LuckPermsPermission>) query.getResultList();
     }
 
-    @SuppressWarnings("unchecked")
     public int upUserPermission(UUID uuid, String prefix, String server, String world, long expiry) {
         Query query = manager.createNativeQuery(String.format("UPDATE %s SET expiry = ? where uuid = ? and permission like ? escape \\ and server = ? and world = ? and (expiry != 0 or expiry > ?)", table),
                 LuckPermsDeliveryService.class);
         query.setParameter(1, expiry);
-        query.setParameter(2, uuid);
+        query.setParameter(2, uuid.toString());
         query.setParameter(3, escapeLike(prefix, "\\") + "%");
         query.setParameter(4, server);
         query.setParameter(5, world);
@@ -70,7 +69,7 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
 
     public boolean deletePermission(UUID uuid, String permission, boolean value, String server, String world, long timestampExpire, String context) {
         Query query = manager.createNativeQuery(String.format("DELETE FROM %s where uuid = ? and permission = ? and value = ? and server = ? and world = ? and expity = ? and contexts = ?", table));
-        query.setParameter(1, uuid);
+        query.setParameter(1, uuid.toString());
         query.setParameter(2, permission);
         query.setParameter(3, value);
         query.setParameter(4, server);

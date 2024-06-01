@@ -44,7 +44,6 @@ public class User implements BasicUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserAsset> assets;
     private String prefix;
-    private String suffix;
 
     public static boolean isCorrectEmail(String email) //Very simple check
     {
@@ -153,14 +152,6 @@ public class User implements BasicUser {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
     }
 
     public enum HashType {
