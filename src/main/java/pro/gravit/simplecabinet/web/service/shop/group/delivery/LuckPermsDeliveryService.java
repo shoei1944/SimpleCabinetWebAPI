@@ -42,6 +42,7 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
     public List<LuckPermsPermission> searchUserPermission(UUID uuid, String prefix, String server, String world) {
         Query query = manager.createNativeQuery(String.format("SELECT uuid, permission, value, server, world, expiry, contexts from %s where uuid = ? and permission like ? escape '\\' and server = ? and world = ? and (expiry = 0 or expiry > ?)", table),
                 LuckPermsPermission.class);
+
         query.setParameter(1, uuid.toString());
         query.setParameter(2, escapeLike(prefix, "\\") + "%");
         query.setParameter(3, server);
@@ -62,8 +63,8 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
     }
 
     public boolean deletePermission(LuckPermsPermission permission) {
-        return deletePermission(permission.getUUID(), permission.getPermission(), permission.getValue(), permission.getServer(),
-                permission.getWorld(), permission.getExpiry(), permission.getContexts());
+        return deletePermission(permission.uuid(), permission.permission(), permission.value(), permission.server(),
+                permission.world(), permission.expiry(), permission.contexts());
     }
 
     public boolean deletePermission(UUID uuid, String permission, boolean value, String server, String world, long timestampExpire, String context) {
@@ -119,19 +120,7 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
         return false;
     }
 
-    public interface LuckPermsPermission {
-        UUID getUUID();
-
-        String getPermission();
-
-        boolean getValue();
-
-        String getServer();
-
-        String getWorld();
-
-        long getExpiry();
-
-        String getContexts();
+    public record LuckPermsPermission(UUID uuid, String permission, boolean value, String server, String world,
+                                      long expiry, String contexts) {
     }
 }
