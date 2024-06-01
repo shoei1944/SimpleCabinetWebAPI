@@ -27,7 +27,7 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
 
     public void insertPermission(UUID uuid, String permission, boolean value, String server, String world, long timestampExpire, String context) {
         Query query = manager.createNativeQuery(String.format("INSERT INTO %s (\"uuid\",\"permission\",value,\"server\",world,expiry,contexts) " +
-                " VALUES (?,?,true,?,?,?,?);", table));
+                " VALUES (?,?,?,?,?,?,?);", table));
         query.setParameter(1, uuid.toString());
         query.setParameter(2, permission);
         query.setParameter(3, value);
