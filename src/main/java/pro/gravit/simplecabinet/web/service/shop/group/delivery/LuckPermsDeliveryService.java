@@ -40,7 +40,7 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
 
     @SuppressWarnings("unchecked")
     public List<LuckPermsPermission> searchUserPermission(UUID uuid, String prefix, String server, String world) {
-        Query query = manager.createNativeQuery(String.format("SELECT uuid, permission, value, server, world, expiry, contexts from %s where uuid = ? and permission like ? escape \\ and server = ? and world = ? and (expiry = 0 or expiry > ?)", table),
+        Query query = manager.createNativeQuery(String.format("SELECT uuid, permission, value, server, world, expiry, contexts from %s where uuid = ? and permission like ? escape '\\' and server = ? and world = ? and (expiry = 0 or expiry > ?)", table),
                 LuckPermsDeliveryService.class);
         query.setParameter(1, uuid.toString());
         query.setParameter(2, escapeLike(prefix, "\\") + "%");
@@ -51,7 +51,7 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
     }
 
     public int upUserPermission(UUID uuid, String prefix, String server, String world, long expiry) {
-        Query query = manager.createNativeQuery(String.format("UPDATE %s SET expiry = ? where uuid = ? and permission like ? escape \\ and server = ? and world = ? and (expiry != 0 or expiry > ?)", table),
+        Query query = manager.createNativeQuery(String.format("UPDATE %s SET expiry = ? where uuid = ? and permission like ? escape '\\' and server = ? and world = ? and (expiry != 0 or expiry > ?)", table),
                 LuckPermsDeliveryService.class);
         query.setParameter(1, expiry);
         query.setParameter(2, uuid.toString());
