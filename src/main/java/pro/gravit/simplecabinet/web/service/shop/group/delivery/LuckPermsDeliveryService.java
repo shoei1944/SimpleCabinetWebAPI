@@ -1,8 +1,6 @@
 package pro.gravit.simplecabinet.web.service.shop.group.delivery;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service("luckPermsDeliveryService")
@@ -63,8 +62,8 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
     }
 
     public boolean deletePermission(LuckPermsPermission permission) {
-        return deletePermission(permission.uuid(), permission.permission(), permission.value(), permission.server(),
-                permission.world(), permission.expiry(), permission.contexts());
+        return deletePermission(permission.getUuid(), permission.getPermission(), permission.getValue(), permission.getServer(),
+                permission.getWorld(), permission.getExpiry(), permission.getContexts());
     }
 
     public boolean deletePermission(UUID uuid, String permission, boolean value, String server, String world, long timestampExpire, String context) {
@@ -120,7 +119,117 @@ public class LuckPermsDeliveryService implements GroupDeliveryService {
         return false;
     }
 
-    public record LuckPermsPermission(UUID uuid, String permission, boolean value, String server, String world,
-                                      long expiry, String contexts) {
+    @Entity
+    public static final class LuckPermsPermission {
+        @Id
+        private UUID uuid;
+        private String permission;
+        private boolean value;
+        private String server;
+        private String world;
+        private long expiry;
+        private String contexts;
+
+        public LuckPermsPermission() {
+        }
+
+        public LuckPermsPermission(UUID uuid, String permission, boolean value, String server, String world,
+                                   long expiry, String contexts) {
+            this.uuid = uuid;
+            this.permission = permission;
+            this.value = value;
+            this.server = server;
+            this.world = world;
+            this.expiry = expiry;
+            this.contexts = contexts;
+        }
+
+        public UUID getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(UUID uuid) {
+            this.uuid = uuid;
+        }
+
+        public String getPermission() {
+            return permission;
+        }
+
+        public void setPermission(String permission) {
+            this.permission = permission;
+        }
+
+        public boolean getValue() {
+            return value;
+        }
+
+        public void setValue(boolean value) {
+            this.value = value;
+        }
+
+        public String getServer() {
+            return server;
+        }
+
+        public void setServer(String server) {
+            this.server = server;
+        }
+
+        public String getWorld() {
+            return world;
+        }
+
+        public void setWorld(String world) {
+            this.world = world;
+        }
+
+        public long getExpiry() {
+            return expiry;
+        }
+
+        public void setExpiry(long expiry) {
+            this.expiry = expiry;
+        }
+
+        public String getContexts() {
+            return contexts;
+        }
+
+        public void setContexts(String contexts) {
+            this.contexts = contexts;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (LuckPermsPermission) obj;
+            return Objects.equals(this.uuid, that.uuid) &&
+                    Objects.equals(this.permission, that.permission) &&
+                    this.value == that.value &&
+                    Objects.equals(this.server, that.server) &&
+                    Objects.equals(this.world, that.world) &&
+                    this.expiry == that.expiry &&
+                    Objects.equals(this.contexts, that.contexts);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(uuid, permission, value, server, world, expiry, contexts);
+        }
+
+        @Override
+        public String toString() {
+            return "LuckPermsPermission[" +
+                    "uuid=" + uuid + ", " +
+                    "permission=" + permission + ", " +
+                    "value=" + value + ", " +
+                    "server=" + server + ", " +
+                    "world=" + world + ", " +
+                    "expiry=" + expiry + ", " +
+                    "contexts=" + contexts + ']';
+        }
+
     }
 }
