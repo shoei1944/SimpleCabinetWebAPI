@@ -39,8 +39,8 @@ public class ServiceProductService {
         return orderRepository.findByUserAndType(user, type);
     }
 
-    public Optional<ServiceProduct> findByType(ServiceProduct.ServiceType type) {
-        return repository.findByType(type);
+    public Page<ServiceProduct> findByType(ServiceProduct.ServiceType type, Pageable pageable) {
+        return repository.findByType(type, pageable);
     }
 
     @Transactional

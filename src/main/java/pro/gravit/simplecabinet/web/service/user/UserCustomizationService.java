@@ -7,6 +7,7 @@ import pro.gravit.simplecabinet.web.model.shop.ServiceOrder;
 import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.model.user.UserGroup;
 import pro.gravit.simplecabinet.web.service.shop.group.delivery.GroupDeliveryService;
+import pro.gravit.simplecabinet.web.service.shop.service.ServiceProductService;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 public class UserCustomizationService {
     @Autowired
     private GroupDeliveryService groupDeliveryService;
+    @Autowired
+    private ServiceProductService serviceProductService;
     @Autowired
     private UserService userService;
 
@@ -43,6 +46,7 @@ public class UserCustomizationService {
         user.setPrefix(prefix);
         userService.save(user);
         groupDeliveryService.updatePrefix(prefix, user.getUuid(), endDate);
+        serviceProductService.delivery(order);
 
     }
 

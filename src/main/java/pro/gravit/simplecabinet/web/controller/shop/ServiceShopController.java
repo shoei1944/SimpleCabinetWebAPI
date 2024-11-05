@@ -45,13 +45,10 @@ public class ServiceShopController {
         return dtoService.toServiceProductDto(optional.get());
     }
 
-    @GetMapping("/type/{type}")
-    public ServiceProductDto getByType(@PathVariable ServiceProduct.ServiceType type) {
-        var prevOrder = serviceProductService.findByType(type);
-        if (prevOrder.isEmpty()) {
-            throw new EntityNotFoundException("Order not found");
-        }
-        return dtoService.toServiceProductDto(prevOrder.get());
+    @GetMapping("/type/{type}/{pageId}")
+    public PageDto<ServiceProductDto> getByType(@PathVariable ServiceProduct.ServiceType type, @PathVariable int pageId) {
+        var list = serviceProductService.findByType(type, PageRequest.of(pageId, 10));
+        return new PageDto<>(list.map(dtoService::toServiceProductDto));
     }
 
     @PostMapping("/id/{id}/updatepicture")
