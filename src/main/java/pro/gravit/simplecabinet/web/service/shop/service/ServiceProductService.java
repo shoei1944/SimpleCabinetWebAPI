@@ -39,6 +39,10 @@ public class ServiceProductService {
         return orderRepository.findByUserAndType(user, type);
     }
 
+    public Optional<ServiceProduct> findByType(ServiceProduct.ServiceType type) {
+        return repository.findByType(type);
+    }
+
     @Transactional
     public ServiceOrder createServiceOrder(ServiceProduct product, long quantity, User user) {
         var order = new ServiceOrder();

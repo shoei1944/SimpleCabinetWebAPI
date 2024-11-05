@@ -45,6 +45,15 @@ public class ServiceShopController {
         return dtoService.toServiceProductDto(optional.get());
     }
 
+    @GetMapping("/type/{type}")
+    public ServiceProductDto getByType(@PathVariable ServiceProduct.ServiceType type) {
+        var prevOrder = serviceProductService.findByType(type);
+        if (prevOrder.isEmpty()) {
+            throw new EntityNotFoundException("Order not found");
+        }
+        return dtoService.toServiceProductDto(prevOrder.get());
+    }
+
     @PostMapping("/id/{id}/updatepicture")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void updatePicture(@PathVariable long id, @RequestBody ServiceProductUpdatePictureRequest request) {
@@ -78,6 +87,17 @@ public class ServiceShopController {
         return new ServiceOrderDto(order);
     }
 
+    @GetMapping("/type/{type}/order")
+    @PreAuthorize("isAuthenticated()")
+    public ServiceOrderDto getServiceOrder(@PathVariable ServiceProduct.ServiceType type) {
+        var user = userService.getCurrentUser();
+        var prevOrder = serviceProductService.findByUserAndType(user.getReference(), type);
+        if (prevOrder.isEmpty()) {
+            throw new EntityNotFoundException("Order not found");
+        }
+        return new ServiceOrderDto(prevOrder.get());
+    }
+
     @PutMapping("/new")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ServiceProductDto create(@RequestBody ServiceProductCreateRequest request) {
@@ -88,6 +108,7 @@ public class ServiceShopController {
         product.setStackable(request.stackable);
         product.setCurrency(request.currency);
         product.setPictureUrl(request.pictureName);
+        product.setType(request.type);
         product.setAvailable(true);
         serviceProductService.save(product);
         return dtoService.toServiceProductDto(product);
@@ -148,7 +169,7 @@ public class ServiceShopController {
     }
 
     public record ServiceProductCreateRequest(String displayName, String description, double price, boolean stackable,
-                                              String currency, String pictureName) {
+                                              String currency, String pictureName, ServiceProduct.ServiceType type) {
     }
 
     public record SetAvailableRequest(boolean available) {

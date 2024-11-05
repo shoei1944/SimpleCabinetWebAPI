@@ -10,6 +10,7 @@ import pro.gravit.simplecabinet.web.service.user.UserService;
 @RestController
 @RequestMapping("/cabinet/prefix")
 public class CabinetPrefixController {
+    public static final String ALWAYS_PERMISSION_NAME = "simplecabinet.customization.prefix.update";
     @Autowired
     private ServiceProductService serviceProductService;
     @Autowired
@@ -35,13 +36,13 @@ public class CabinetPrefixController {
     @GetMapping
     public GetPrefixResponse getPrefix() {
         var user = userService.getCurrentUser();
-        return new GetPrefixResponse(user.getReference().getPrefix());
+        return new GetPrefixResponse(user.getReference().getPrefix(), user.getPermission(ALWAYS_PERMISSION_NAME) != null);
     }
 
     @PutMapping
     public void setPrefix(@RequestBody SetPrefixRequest request) {
         var user = userService.getCurrentUser();
-        var alwaysPermission = user.getPermission("simplecabinet.customization.prefix.update");
+        var alwaysPermission = user.getPermission(ALWAYS_PERMISSION_NAME);
         if (alwaysPermission == null) {
             var order = serviceProductService.findByUserAndType(user.getReference(), ServiceProduct.ServiceType.CHANGE_PREFIX);
             if (order.isEmpty()) {
@@ -57,7 +58,7 @@ public class CabinetPrefixController {
 
     }
 
-    public record GetPrefixResponse(String prefix) {
+    public record GetPrefixResponse(String prefix, boolean freePrefixChangeAvailable) {
 
     }
 }
