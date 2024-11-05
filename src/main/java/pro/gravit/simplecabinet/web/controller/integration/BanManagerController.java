@@ -1,18 +1,17 @@
-package pro.gravit.simplecabinet.web.controller;
+package pro.gravit.simplecabinet.web.controller.integration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pro.gravit.simplecabinet.web.dto.user.UserDto;
 import pro.gravit.simplecabinet.web.service.DtoService;
 import pro.gravit.simplecabinet.web.service.user.UserService;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/banmanager")
+@RequestMapping("/integration/banmanager")
 public class BanManagerController {
     @Autowired
     private UserService service;
