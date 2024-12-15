@@ -107,6 +107,15 @@ public class UserDetailsService {
             return permissions;
         }
 
+        public boolean checkAuthority(String name) {
+            for (var e : authorities) {
+                if (e.getAuthority().equals(name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return authorities;

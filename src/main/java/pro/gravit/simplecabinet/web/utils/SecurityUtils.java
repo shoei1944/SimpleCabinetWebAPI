@@ -32,6 +32,14 @@ public class SecurityUtils {
         return user;
     }
 
+    public static boolean checkAuthority(String name) {
+        var user = tryUser();
+        if (user == null) {
+            return false;
+        }
+        return user.checkAuthority(name);
+    }
+
     public static String generateRandomString(int length) {
         Random rng = new SecureRandom();
         char[] text = new char[length];

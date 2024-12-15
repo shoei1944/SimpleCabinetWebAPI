@@ -41,8 +41,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody RegisterRequest request) {
-        if (!captchaService.verify(request.captcha)) {
+        var isAdmin = SecurityUtils.checkAuthority("ROLE_ADMIN");
+        if (!isAdmin && !captchaService.verify(request.captcha)) {
             throw new InvalidParametersException("Invalid captcha response", 36);
+        }
+        if (!isAdmin && !registerService.isEnabled()) {
+            throw new InvalidParametersException("Registration disabled", 31);
         }
         registerService.check(request.username, request.email, request.password);
         var result = registerService.register(request.username, request.email, request.password);

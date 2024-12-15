@@ -40,9 +40,6 @@ public class RegisterService {
 
     @Transactional
     public void check(String username, String email, String password) {
-        if (!config.isEnabled()) {
-            throw new InvalidParametersException("Registration disabled", 31);
-        }
         if (!USERNAME_PATTERN.matcher(username).matches()) {
             throw new InvalidParametersException("Username contains forbidden characters", 33);
         }
