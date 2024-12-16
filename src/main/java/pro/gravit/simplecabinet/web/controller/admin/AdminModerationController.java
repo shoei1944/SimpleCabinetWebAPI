@@ -41,6 +41,7 @@ public class AdminModerationController {
         if (request.isHardware) {
             hardwareIdService.banByUser(user.get().getId());
         }
+        userService.deactivateSessionsByUser(user.get());
         return new BanInfoDto(banInfo);
     }
 

@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pro.gravit.simplecabinet.web.model.BanInfoEntity;
 import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.repository.BanInfoRepository;
-import pro.gravit.simplecabinet.web.repository.user.UserRepository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -21,8 +20,6 @@ public class BanService {
     private final Logger logger = LoggerFactory.getLogger(BanService.class);
     @Autowired
     private BanInfoRepository repository;
-    @Autowired
-    private UserRepository userRepository;
 
     public Page<BanInfoEntity> findAll(Pageable pageable) {
         return repository.findAllByShadow(false, pageable);

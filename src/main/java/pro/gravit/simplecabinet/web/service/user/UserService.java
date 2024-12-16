@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.exception.InvalidParametersException;
 import pro.gravit.simplecabinet.web.model.user.*;
 import pro.gravit.simplecabinet.web.repository.user.UserRepository;
+import pro.gravit.simplecabinet.web.repository.user.UserSessionRepository;
 import pro.gravit.simplecabinet.web.utils.SecurityUtils;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,8 @@ public class UserService {
     private UserRepository repository;
     @Autowired
     private PasswordCheckService passwordCheckService;
+    @Autowired
+    private UserSessionRepository userSessionRepository;
 
     public <S extends User> S save(S entity) {
         return repository.save(entity);
@@ -70,6 +73,10 @@ public class UserService {
 
     public List<User> findByHardwareIdFetchAssets(HardwareId hardwareId) {
         return repository.findByHardwareIdFetchAssets(hardwareId);
+    }
+
+    public void deactivateSessionsByUser(User user) {
+        userSessionRepository.deactivateByUser(user);
     }
 
     public void delete(User entity) {

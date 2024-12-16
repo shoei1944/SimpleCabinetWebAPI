@@ -28,4 +28,8 @@ public interface UserSessionRepository extends JpaRepository<UserSession, Long> 
     @Modifying
     @Query("UPDATE UserSession s set s.deleted = true where s.id = :id")
     int deactivateById(long id);
+
+    @Modifying
+    @Query("UPDATE UserSession s set s.deleted = true where s.user = :user")
+    int deactivateByUser(User user);
 }
