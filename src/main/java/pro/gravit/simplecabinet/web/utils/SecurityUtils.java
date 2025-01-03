@@ -18,7 +18,7 @@ public class SecurityUtils {
 
     public static UserDetailsService.CabinetUserDetails tryUser() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) {
+        if (!(auth instanceof UserDetailsService.CabinetUserDetails)) {
             return null;
         }
         return (UserDetailsService.CabinetUserDetails) auth.getPrincipal();
