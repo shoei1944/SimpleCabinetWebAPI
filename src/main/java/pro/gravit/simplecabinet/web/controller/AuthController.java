@@ -50,7 +50,7 @@ public class AuthController {
         }
         registerService.check(request.username, request.email, request.password);
         var result = registerService.register(request.username, request.email, request.password);
-        return new RegisterResponse(result.id()); // TODO
+        return new RegisterResponse(result.id(), result.prepared(), result.needConfirm()); // TODO
     }
 
     @PostMapping("/regconfirm")
@@ -135,7 +135,7 @@ public class AuthController {
         return dtoService.toPrivateUserDto(userOptional.get());
     }
 
-    public record RegisterResponse(long id) {
+    public record RegisterResponse(long id, boolean prepared, boolean needConfirm) {
     }
 
     public record RegisterRequest(String username, String email, String password, String captcha) {
