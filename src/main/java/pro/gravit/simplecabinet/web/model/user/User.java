@@ -44,6 +44,7 @@ public class User implements BasicUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserAsset> assets;
     private String prefix;
+    private Long reputation;
 
     public static boolean isCorrectEmail(String email) //Very simple check
     {
@@ -152,6 +153,14 @@ public class User implements BasicUser {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+
+    public Long getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(Long reputation) {
+        this.reputation = reputation;
     }
 
     public enum HashType {

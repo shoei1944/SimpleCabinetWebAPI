@@ -107,6 +107,19 @@ public class UserDetailsService {
             return permissions;
         }
 
+        public String getPermission(String name) {
+            return getPermission(name, null);
+        }
+
+        public String getPermission(String name, String defaultValue) {
+            var permissions = getPermissions();
+            var permission = permissions.get(name);
+            if (permission == null) {
+                return defaultValue;
+            }
+            return permission.getValue();
+        }
+
         public boolean checkAuthority(String name) {
             for (var e : authorities) {
                 if (e.getAuthority().equals(name)) {

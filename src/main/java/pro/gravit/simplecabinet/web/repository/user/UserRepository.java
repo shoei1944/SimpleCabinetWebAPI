@@ -1,6 +1,7 @@
 package pro.gravit.simplecabinet.web.repository.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import pro.gravit.simplecabinet.web.model.user.HardwareId;
 import pro.gravit.simplecabinet.web.model.user.User;
@@ -33,4 +34,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from UserSession session, User u join fetch u.assets where session.user = u and session.hardwareId = :hardwareId")
     List<User> findByHardwareIdFetchAssets(HardwareId hardwareId);
+
+    @Query("update User u set u.reputation = u.reputation + :value where u.id = :userId")
+    @Modifying
+    void changeReputation(Long userId, Long value);
 }

@@ -61,7 +61,7 @@ public class DtoService {
     @Transactional
     public UserDto toPublicUserDto(User user) {
         var groups = userService.getUserGroups(user).stream().map(UserGroupDto::new).collect(Collectors.toList());
-        return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
+        return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getReputation(), user.getStatus(), user.getRegistrationDate(),
                 groups, getUserTextures(user), null);
     }
 
@@ -74,12 +74,12 @@ public class DtoService {
     public UserDto toPrivateUserDto(User user) {
         var groups = userService.getUserGroups(user);
         var groupsDto = groups.stream().map(UserGroupDto::new).collect(Collectors.toList());
-        return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
+        return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getReputation(), user.getStatus(), user.getRegistrationDate(),
                 groupsDto, getUserTextures(user), userDetailsService.collectUserPermissions(groups));
     }
 
     public UserDto toMiniUserDto(User user) {
-        return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getStatus(), user.getRegistrationDate(),
+        return new UserDto(user.getId(), user.getUsername(), user.getUuid(), user.getGender(), user.getReputation(), user.getStatus(), user.getRegistrationDate(),
                 null, getUserTextures(user), null);
     }
 
