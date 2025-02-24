@@ -70,6 +70,18 @@ public class UserDetailsService {
         return map;
     }
 
+    @Transactional
+    public CabinetUserDetails makeDetails(User entity) {
+        return new pro.gravit.simplecabinet.web.service.user.UserDetailsService.CabinetUserDetails(
+                entity.getId(),
+                entity.getPassword(),
+                entity.getUsername(),
+                collectUserRoles(entity),
+                "UNKNOWN",
+                0
+        );
+    }
+
     public class CabinetUserDetails implements UserDetails {
         @Getter
         private final long userId;
