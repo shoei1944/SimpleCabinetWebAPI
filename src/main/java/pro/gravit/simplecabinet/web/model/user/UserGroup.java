@@ -1,9 +1,12 @@
 package pro.gravit.simplecabinet.web.model.user;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity(name = "UserGroup")
 @Table(name = "user_groups")
 public class UserGroup {
@@ -11,55 +14,17 @@ public class UserGroup {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_groups_generator")
     @SequenceGenerator(name = "user_groups_generator", sequenceName = "user_groups_seq", allocationSize = 1)
     private long id;
+    @Setter
     private String groupName;
+    @Setter
     private long priority;
+    @Setter
     private LocalDateTime startDate;
+    @Setter
     private LocalDateTime endDate;
+    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public long getId() {
-        return id;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public long getPriority() {
-        return priority;
-    }
-
-    public void setPriority(long priority) {
-        this.priority = priority;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

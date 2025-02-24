@@ -1,8 +1,12 @@
 package pro.gravit.simplecabinet.web.model.shop;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import pro.gravit.simplecabinet.web.model.user.User;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "item_delivery")
 public class ItemDelivery {
@@ -25,67 +29,4 @@ public class ItemDelivery {
     private long part;
     private boolean completed;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public String getItemExtra() {
-        return itemExtra;
-    }
-
-    public void setItemExtra(String itemExtra) {
-        this.itemExtra = itemExtra;
-    }
-
-    public String getItemEnchants() {
-        return itemEnchants;
-    }
-
-    public void setItemEnchants(String itemEnchants) {
-        this.itemEnchants = itemEnchants;
-    }
-
-    public String getItemNbt() {
-        return itemNbt;
-    }
-
-    public void setItemNbt(String itemNbt) {
-        this.itemNbt = itemNbt;
-    }
-
-    public long getPart() {
-        return part;
-    }
-
-    public void setPart(long part) {
-        this.part = part;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
 }

@@ -1,6 +1,8 @@
 package pro.gravit.simplecabinet.web.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -14,68 +16,36 @@ import java.util.List;
 @Table(name = "news")
 public class News {
     public static final String WITH_COMMENTS = "News[comments]";
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "news_generator")
     @SequenceGenerator(name = "news_generator", sequenceName = "news_seq", allocationSize = 1)
     private long id;
+    @Setter
+    @Getter
     private String header;
+    @Setter
+    @Getter
     @Column(name = "mini_text")
     private String miniText;
+    @Setter
+    @Getter
     private String text;
+    @Setter
+    @Getter
     private int commentsCount;
     private String pictureURL;
+    @Setter
+    @Getter
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<NewsComment> comments;
 
-    public long getId() {
-        return id;
-    }
-
-    public String getHeader() {
-        return header;
-    }
-
     public String getPicture () {
         return pictureURL;
-    }
-
-    public void setHeader(String header) {
-        this.header = header;
     }
 
     public void setPicture (String pictureURL) {
         this.pictureURL = pictureURL;
     }
 
-    public String getMiniText() {
-        return miniText;
-    }
-
-    public void setMiniText(String miniText) {
-        this.miniText = miniText;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public int getCommentsCount() {
-        return commentsCount;
-    }
-
-    public void setCommentsCount(int commentsCount) {
-        this.commentsCount = commentsCount;
-    }
-
-    public List<NewsComment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<NewsComment> comments) {
-        this.comments = comments;
-    }
 }

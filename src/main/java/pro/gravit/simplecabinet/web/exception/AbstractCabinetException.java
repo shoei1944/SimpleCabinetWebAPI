@@ -1,5 +1,8 @@
 package pro.gravit.simplecabinet.web.exception;
 
+import lombok.Getter;
+
+@Getter
 public class AbstractCabinetException extends RuntimeException {
     private final int code;
 
@@ -8,7 +11,4 @@ public class AbstractCabinetException extends RuntimeException {
         this.code = code;
     }
 
-    public int getCode() {
-        return code;
-    }
 }

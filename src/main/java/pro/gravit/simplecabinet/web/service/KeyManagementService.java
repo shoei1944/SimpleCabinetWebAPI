@@ -1,8 +1,11 @@
 package pro.gravit.simplecabinet.web.service;
 
+import lombok.Getter;
+
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 
+@Getter
 public class KeyManagementService {
     private final ECPublicKey publicKey;
     private final ECPrivateKey privateKey;
@@ -14,15 +17,4 @@ public class KeyManagementService {
         this.encodedPublicKey = publicKey.getEncoded();
     }
 
-    public ECPublicKey getPublicKey() {
-        return publicKey;
-    }
-
-    public ECPrivateKey getPrivateKey() {
-        return privateKey;
-    }
-
-    public byte[] getEncodedPublicKey() {
-        return encodedPublicKey;
-    }
 }

@@ -71,7 +71,7 @@ public class AdminHardwareController {
     }
 
     @GetMapping("/getusersbyhardware/{hardwareId}")
-    public List<UserDto> getUsersByHardwareId(@PathVariable long hardwareId, @PathVariable boolean assets) {
+    public List<UserDto> getUsersByHardwareId(@PathVariable long hardwareId, @RequestParam boolean assets) {
         var hardwareOptional = hardwareIdService.findById(hardwareId);
         if (hardwareOptional.isEmpty()) {
             throw new EntityNotFoundException("HardwareId not found");

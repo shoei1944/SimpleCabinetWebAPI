@@ -18,8 +18,8 @@ public class BanlistController {
     private BanService banService;
 
     @GetMapping("/userId/{userId}")
-    public BanInfoDto getById(@PathVariable long id) {
-        var optional = banService.findById(id);
+    public BanInfoDto getById(@PathVariable long userId) {
+        var optional = banService.findById(userId);
         if (optional.isEmpty()) {
             throw new EntityNotFoundException("BanInfo not found");
         }

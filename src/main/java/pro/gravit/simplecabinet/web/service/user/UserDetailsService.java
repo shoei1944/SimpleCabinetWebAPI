@@ -1,6 +1,7 @@
 package pro.gravit.simplecabinet.web.service.user;
 
 import jakarta.persistence.EntityManager;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -70,11 +71,14 @@ public class UserDetailsService {
     }
 
     public class CabinetUserDetails implements UserDetails {
+        @Getter
         private final long userId;
         private final String password;
         private final String username;
         private final List<GrantedAuthority> authorities;
+        @Getter
         private final String client;
+        @Getter
         private final long sessionId;
         private Map<String, UserPermission> permissions;
 
@@ -85,18 +89,6 @@ public class UserDetailsService {
             this.authorities = roles.stream().map(e -> new SimpleGrantedAuthority("ROLE_".concat(e.toUpperCase(Locale.ROOT)))).collect(Collectors.toList());
             this.client = client;
             this.sessionId = sessionId;
-        }
-
-        public long getUserId() {
-            return userId;
-        }
-
-        public String getClient() {
-            return client;
-        }
-
-        public long getSessionId() {
-            return sessionId;
         }
 
         public Map<String, UserPermission> getPermissions() { // Optimize this

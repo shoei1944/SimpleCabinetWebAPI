@@ -1,6 +1,8 @@
 package pro.gravit.simplecabinet.web.model.user;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,94 +15,68 @@ public class User implements BasicUser {
 
     public static HashType DEFAULT_PASSWORD_HASH = HashType.BCRYPT;
     //Base and launcher
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_generator")
     @SequenceGenerator(name = "users_generator", sequenceName = "users_seq", allocationSize = 1)
     private long id;
+    @Setter
+    @Getter
     @Column(unique = true)
     private String username;
+    @Setter
+    @Getter
     @Column(unique = true)
     private UUID uuid;
     //Password and permissions
+    @Setter
+    @Getter
     @Column(name = "hash_type")
     @Enumerated(EnumType.ORDINAL)
     private HashType hashType = HashType.BCRYPT;
+    @Getter
     private String password;
     //Special
+    @Setter
+    @Getter
     @Column(unique = true)
     private String email;
     //Addional info (may be null)
+    @Setter
+    @Getter
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
+    @Setter
+    @Getter
     private String status;
+    @Setter
+    @Getter
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
+    @Setter
+    @Getter
     @Column(name = "totp_secret_key")
     private String totpSecretKey;
+    @Setter
+    @Getter
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserGroup> groups;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserSession> sessions;
+    @Setter
+    @Getter
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserAsset> assets;
+    @Setter
+    @Getter
     private String prefix;
+    @Setter
+    @Getter
     private Long reputation;
 
     public static boolean isCorrectEmail(String email) //Very simple check
     {
         return email != null && email.contains("@") && email.length() >= 3;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getTotpSecretKey() {
-        return totpSecretKey;
-    }
-
-    public void setTotpSecretKey(String totpSecretKey) {
-        this.totpSecretKey = totpSecretKey;
-    }
-
-    public List<UserGroup> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<UserGroup> groups) {
-        this.groups = groups;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public void setRawPassword(String password) {
@@ -111,58 +87,7 @@ public class User implements BasicUser {
         this.hashType = type;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public HashType getHashType() {
-        return hashType;
-    }
-
-    public void setHashType(HashType hashType) {
-        this.hashType = hashType;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public LocalDateTime getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public List<UserAsset> getAssets() {
-        return assets;
-    }
-
-    public void setAssets(List<UserAsset> assets) {
-        this.assets = assets;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public Long getReputation() {
-        return reputation;
-    }
-
-    public void setReputation(Long reputation) {
-        this.reputation = reputation;
-    }
-
+    @Getter
     public enum HashType {
         BCRYPT(true),
         DOUBLEMD5(false),
@@ -176,9 +101,6 @@ public class User implements BasicUser {
             this.trusted = trusted;
         }
 
-        public boolean isTrusted() {
-            return trusted;
-        }
     }
 
     public enum Gender {

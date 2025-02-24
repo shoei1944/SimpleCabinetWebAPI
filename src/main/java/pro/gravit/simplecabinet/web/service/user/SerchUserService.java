@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 import pro.gravit.simplecabinet.web.model.user.User;
 import pro.gravit.simplecabinet.web.repository.user.UserSearchRepository;
 
-
-import java.util.*;
-
 @Service
 public class SerchUserService {
     @Autowired

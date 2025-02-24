@@ -1,13 +1,19 @@
 package pro.gravit.simplecabinet.web.model.shop;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "item_orders")
 public class ItemOrder extends Order<ItemProduct> {
     private long quantity;
+    @Setter
+    @Getter
     @Column(name = "custom_params")
     private String customParams;
+    @Setter
+    @Getter
     @ManyToOne
     @JoinColumn(name = "product_id")
     private ItemProduct product;
@@ -22,19 +28,4 @@ public class ItemOrder extends Order<ItemProduct> {
         this.quantity = quantity;
     }
 
-    public String getCustomParams() {
-        return customParams;
-    }
-
-    public void setCustomParams(String customParams) {
-        this.customParams = customParams;
-    }
-
-    public ItemProduct getProduct() {
-        return product;
-    }
-
-    public void setProduct(ItemProduct product) {
-        this.product = product;
-    }
 }

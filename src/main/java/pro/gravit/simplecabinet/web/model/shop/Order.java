@@ -1,10 +1,13 @@
 package pro.gravit.simplecabinet.web.model.shop;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import pro.gravit.simplecabinet.web.model.user.User;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "orders")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -13,70 +16,24 @@ public abstract class Order<T extends Product> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_generator")
     @SequenceGenerator(name = "orders_generator", sequenceName = "orders_seq", allocationSize = 1)
     private long id;
+    @Setter
     @ManyToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
+    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @Setter
     private long quantity;
+    @Setter
     private OrderStatus status;
+    @Setter
     private LocalDateTime createdAt;
+    @Setter
     private LocalDateTime updatedAt;
 
-    public long getId() {
-        return id;
-    }
-
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-    }
-
-    public long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(long quantity) {
-        this.quantity = quantity;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public abstract T getProduct();
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 
     public enum OrderStatus {
         INITIATED, DELIVERY

@@ -1,10 +1,13 @@
 package pro.gravit.simplecabinet.web.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import pro.gravit.simplecabinet.web.model.user.User;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity(name = "BanInfo")
 @Table(name = "baninfo")
 public class BanInfoEntity {
@@ -12,68 +15,23 @@ public class BanInfoEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "baninfo_generator")
     @SequenceGenerator(name = "baninfo_generator", sequenceName = "baninfo_seq", allocationSize = 1)
     private long id;
+    @Setter
     @ManyToOne
     @JoinColumn(name = "target_id")
     private User target;
+    @Setter
     @ManyToOne
     @JoinColumn(name = "moderator_id")
     private User moderator;
+    @Setter
     private String reason;
+    @Setter
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+    @Setter
     @Column(name = "end_at")
     private LocalDateTime endAt;
+    @Setter
     private boolean shadow;
 
-    public long getId() {
-        return id;
-    }
-
-    public User getTarget() {
-        return target;
-    }
-
-    public void setTarget(User target) {
-        this.target = target;
-    }
-
-    public User getModerator() {
-        return moderator;
-    }
-
-    public void setModerator(User moderator) {
-        this.moderator = moderator;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getEndAt() {
-        return endAt;
-    }
-
-    public void setEndAt(LocalDateTime endAt) {
-        this.endAt = endAt;
-    }
-
-    public boolean isShadow() {
-        return shadow;
-    }
-
-    public void setShadow(boolean shadow) {
-        this.shadow = shadow;
-    }
 }

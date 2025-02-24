@@ -1,8 +1,12 @@
 package pro.gravit.simplecabinet.web.configuration.properties.storage;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+@Setter
+@Getter
 @Component
 @ConfigurationProperties(prefix = "storage.file")
 public class FileStorageConfig {
@@ -12,19 +16,4 @@ public class FileStorageConfig {
     public FileStorageConfig() {
     }
 
-    public String getRemoteUrl() {
-        return remoteUrl;
-    }
-
-    public void setRemoteUrl(String remoteUrl) {
-        this.remoteUrl = remoteUrl;
-    }
-
-    public String getLocalPath() {
-        return localPath;
-    }
-
-    public void setLocalPath(String localPath) {
-        this.localPath = localPath;
-    }
 }

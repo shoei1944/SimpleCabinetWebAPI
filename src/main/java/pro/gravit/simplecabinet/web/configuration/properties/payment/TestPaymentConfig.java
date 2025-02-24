@@ -1,8 +1,12 @@
 package pro.gravit.simplecabinet.web.configuration.properties.payment;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+@Setter
+@Getter
 @Component
 @ConfigurationProperties(prefix = "payment.test")
 public class TestPaymentConfig {
@@ -12,20 +16,5 @@ public class TestPaymentConfig {
     public TestPaymentConfig() {
     }
 
-    public boolean isEnable() {
-        return enable;
-    }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
-
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }

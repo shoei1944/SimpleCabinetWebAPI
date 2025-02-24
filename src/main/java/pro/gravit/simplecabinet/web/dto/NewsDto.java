@@ -1,6 +1,5 @@
 package pro.gravit.simplecabinet.web.dto;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import pro.gravit.simplecabinet.web.model.News;
 
 import java.util.List;

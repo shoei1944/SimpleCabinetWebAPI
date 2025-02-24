@@ -1,9 +1,13 @@
 package pro.gravit.simplecabinet.web.model.user;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity(name = "UserReputationChange")
 @Table(name = "user_rep_change")
 public class UserReputationChange {
@@ -20,54 +24,6 @@ public class UserReputationChange {
     private Long value;
     private LocalDateTime date;
     private ReputationChangeReason reason;
-
-    public User getTarget() {
-        return target;
-    }
-
-    public void setTarget(User target) {
-        this.target = target;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Long getValue() {
-        return value;
-    }
-
-    public void setValue(Long value) {
-        this.value = value;
-    }
-
-    public ReputationChangeReason getReason() {
-        return reason;
-    }
-
-    public void setReason(ReputationChangeReason reason) {
-        this.reason = reason;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public enum ReputationChangeReason {
         NORMAL, SET
