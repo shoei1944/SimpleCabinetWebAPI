@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '3.3.4'
-    id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
     id "org.javamodularity.moduleplugin" version "1.8.15"
     id 'java'
 }
@@ -24,7 +24,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.liquibase:liquibase-core:4.29.2'
+    implementation 'org.liquibase:liquibase-core:4.31.1'
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
     implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
@@ -32,12 +32,12 @@ dependencies {
     implementation 'dev.samstevens.totp:totp:1.7.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-    implementation 'org.apache.logging.log4j:log4j-core:2.24.1'
-    implementation 'org.apache.logging.log4j:log4j-api:2.24.1'
-    implementation 'software.amazon.awssdk:s3:2.28.22'
-    implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.8.3'
+    implementation 'org.apache.logging.log4j:log4j-core:2.24.3'
+    implementation 'org.apache.logging.log4j:log4j-api:2.24.3'
+    implementation 'software.amazon.awssdk:s3:2.30.26'
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.9.2'
     runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'org.postgresql:postgresql:42.7.4'
+    runtimeOnly 'org.postgresql:postgresql:42.7.5'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
